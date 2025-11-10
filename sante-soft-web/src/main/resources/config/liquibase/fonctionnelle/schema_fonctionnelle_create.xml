@@ -1,0 +1,260 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    
+    <changeSet author="Bouchara (generated)" id="15-07-2024-1-1">
+        <createTable  schemaName="${achat_schema_name}"    tableName="categorie_produit">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="VARCHAR(50)"/>
+            <column name="created_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="created_user_ip_adresse" type="VARCHAR(255)"/>
+            <column name="created_user_agent_info" type="VARCHAR(255)"/>
+            <column name="created_user_device" type="VARCHAR(255)"/>
+            <column name="created_user_zone" type="VARCHAR(255)"/>
+            <column name="last_modified_by" type="VARCHAR(50)"/>
+            <column name="last_modified_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="last_modified_user_ip_adresse" type="VARCHAR(255)"/>
+            <column name="last_modified_user_agent_info" type="VARCHAR(255)"/>
+            <column name="last_modified_user_device" type="VARCHAR(255)"/>
+            <column name="last_modified_user_zone" type="VARCHAR(255)"/>
+            <column name="code_categorie" type="VARCHAR(40)"/>
+            <column name="libelle_categorie" type="VARCHAR(255)"/>
+            <column name="description_categorie" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Bouchara (generated)" id="15-07-2024-1-2">
+        <addPrimaryKey schemaName="${achat_schema_name}" columnNames="id" constraintName="categorie_produit_pkey" tableName="categorie_produit"/>
+    </changeSet>
+ 
+    <changeSet author="Bouchara (generated)" id="15-07-2024-1-4">
+        <createTable  schemaName="${achat_schema_name}"   tableName="type_produit">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="VARCHAR(50)"/>
+            <column name="created_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="created_user_ip_adresse" type="VARCHAR(255)"/>
+            <column name="created_user_agent_info" type="VARCHAR(255)"/>
+            <column name="created_user_device" type="VARCHAR(255)"/>
+            <column name="created_user_zone" type="VARCHAR(255)"/>
+            <column name="last_modified_by" type="VARCHAR(50)"/>
+            <column name="last_modified_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="last_modified_user_ip_adresse" type="VARCHAR(255)"/>
+            <column name="last_modified_user_agent_info" type="VARCHAR(255)"/>
+            <column name="last_modified_user_device" type="VARCHAR(255)"/>
+            <column name="last_modified_user_zone" type="VARCHAR(255)"/>
+            <column name="code_type_produit" type="VARCHAR(40)"/>
+            <column name="libelle_type_produit" type="VARCHAR(255)"/>
+            <column name="description_type_produit" type="VARCHAR(255)"/>
+            <column name="categorie_produit" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Bouchara (generated)" id="15-07-2024-1-5">
+        <addPrimaryKey schemaName="${achat_schema_name}" columnNames="id" constraintName="type_produit_pkey" tableName="type_produit"/>
+    </changeSet>
+        
+    <changeSet author="Bouchara (generated)" id="15-07-2024-1-6">
+        <addForeignKeyConstraint baseTableSchemaName="${achat_schema_name}" baseColumnNames="categorie_produit" baseTableName="type_produit" constraintName="cat_produit_on_type_produit_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="categorie_produit" referencedTableSchemaName="${achat_schema_name}"/>
+    </changeSet>
+    
+    <changeSet author="Bouchara (generated)" id="15-07-2024-1-8">
+        <createTable  schemaName="${achat_schema_name}"    tableName="produit">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="VARCHAR(50)"/>
+            <column name="created_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="created_user_ip_adresse" type="VARCHAR(255)"/>
+            <column name="created_user_agent_info" type="VARCHAR(255)"/>
+            <column name="created_user_device" type="VARCHAR(255)"/>
+            <column name="created_user_zone" type="VARCHAR(255)"/>
+            <column name="last_modified_by" type="VARCHAR(50)"/>
+            <column name="last_modified_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="last_modified_user_ip_adresse" type="VARCHAR(255)"/>
+            <column name="last_modified_user_agent_info" type="VARCHAR(255)"/>
+            <column name="last_modified_user_device" type="VARCHAR(255)"/>
+            <column name="last_modified_user_zone" type="VARCHAR(255)"/>
+            <column name="code_produit" type="VARCHAR(40)"/>
+            <column name="libelle_produit" type="VARCHAR(255)"/>
+            <column name="description_produit" type="VARCHAR(255)"/>
+            <column name="type_produit" type="VARCHAR(255)"/>
+            <column name="prix" type="numeric(50, 2)"/>
+            <column name="quantite" type="INT"/>
+            <column name="image" type="BLOB"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Bouchara (generated)" id="15-07-2024-1-64">
+        <addPrimaryKey schemaName="${achat_schema_name}" columnNames="id" constraintName="produit_pkey" tableName="produit"/>
+    </changeSet>
+        
+    <changeSet author="Bouchara (generated)" id="15-07-2024-1-6-1">
+        <addForeignKeyConstraint baseTableSchemaName="${achat_schema_name}" baseColumnNames="type_produit" baseTableName="produit" constraintName="type_produit_on_produit_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="type_produit" referencedTableSchemaName="${achat_schema_name}"/>
+    </changeSet>
+    
+    
+    <changeSet author="Bouchara (generated)" id="24-07-2024-1-1">
+        <createTable  schemaName="${achat_schema_name}"   tableName="commande">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="VARCHAR(50)"/>
+            <column name="created_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="created_user_ip_adresse" type="VARCHAR(255)"/>
+            <column name="created_user_agent_info" type="VARCHAR(255)"/>
+            <column name="created_user_device" type="VARCHAR(255)"/>
+            <column name="created_user_zone" type="VARCHAR(255)"/>
+            <column name="last_modified_by" type="VARCHAR(50)"/>
+            <column name="last_modified_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="last_modified_user_ip_adresse" type="VARCHAR(255)"/>
+            <column name="last_modified_user_agent_info" type="VARCHAR(255)"/>
+            <column name="last_modified_user_device" type="VARCHAR(255)"/>
+            <column name="last_modified_user_zone" type="VARCHAR(255)"/>
+            <column name="numero_commande" type="VARCHAR(50)"/>
+            <column name="date_commande" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="prix_total_commande" type="numeric(50, 2)"/>
+            <column name="etat_commande" type="VARCHAR(50)"/>
+            <column name="id_utilisateur" type="VARCHAR(50)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Bouchara (generated)" id="24-07-2024-1-2">
+        <addPrimaryKey schemaName="${achat_schema_name}" columnNames="id" constraintName="commande_pkey" tableName="commande"/>
+    </changeSet>
+    <!--        
+    <changeSet author="Bouchara (generated)" id="24-07-2024-1-3">
+        <addForeignKeyConstraint baseTableSchemaName="${achat_schema_name}" baseColumnNames="categorie_produit" baseTableName="type_produit" constraintName="cat_produit_on_type_produit_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="categorie_produit" referencedTableSchemaName="${achat_schema_name}"/>
+    </changeSet>-->
+    <changeSet author="Bouchara (generated)" id="24-07-2024-1-3">
+        <createTable  schemaName="${achat_schema_name}"   tableName="detail_commande">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="VARCHAR(50)"/>
+            <column name="created_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="created_user_ip_adresse" type="VARCHAR(255)"/>
+            <column name="created_user_agent_info" type="VARCHAR(255)"/>
+            <column name="created_user_device" type="VARCHAR(255)"/>
+            <column name="created_user_zone" type="VARCHAR(255)"/>
+            <column name="last_modified_by" type="VARCHAR(50)"/>
+            <column name="last_modified_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="last_modified_user_ip_adresse" type="VARCHAR(255)"/>
+            <column name="last_modified_user_agent_info" type="VARCHAR(255)"/>
+            <column name="last_modified_user_device" type="VARCHAR(255)"/>
+            <column name="last_modified_user_zone" type="VARCHAR(255)"/>
+            <column name="id_commande" type="VARCHAR(50)"/>
+            <column name="id_produit" type="VARCHAR(50)"/>
+            <column name="prix_unitaire" type="numeric(50, 2)"/>
+            <column name="quantite_commande" type="INT"/>
+            <column name="prix_total_produit" type="numeric(50, 2)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Bouchara (generated)" id="24-07-2024-1-4">
+        <addPrimaryKey schemaName="${achat_schema_name}" columnNames="id" constraintName="detail_commande_pkey" tableName="detail_commande"/>
+    </changeSet>
+    <changeSet author="Bouchara (generated)" id="24-07-2024-1-5">
+        <addForeignKeyConstraint baseTableSchemaName="${achat_schema_name}" baseColumnNames="id_commande" baseTableName="detail_commande" constraintName="commande_on_detail_produit_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="commande" referencedTableSchemaName="${achat_schema_name}"/>
+    </changeSet>
+    <changeSet author="Bouchara (generated)" id="24-07-2024-1-6">
+        <addForeignKeyConstraint baseTableSchemaName="${achat_schema_name}" baseColumnNames="id_produit" baseTableName="detail_commande" constraintName="produit_on_detail_produit_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="produit" referencedTableSchemaName="${achat_schema_name}"/>
+    </changeSet>
+    
+    <changeSet author="Bouchara (generated)" id="24-07-2024-1-7">
+        <addColumn tableName="commande" schemaName="${achat_schema_name}">
+            <column name="numero_tel_client" type="VARCHAR(50)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Bouchara (generated)" id="24-07-2024-1-8">
+        <addColumn tableName="commande" schemaName="${achat_schema_name}">
+            <column name="nom_client" type="VARCHAR(50)"/>
+        </addColumn>    
+    </changeSet>
+    <changeSet author="Bouchara (generated)" id="24-07-2024-1-9">
+        <addColumn tableName="commande" schemaName="${achat_schema_name}">
+            <column name="prenom_client" type="VARCHAR(50)"/>
+        </addColumn>    
+    </changeSet>
+    <changeSet author="Bouchara (generated)" id="24-07-2024-1-10">
+        <addColumn tableName="commande" schemaName="${achat_schema_name}">
+            <column name="email_client" type="VARCHAR(50)"/>
+        </addColumn>    
+    </changeSet>
+    <changeSet author="Bouchara (generated)" id="24-07-2024-1-11">
+        <createTable  schemaName="${achat_schema_name}"    tableName="ordonnance">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="VARCHAR(50)"/>
+            <column name="created_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="created_user_ip_adresse" type="VARCHAR(255)"/>
+            <column name="created_user_agent_info" type="VARCHAR(255)"/>
+            <column name="created_user_device" type="VARCHAR(255)"/>
+            <column name="created_user_zone" type="VARCHAR(255)"/>
+            <column name="last_modified_by" type="VARCHAR(50)"/>
+            <column name="last_modified_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="last_modified_user_ip_adresse" type="VARCHAR(255)"/>
+            <column name="last_modified_user_agent_info" type="VARCHAR(255)"/>
+            <column name="last_modified_user_device" type="VARCHAR(255)"/>
+            <column name="last_modified_user_zone" type="VARCHAR(255)"/>
+            <column name="identifiant_client" type="VARCHAR(40)"/>
+            <column name="date_telechargement" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="file_path" type="BLOB"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Bouchara (generated)" id="24-07-2024-1-12">
+        <addPrimaryKey schemaName="${achat_schema_name}" columnNames="id" constraintName="ordonnance_pkey" tableName="ordonnance"/>
+    </changeSet>
+    
+    <changeSet author="Bouchara (generated)" id="24-07-2024-1-1-1-13">
+        <createTable  schemaName="${achat_schema_name}"    tableName="paiements">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="VARCHAR(50)"/>
+            <column name="created_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="created_user_ip_adresse" type="VARCHAR(255)"/>
+            <column name="created_user_agent_info" type="VARCHAR(255)"/>
+            <column name="created_user_device" type="VARCHAR(255)"/>
+            <column name="created_user_zone" type="VARCHAR(255)"/>
+            <column name="last_modified_by" type="VARCHAR(50)"/>
+            <column name="last_modified_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="last_modified_user_ip_adresse" type="VARCHAR(255)"/>
+            <column name="last_modified_user_agent_info" type="VARCHAR(255)"/>
+            <column name="last_modified_user_device" type="VARCHAR(255)"/>
+            <column name="last_modified_user_zone" type="VARCHAR(255)"/>
+            <column name="moyen_paiement" type="VARCHAR(40)"/>
+            <column name="montant_paiement" type="numeric(50, 2)"/>
+            <column name="commande_correspondante" type="VARCHAR(40)"/>
+            <column name="date_paiement" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="file_path" type="BLOB"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Bouchara (generated)" id="24-07-2024-1-1-1-14">
+        <addPrimaryKey schemaName="${achat_schema_name}" columnNames="id" constraintName="paiement_pkey" tableName="paiements"/>
+    </changeSet>
+    
+    <changeSet author="Bouchara (generated)" id="24-07-2024-1-1-1-15">
+        <addForeignKeyConstraint baseTableSchemaName="${achat_schema_name}" baseColumnNames="commande_correspondante" baseTableName="paiements" constraintName="commande_on_paiements_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="commande" referencedTableSchemaName="${achat_schema_name}"/>
+    </changeSet>
+    
+    <changeSet author="Bouchara (generated)" id="24-07-2024-1-1-16">
+        <addColumn tableName="ordonnance" schemaName="${achat_schema_name}">
+            <column name="commande_correspondante" type="VARCHAR(50)"/>
+        </addColumn>    
+    </changeSet>
+    
+    <changeSet author="Bouchara (generated)" id="24-07-2024-1-1-1-17">
+        <addForeignKeyConstraint baseTableSchemaName="${achat_schema_name}" baseColumnNames="commande_correspondante" baseTableName="ordonnance" constraintName="commande_on_ordonnance_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="commande" referencedTableSchemaName="${achat_schema_name}"/>
+    </changeSet>
+   
+    <changeSet author="Bouchara (generated)" id="24-07-2024-1-1-17">
+        <addColumn tableName="ordonnance" schemaName="${achat_schema_name}">
+            <column name="type_fichier" type="VARCHAR(50)"/>
+        </addColumn>    
+    </changeSet>
+    
+</databaseChangeLog>

@@ -1,0 +1,105 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 3 avr. 2023, 11:52:18
+    Author     : Bouchara
+*/
+.topbar .topbar-left {
+    background-color: #008000 !important;
+    float: left;
+    text-align: center;
+    height: 70px;
+    position: relative;
+    width: 270px;
+    z-index: 1;
+}
+.navbar-custom {
+    background: #008000 !important;
+    margin-left: 270px !important;
+    min-height: 70px !important;
+    position: relative !important;
+}
+
+.navbar-custom .nav-link {
+    padding: 0 0.75rem;
+    color: #fff !important;
+    line-height: 70px;
+    max-height: 70px;
+}
+
+.navbar-custom .topbar-nav li.show .nav-link {
+    background-color: #3C7DBF !important;
+    color: #303e67;
+}
+.left-sidenav {
+    /* position: fixed; */
+    /*height: 100%;*/
+    min-width: 330px !important;
+    max-width: auto;
+    background-color: #fff;
+    /* min-height: auto; */
+    /* transition: .3s; */
+    padding: 24px;
+    margin-top: 70px;
+}
+
+.account-body.accountbg {
+    background: -webkit-gradient(linear, left bottom, left top, from(#f7f7f7), color-stop(55%, #fcdede));
+    background: linear-gradient(0deg, #f7f7f7 0%, #3C4BBF 55%) !important;
+    width: 100%;
+    height: 100vh;
+}
+
+.modal-content .modal-header, .modal-content .modal-footer {
+    border-color: #eaf0f9 !important;
+    background-color: #008000 !important;
+}
+
+.modal-content .modal-header .modal-title, .modal-content .modal-footer .modal-title {
+    color: #fff !important;
+    -ms-flex-item-align: center;
+    -ms-grid-row-align: center;
+    align-self: center;
+    font-weight: 600;
+    margin-top: 0;
+}
+
+.modal-content .modal-header .close, .modal-content .modal-footer .close {
+    color: #fff !important;
+}
+
+.loader {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    background-color: #ffffffcf;
+}
+.loader img{
+    position: relative;
+    left: 40%;
+    top: 40%;
+}
+
+.page-content {
+    padding: 0 0 60px 0 !important;
+    min-height: unset !important;
+    width: 100%!important;
+}
+
+.page-title-box {
+    padding: 3px 0 !important;
+}
+
+
+.account-body.accountbg {
+    background: -webkit-gradient(linear, left bottom, left top, from(#0c8342), color-stop(55%, #fcdede));
+    background: linear-gradient(0deg, #0c8342 0%, #008000 55%)!important;
+    width: 100% !important;
+    height: 100vh !important;
+}

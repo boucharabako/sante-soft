@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org"
+
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+    <head>
+        <meta charset="utf-8" />
+        <title>achat</title>        
+
+        <!-- App favicon -->
+        <!--<link rel="shortcut icon" href="@{/images/favicon.ico"/>-->
+        <link rel="shortcut icon" th:href="@{/assets/images/logov.ico}"/>
+        <link th:href="@{/assets/css/bootstrap.min.css}" rel="stylesheet" type="text/css" />
+        <link th:href="@{/assets/css/jquery-ui.min.css}" rel="stylesheet"/>
+        <link th:href="@{/assets/css/icons.min.css}" rel="stylesheet" type="text/css" />
+        <link th:href="@{/assets/css/metisMenu.min.css}" rel="stylesheet" type="text/css" />
+        <link th:href="@{/assets/css/app.min.css}" rel="stylesheet" type="text/css" />
+        <link th:href="@{/assets/css/personaliser.css}" rel="stylesheet" type="text/css" />
+
+
+        <link th:href="@{/notifications/assets/css/bootstrap.min.css}" rel="stylesheet" type="text/css" />
+        <link th:href="@{/notifications/assets/css/jquery-ui.min.css}" rel="stylesheet"/>
+        <link th:href="@{/notifications/assets/css/icons.min.css}" rel="stylesheet" type="text/css" />
+        <link th:href="@{/notifications/assets/css/metisMenu.min.css}" rel="stylesheet" type="text/css" />
+        <link th:href="@{/notifications/assets/css/app.min.css}" rel="stylesheet" type="text/css" />
+
+        <link th:href="@{/notifications/plugins/daterangepicker/daterangepicker.css}" rel="stylesheet" />
+        <link th:href="@{/notifications/plugins/select2/select2.min.css}" rel="stylesheet" type="text/css" />
+        <link th:href="@{/notifications/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.css}" rel="stylesheet" type="text/css" />
+        <link th:href="@{/notifications/plugins/timepicker/bootstrap-material-datetimepicker.css}" rel="stylesheet"/>
+        <link th:href="@{/notifications/plugins/bootstrap-touchspin/css/jquery.bootstrap-touchspin.min.css}" rel="stylesheet" />
+
+        <link th:href="@{/notifications/plugins/jquery-steps/jquery.steps.css}" rel="stylesheet" />
+
+        <link th:href="@{/plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.css}" rel="stylesheet" type="text/css"/>
+        <link th:href="@{/plugins/switchery/css/switchery.min.css}" rel="stylesheet" type="text/css"/>
+        <link th:href="@{/plugins/multiselect/css/multi-select.css}" rel="stylesheet" type="text/css"/>
+        <link th:href="@{/plugins/select2/css/select2.min.css}" rel="stylesheet" type="text/css"/>
+        <link th:href="@{/plugins/bootstrap-select/css/bootstrap-select.min.css}" rel="stylesheet" type="text/css"/>
+        <link th:href="@{/plugins/jvectormap/jquery-jvectormap-2.0.2.css}" rel="stylesheet"/>
+        <link th:href="@{/css/own/multiple-select.min.css}" rel="stylesheet" type="text/css" />
+        <!--select 2 css-->
+        <link th:href="@{/select2.develop/css/select2.min.css}" rel="stylesheet" type="text/css" />
+
+        <link th:href="@{/plugins/lightpick/lightpick.css}" rel="stylesheet"/>
+        <!-- Sweet Alert -->
+        <link th:href="@{/plugins/sweet-alert2/sweetalert2.min.css}" rel="stylesheet" type="text/css"/>
+        <link th:href="@{/plugins/animate/animate.css}" rel="stylesheet" type="text/css"/>
+        <link th:href="@{/notifications/plugins/sweet-alert2/sweetalert2.min.css}" rel="stylesheet" type="text/css"/>
+        <link th:href="@{/notifications/plugins/animate/animate.css}" rel="stylesheet" type="text/css"/>
+        <!-- App css -->
+        <!--<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet}" type="text/css" />-->
+        <link th:href="@{/css/jquery-ui.min.css}" rel="stylesheet"/>
+        <link th:href="@{/css/icons.min.css}" rel="stylesheet" type="text/css" />
+        <link th:href="@{/css/metisMenu.min.css}" rel="stylesheet" type="text/css" />
+        <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" type="text/css" />
+        <link th:href="@{/css/app.min.css}" rel="stylesheet" type="text/css" />
+        <link th:href="@{/assets/css/app.min.css}" rel="stylesheet" type="text/css" />
+        <!--<link th:href="@{/css/app.min.css}" rel="stylesheet}" type="text/css" />-->
+        <!--<script th:src="@{/js/jquery.min.js}"></script>-->
+
+
+        <style>
+            .card{
+                margin-top: 15px;
+            }
+            .container-fluid{
+                padding: 0 !important;
+            }
+            .page-content{
+                padding: 0 0 60px 0 !important;
+                min-height: unset !important;
+                width: 100% !important;
+                height: 100% !important;
+            }
+
+            .wel-card{
+                top: 100px;
+                height: 80%;
+                width: 80%;
+                /*margin-bottom: -70px;*/
+                margin-top: 0px;
+                padding-bottom: 70px;
+                position: fixed;
+                left: 17%;
+                right: 0;
+            }
+            .frame {
+                /*                white-space: nowrap;
+                
+                                text-align: center;
+                                margin: 1em 0;*/
+            }
+            .left-sidenav {
+                /*position: fixed;*/
+                /*height: 1000%;*/
+                min-width: 270px;
+                max-width: auto;
+                background-color: #fff;
+                /*min-height: 100% ;*/
+                /*                    -webkit-box-shadow: 0px 0px 3px rgb(31 30 47 / 5%);
+                                    box-shadow: 0px 0px 3px rgb(31 30 47 / 5%);*/
+                -webkit-transition: .3s;
+                transition: .3s;
+                padding: 24px;
+                margin-top: 70px;
+            }
+        </style>
+
+        <script th:src="@{/js/jquery.min.js}" type="text/javascript"/>
+        <script>
+            $(document).ready(function () {
+                //                alert(" end loading...");
+            });
+        </script>
+        <script th:src="@{/js/bootstrap.min.js}" type="text/javascript"/>
+
+        <script type="text/javascript" th:src="@{/js/own/structurecontrole.js}"></script>
+
+
+        <!--Angular js dependencies--> 
+        <script th:src="@{/webjars/angularjs/1.8.0/angular.js}"></script>
+        <script type="text/javascript" th:src="@{/webjars/angular-animate/1.8.0/angular-animate.js}"></script>
+        <script type="text/javascript" th:src="@{/webjars/angular-sanitize/1.8.0/angular-sanitize.js}"></script>
+        <script type="text/javascript" th:src="@{/js/own/angular-recursion.js}"></script>
+        <script type="text/javascript" th:src="@{/js/own/angular-tree-widget.min.js}"></script>
+        <script type="text/javascript" th:src="@{/js/own/angular-recursion.js}"></script>
+        <script type="text/javascript" th:src="@{/js/own/multiple-select.min.js}"></script>
+        <script type="text/javascript" th:src="@{/js/own/multiselect.min.js}"></script>
+        <script type="text/javascript" th:src="@{/js/own/angular-cookies.js}"></script>
+        <script type="text/javascript" th:src="@{/js/own/angularjs-dropdown-multiselect.js}"></script>
+        <!--<script type="text/javascript" th:src="@{/js/own/select.js}"></script>-->
+
+
+        <!--Angular Chart js-->
+
+        <script type="text/javascript" th:src="@{/js/own/ng-google-chart.js}"></script>
+        <script type="text/javascript" th:src="@{/js/own/ng-google-chart.min.js}"></script>
+        <script type="text/javascript" th:src="@{/js/own/chart.js}"></script>
+        <script type="text/javascript" th:src="@{/js/own/angular-chart.js}"></script>
+        <script type="text/javascript" th:src="@{/js/own/angular-chart.min.js}"></script>
+
+        <!--<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>-->
+        <script type="text/javascript" th:src="@{/js/own/loader.js}"></script>
+
+
+        <!--Angular Chart js-->
+
+
+        <!--Angular workFlow diagramme js-->
+        <!--<script type="text/javascript" th:src="@{/js/own/go.js}"></script>-->
+
+        <!--alert notification js-->
+        <script th:src="@{/plugins/notifyjs/js/notify.js}" type="text/javascript"></script>
+        <script th:src="@{/plugins/notifications/notify-metro.js}" type="text/javascript"></script>
+        <!--Angular workFlow diagramme js-->
+        <script type="text/javascript" th:src="@{/js/own/application.js}"></script>
+        <script type="text/javascript" th:src="@{/js/own/generic_service.js}"></script>
+        <script type="text/javascript" th:src="@{/js/own/propagation_service.js}"></script>
+        <script type="text/javascript" th:src="@{/js/own/generic_statut_service.js}"></script>
+        <script type="text/javascript" th:src="@{/js/own/angular-tree-control.js}"></script>
+        <script type="text/javascript" th:src="@{/js/own/context-menu.js}"></script>
+        <script type="text/javascript" th:src="@{/js/own/angular-toggle-switch.min.js}"></script>
+        <script type="text/javascript" th:src="@{/js/own/ivh-treeview.js}"></script>
+        <script type="text/javascript" th:src="@{/js/own/sweetalert.min.js}"></script>
+        <script th:src="@{/js/own/dynamic-number.min.js}" type="text/javascript"/>
+        <script th:src="@{/js/oi/select-tpls.min.js}" type="text/javascript"/>
+
+        <!--carousel--> 
+        <script type="text/javascript" th:src="@{/js/angular-animate.js}"></script>
+        <script type="text/javascript" th:src="@{/js/ui-bootstrap-tpls-0.13.4.js}"></script>
+        <script type="text/javascript" th:src="@{/js/tagsInput/ng-tags-input.min.js}"></script>
+
+        <!--alert notification js-->
+        <script th:src="@{/plugins/notifyjs/js/notify.js}" type="text/javascript"></script>
+        <script th:src="@{/plugins/notifications/notify-metro.js}" type="text/javascript"></script>
+
+        <script th:src="@{/js/jquery.core.js}" type="text/javascript"></script>
+
+        <script type="text/javascript"  th:src="@{/js/angular/jquery-1.11.3.min.js}"></script>
+        <script type="text/javascript" th:src="@{/js/angular/bootstrap.js}"></script>
+        <script type="text/javascript" th:src="@{/js/angular/angular.min.js}"></script>
+        <script type="text/javascript" th:src="@{/js/angular/angular-notify.js}"></script>
+        <!--        <script th:src="@{/js/own/js.js}" type="text/javascript"/>-->
+
+        <!--tagsInput-->
+        <link th:href="@{/css/tagsInput/ng-tags-input.bootstrap.min.css}" rel="stylesheet" type="text/css" />
+        <link th:href="@{/css/tagsInput/ng-tags-input.min.css}" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" th:src="@{/js/tagsInput/ng-tags-input.min.js}"></script>
+
+        <!--select 2 js-->
+        <script th:src="@{/select2.develop/js/select2.min.js}"></script>
+        <script th:src="@{/select2.develop/js/i18n/fr.js}"></script>
+        <!--selectize select multi-criteres js-->
+        <script th:src="@{/js/selectize/angular-selectize.js}"></script>
+        <script th:src="@{/js/selectize/selectize.js}"></script>
+        <!--selectize select multi-criteres css-->
+        <link th:href="@{/css/selectize/selectize.css}" rel="stylesheet" type="text/css" />
+        <link th:href="@{/css/selectize/style.css}" rel="stylesheet" type="text/css" />
+
+        <link th:href="@{/css/bootstrap-responsive-tabs.css}" rel="stylesheet" type="text/css" />
+
+
+
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+        <style>
+            .material-symbols-outlined {
+                font-variation-settings:
+                    'FILL' 0,
+                    'wght' 400,
+                    'GRAD' 0,
+                    'opsz' 48
+            }
+        </style>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"
+            />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+    </head>
+
+    <body ng-app="app" >
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.9/angular.min.js"></script>
+
+
+        <div class="topbar" >
+            <a th:href="@{/}" id="appUrl"/>
+            <div th:include="top-bar">
+
+            </div>
+
+        </div>
+
+        <div class="left-sidenav" layout:fragment="left">
+            <div th:include="left-side" >
+
+            </div>
+        </div>
+        <div class="page-wrapper" style="margin-left: 20px; margin-right: 20px;">
+
+            <!-- Page Content-->
+            <div class="page-content">
+
+                <div class="container-fluid">
+
+                    <div class="contentSection" layout:fragment="content"> 
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!--        <footer class="footer text-center text-sm-left">
+                    &copy; 2022 achat <span class="text-muted d-none d-sm-inline-block float-right">All right reserved</span>
+                </footer-->
+
+        <!-- end page content -->
+
+        <!-- end page-wrapper -->
+
+
+        <!-- Integration Mercredi---->
+        <!--select 2 js-->
+        <script th:src="@{/select2.develop/js/select2.min.js}"></script>
+        <script th:src="@{/select2.develop/js/i18n/fr.js}"></script>
+        <!--selectize select multi-criteres js-->
+        <script th:src="@{/js/selectize/angular-selectize.js}"></script>
+        <script th:src="@{/js/selectize/selectize.js}"></script>
+        <script th:src="@{/plugins/jstree/jstree.min.js}"></script>
+        <script th:src="@{/js/ngJsTree.min.js}"></script>
+        <script th:src="@{/Loading-Spinner/jquery.preloaders.js}"></script>
+        <!--oi.select-->
+        <!--<link th:href="@{/css/oi/select.min.css}" rel="stylesheet" type="text/css" />-->
+        <script th:src="@{/js/oi/select-tpls.min.js}" type="text/javascript"/>
+        <!--oi.select-->
+
+
+        <th:block layout:fragment="stylesheets"></th:block>
+        <!--<script th:src="@{/pages/jquery.form-advanced.init.js}" type="text/javascript"/>-->
+        <script th:src="@{/plugins/sweet-alert2/sweetalert2.min.js}"></script>
+        <script th:src="@{/js/own/generic_ajax.js}"></script>
+        <script th:src="@{/js/own/jquery-loading-bar.js}" type="text/javascript"/>
+        <script th:src="@{/js/own/app.js}" type="text/javascript"/>
+        <script th:src="@{/js/own/app1.js}" type="text/javascript"/>
+        <script th:src="@{/js/own/parsley.min.js}" type="text/javascript"/>
+        <script th:src="@{/js/own/dynamic-number.min.js}" type="text/javascript"/>
+        <script th:src="@{/js/own/en.js}" type="text/javascript"/>
+        <script th:src="@{/js/own/fr.js}" type="text/javascript"/>
+        <script th:src="@{/js/own/editablejs.js}" type="text/javascript"/>
+        <script th:src="@{/js/own/js.js}" type="text/javascript"/>
+        <script th:src="@{/js/jquery.core.js}" type="text/javascript"/>
+        <script th:src="@{/plugins/bootstrap-tagsinput/js/bootstrap-tagsinput.min.js}"></script>
+
+
+        <!--<script th:src="@{/js/progress.bar.js}"></script>-->
+        <script type="text/javascript">
+
+            //jfofjfofofjo
+            $(window).bind("load", function () {
+
+            });
+            function usernames() {
+                //                console.log("function usernames");
+                $(".names").each(function () {
+                    let urle = "" + $(this).attr("href");
+                    let current = $(this);
+                    $.ajax({
+                        url: urle,
+                        type: "GET",
+                        success: function (data, textStatus, jqXHR) {
+                            current.html(data.value);
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            //                            console.log("error:" + JSON.stringify(errorThrown));
+                        }
+                    });
+                });
+            }
+
+            //initialiser l'ecran
+            $(function () {
+
+                var status = sessionStorage.getItem("status");
+                if (typeof (status) === "undefined") {
+                    $('.button-menu-mobile').click();
+                } else if (status === 'enlarged') {
+                    $('#main-content-page').css("margin-left", "70px");
+                    $('.button-menu-mobile').click();
+                    $('.list-unstyled').css("display", "table-column");
+                } else {
+                    $('#main-content-page').css("margin-left", "240px");
+                    $('.list-unstyled').css("display", "block");
+                }
+
+            });
+            $(function () {
+                let menuCrnt = $("#welcomen").attr("data-id");
+                let activeMenu = sessionStorage.getItem("nomClass");
+
+                //                console.log("MENU ACTIVE  " + activeMenu);
+                if (menuCrnt === "paramContexte") {
+                    menuCrnt = activeMenu;
+                }
+                //                console.log("MENU CRNT " + menuCrnt);
+                //                console.log("MENU ACTIVE MENU " + activeMenu);
+                if (activeMenu != menuCrnt) {
+                    if (activeMenu != '') {
+                        $("." + activeMenu).removeClass("active");
+                    }
+                    sessionStorage.setItem("nomClass", menuCrnt);
+                    var selector = sessionStorage.getItem("nomClass");
+                    if (selector != '') {
+                        $("." + selector).addClass("active");
+                    }
+                }
+            });
+            /**
+             * fonction qui sauvegarde le menu sélectionné 
+             * @param {type} nomClass
+             * @returns {undefined}
+             */
+            function saveInSession(nomClass) {
+                sessionStorage.setItem("nomClass", nomClass);
+                $('.content').css("display", "none");
+                $('.tabcont').css("display", "block");
+            }
+
+            /**
+             * fonction qui sauvegarde le sous menu sélectionné
+             * @param {type} event
+             * @returns {undefined}
+             */
+            function getClassSession(event) {
+                var myClas = $(event).attr('class');
+                sessionStorage.setItem("clickMenuClass", myClas);
+            }
+
+            function viderLeContainer() {
+                //                console.log("Trace !");
+                //                console.log("Trace 2!");
+                $('.tabcont').css("display", "none");
+            }
+
+            function afficherLeCont() {
+                //                console.log("Trace !");
+                //                console.log("Trace 2!");
+                $('.tabcont').css("display", "block");
+            }
+
+            function jslog(logText) {
+                console.log(logText);
+            }
+        </script>
+        <!-- Integration Mercredi Fin -->
+        <script th:src="@{/plugins/multiselect/js/jquery.multi-select.js}" type="text/javascript"/>
+
+        <!-- jQuery  -->
+        <!--        <script th:src="@{/js/jquery.min.js}"></script>-->
+        <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+        <script th:src="@{/js/metismenu.min.js}"></script>
+        <script th:src="@{/js/waves.js}"></script>
+        <script th:src="@{/js/feather.min.js}"></script>
+        <script th:src="@{/js/jquery.slimscroll.min.js}"></script>
+        <script th:src="@{/js/jquery-ui.min.js}"></script>
+
+        <!-- jQuery  -->
+
+
+
+        <script th:src="@{/plugins/moment/moment.js}"></script>
+        <script th:src="@{/plugins/apexcharts/apexcharts.min.js}"></script>
+        <script th:src="@{/plugins/jvectormap/jquery-jvectormap-2.0.2.min.js}"></script>
+        <script th:src="@{/plugins/jvectormap/jquery-jvectormap-world-mill-en.js}"></script>
+        <script th:src="@{/plugins/flot-chart/jquery.canvaswrapper.js}"></script>
+        <script th:src="@{/plugins/flot-chart/jquery.colorhelpers.js}"></script>
+        <script th:src="@{/plugins/flot-chart/jquery.flot.js}"></script>        
+        <script th:src="@{/plugins/flot-chart/jquery.flot.saturated.js}"></script>
+        <script th:src="@{/plugins/flot-chart/jquery.flot.browser.js}"></script>
+        <script th:src="@{/plugins/flot-chart/jquery.flot.drawSeries.js}"></script> 
+        <script th:src="@{/plugins/flot-chart/jquery.flot.uiConstants.js}"></script>
+        <script th:src="@{/plugins/flot-chart/jquery.flot-dataType.js}"></script>
+        <!--<script th:src="@{/pages/jquery.crm_dashboard.init.js}"></script>-->
+
+        <script th:src="@{/plugins/chartjs/chart.min.js}"></script>
+        <script th:src="@{/plugins/chartjs/roundedBar.min.js}"></script>
+        <script th:src="@{/plugins/lightpick/lightpick.js}"></script>
+        <!--        <script th:src="@{/pages/jquery.sales_dashboard.init.js}"></script>-->
+
+        <!-- App js -->
+        <!--        <script th:src="@{/js/app.js}"></script>-->
+        <script th:src="@{/js/own/nprogress.js}" type="text/javascript"/>
+        <script type="text/javascript">
+            NProgress.start();
+            showSpinner();
+
+            $(function () {
+
+                if ($("#msg_global").attr("data-msg-visible")) {
+                    var type;
+                    if ($("#msg_global").attr("data-alert") === "danger") {
+                        type = 'error';
+                    } else if ($("#msg_global").attr("data-alert") === "info") {
+                        type = 'success';
+                    } else {
+                        type = $("#msg_global").attr("data-alert");
+                    }
+                    var detail = "";
+                    $("#msg_global ul li").each(function (i, el) {
+                        detail = detail + $(this).attr("data-message") + "<br/>";
+                    });
+                    $.Notification.notify(type, 'top right', $("#msg_global").attr("data-erreur-principal"),
+                            detail);
+                }
+            });
+
+            function getHeaderMenu() {
+                doGet(("menu/header-value"),
+                        function (data)
+                        {
+
+                            $(".header-t").html(data);
+                        },
+                        function (error)
+                        {
+                            //                            console.info(error)
+                        });
+            }
+
+            function getLeftMenu() {
+                doGet(("menu/left-value"),
+                        function (data)
+                        {
+                            $(".left-t").html(data);
+                            var selectedMenu = sessionStorage.getItem("nomClass");
+                            var selectedSousMenu = sessionStorage.getItem("clickMenuClass");
+                            //activer le menu
+                            if (selectedMenu != '') {
+                                $("." + selectedMenu).addClass('active');
+                                //activer le sous menu du menu selectionné
+                                $("." + selectedMenu + " " + "." + selectedSousMenu).closest('li').addClass('active');
+                            }
+                        },
+                        function (error)
+                        {
+                            console.info(error);
+                        });
+            }
+
+            function getOtherMenu() {
+                console.log(window.location.pathname);
+                doGet(("menu/other-value?url=" + window.location.pathname),
+                        function (data)
+                        {
+
+                            $(".other-t").html(data);
+                        },
+                        function (error)
+                        {
+                            console.info(error);
+                        });
+            }
+            function getClientName() {
+                doGet(("menu/client-name"),
+                        function (data)
+                        {
+                            $(".client-name-t").text(data);
+                        },
+                        function (error)
+                        {
+
+                        });
+            }
+
+            $(document).ready(function () {
+                NProgress.done();
+                hideSpinner();
+                getAppTitle();
+                getUsername();
+                getAppName();
+                getClientName();
+                getHeaderMenu();
+                getOtherMenu();
+                getLeftMenu();
+                getProfilMenu();
+                getVersion();
+                $('.counter').counterUp({
+                    delay: 100,
+                    time: 1200
+                });
+                $(".knob").knob();
+                // Bind normal buttons
+                $('.ladda-button').ladda('bind', {timeout: 2000});
+                // Bind progress buttons and simulate loading progress
+                Ladda.bind('.progress-demo .ladda-button', {
+                    callback: function (instance) {
+                        var progress = 0;
+                        var interval = setInterval(function () {
+                            progress = Math.min(progress + Math.random() * 0.1, 1);
+                            instance.setProgress(progress);
+                            if (progress === 1) {
+                                instance.stop();
+                                clearInterval(interval);
+                            }
+                        }, 200);
+                    }
+                });
+                var l = $('.ladda-button-demo').ladda();
+                l.click(function () {
+                    // Start loading
+                    l.ladda('start');
+                    // Timeout example
+                    // Do something in backend and then stop ladda
+                    setTimeout(function () {
+                        l.ladda('stop');
+                    }, 12000);
+                });
+            });
+        </script>
+
+
+
+
+        <script th:src="@{/js/detect.js}" type="text/javascript"/>
+        <script th:src="@{/js/fastclick.js}" type="text/javascript"/>
+        <script th:src="@{/js/jquery.slimscroll.js}" type="text/javascript"/>
+        <script th:src="@{/js/waves.js}" type="text/javascript"/>
+
+        <script th:src="@{/js/wow.min.js}" type="text/javascript"/>
+        <script th:src="@{/js/jquery.nicescroll.js}" type="text/javascript"/>
+        <script th:src="@{/js/jquery.app.js}" type="text/javascript"/>
+        <script th:src="@{/js/jquery.bootstrap-responsive-tabs.min.js}" type="text/javascript"></script>
+
+        <script th:src="@{/plugins/peity/jquery.peity.min.js}" type="text/javascript"/>
+        <!-- jQuery  -->
+        <script th:src="@{/plugins/waypoints/lib/jquery.waypoints.js}" type="text/javascript"/>
+        <script th:src="@{/plugins/counterup/jquery.counterup.min.js}" type="text/javascript"/>
+
+        <script th:src="@{/plugins/raphael/raphael-min.js}" type="text/javascript"/>
+
+        <script th:src="@{/plugins/jquery-knob/jquery.knob.js}" type="text/javascript"/>
+        <script th:src="@{/plugins/bootstrap-filestyle/js/bootstrap-filestyle.min.js}"  src="../static/plugins/bootstrap-filestyle/js/bootstrap-filestyle.min.js" type="text/javascript"/>
+
+        <script th:src="@{/plugins/datatables/jquery.dataTables.min.js}" type="text/javascript"/>
+        <script th:src="@{/plugins/datatables/dataTables.bootstrap.js}" type="text/javascript"/>
+
+        <script th:src="@{/plugins/morris/morris.min.js}" type="text/javascript"/>
+
+        <!--FooTable-->
+        <script th:src="@{/plugins/footable/js/footable.all.min.js}" type="text/javascript"/>
+
+        <script th:src="@{/pages/bootstrap-select/js/bootstrap-select.min.js}" type="text/javascript"/>
+        <script th:src="@{/pages/datatables.editable.init.js}" type="text/javascript"/>
+
+        <script th:src="@{/plugins/datatables/dataTables.buttons.min.js}" type="text/javascript"/>
+        <script th:src="@{/plugins/datatables/buttons.bootstrap.min.js}" type="text/javascript"/>
+        <!--<script th:src="@{/plugins/datatables/pdfmake.min.js}" type="text/javascript"/>-->
+        <!--<script th:src="@{/plugins/datatables/vfs_fonts.js}" type="text/javascript"/>-->
+        <!--<script th:src="@{/plugins/datatables/dataTables.fixedHeader.min.js}" type="text/javascript"/>-->
+        <!--<script th:src="@{/plugins/datatables/dataTables.keyTable.min.js}" type="text/javascript"/>-->
+        <script th:src="@{/plugins/datatables/dataTables.responsive.min.js}" type="text/javascript"/>
+        <!--<script th:src="@{/plugins/datatables/dataTables.scroller.min.js}" type="text/javascript"/>-->
+        <!--<script th:src="@{/plugins/datatables/dataTables.colVis.js}" type="text/javascript"/>-->
+        <!--<script th:src="@{/plugins/datatables/dataTables.fixedColumns.min.js}" type="text/javascript"/>-->
+        <script th:src="@{/plugins/jquery-datatables-editable/jquery.dataTables.js}" type="text/javascript"/>
+
+
+
+        <script th:src="@{/pages/datatables.init.js}" type="text/javascript"/>
+
+        <script th:src="@{/plugins/ladda-buttons/js/spin.min.js}" type="text/javascript"/>
+        <script th:src="@{/plugins/ladda-buttons/js/ladda.min.js}" type="text/javascript"/>
+        <script th:src="@{/plugins/ladda-buttons/js/ladda.jquery.min.js}" type="text/javascript"/>
+
+        <script th:src="@{/js/compte-autocomplete.js}" type="text/javascript"/>
+        <script th:src="@{/plugins/multiselect/js/jquery.multi-select.js}" type="text/javascript"/>
+        <script th:src="@{/plugins/jquery-quicksearch/jquery.quicksearch.js}" type="text/javascript"/>
+
+        <!--wizard initialization-->
+
+
+        <script th:src="@{/plugins/switchery/js/switchery.min.js}" type="text/javascript"/>
+        <!--alert notification js-->
+        <script th:src="@{/plugins/notifyjs/js/notify.js}" type="text/javascript"/>
+        <script th:src="@{/plugins/notifications/notify-metro.js}" type="text/javascript"/>
+
+        <!--<script th:src="@{/plugins/bootstrap-select/js/bootstrap-select.min.js}" type="text/javascript"/>-->
+        <!--<script th:src="@{/plugins/select2/js/select2.min.js}" type="text/javascript"/>-->
+        <script th:src="@{/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js}" type="text/javascript"/>
+        <script th:src="@{/js/jquery.etiquette.menu.js}" type="text/javascript"/>
+
+        <script src="../static/plugins/custombox/js/custombox.min.js" th:src="@{/plugins/custombox/js/custombox.min.js}"></script>
+        <script src="../static/plugins/custombox/js/legacy.min.js" th:src="@{/plugins/custombox/js/legacy.min.js}"></script>
+
+        <!--<script th:src="@{/plugins/jquery/steps/js/jquery.steps.min.js}" type="text/javascript"/>-->
+        <script th:src="@{/plugins/jquery-validation/js/jquery.validate.min.js}" type="text/javascript"/>
+        <!--<script th:src="@{/pages/jquery.wizard-init.js}" type="text/javascript"/>-->
+        <!--select 2 js-->
+        <script th:src="@{/select2.develop/js/select2.min.js}"></script>
+        <script th:src="@{/select2.develop/js/i18n/fr.js}"></script>
+        <!--selectize select multi-criteres js-->
+        <script th:src="@{/js/selectize/angular-selectize.js}"></script>
+        <script th:src="@{/js/selectize/selectize.js}"></script>
+        <script th:src="@{/plugins/jstree/jstree.min.js}"></script>
+        <script th:src="@{/js/ngJsTree.min.js}"></script>
+        <script th:src="@{/Loading-Spinner/jquery.preloaders.js}"></script>
+
+        <!--<script th:src="@{/js/progress.bar.js}"></script>-->
+        <th:block layout:fragment="stylesheets"></th:block>
+        <!--<script th:src="@{/pages/jquery.form-advanced.init.js}" type="text/javascript"/>-->
+        <script th:src="@{/plugins/sweet-alert2/sweetalert2.min.js}"></script>
+        <script th:src="@{/js/own/generic_ajax.js}"></script>
+        <script th:src="@{/js/own/jquery-loading-bar.js}" type="text/javascript"/>
+        <script th:src="@{/js/own/app.js}" type="text/javascript"/>
+        <script th:src="@{/js/own/parsley.min.js}" type="text/javascript"/>
+        <script th:src="@{/js/own/dynamic-number.min.js}" type="text/javascript"/>
+        <script th:src="@{/js/own/en.js}" type="text/javascript"/>
+        <script th:src="@{/js/own/fr.js}" type="text/javascript"/>
+        <script th:src="@{/js/own/editablejs.js}" type="text/javascript"/>
+        <script th:src="@{/js/jquery.core.js}" type="text/javascript"/>
+        <script th:src="@{/plugins/bootstrap-tagsinput/js/bootstrap-tagsinput.min.js}"></script>
+
+        <script th:src="@{/plugins/ladda-buttons/js/spin.min.js}"></script>
+        <script th:src="@{/plugins/ladda-buttons/js/ladda.min.js}"></script>
+        <script th:src="@{/plugins/ladda-buttons/js/ladda.jquery.min.js}"></script>
+
+
+        <!--Jquery file upload-->
+        <script th:src="@{/plugins/jquery-file-upload/js/vendor/jquery.ui.widget.js}"></script>
+        <script th:src="@{/plugins/jquery-file-upload/js/jquery.iframe-transport.js}"></script>
+        <script th:src="@{/plugins/jquery-file-upload/js/jquery.fileupload.js}"></script>
+        <script th:src="@{/pages/jquery.chat.js}" type="text/javascript"></script>
+
+        <!--Angular js xeditable dependencies (tableau editable)-->
+        <!--        <script th:src="@{/js/own/xeditable.js}"></script>
+                <script th:src="@{/js/own/xeditable.min.js}"></script>-->
+
+        <th:block layout:fragment="scripts"></th:block>
+
+        <!-- jQuery  -->
+        <script th:src="@{/notifications/assets/js/jquery.min.js}"></script>
+        <script th:src="@{/notifications/assets/js/jquery-ui.min.js}"></script>
+        <script th:src="@{/notifications/assets/js/bootstrap.bundle.min.js}"></script>
+        <script th:src="@{/notifications/assets/js/metismenu.min.js}"></script>
+        <script th:src="@{/notifications/assets/js/feather.min.js}"></script>
+        <script th:src="@{/notifications/assets/js/jquery.slimscroll.min.js}"></script>  
+        <script th:src="@{/notifications/plugins/sweet-alert2/sweetalert2.min.js}"></script>
+        <script th:src="@{/notifications/assets/pages/jquery.sweet-alert.init.js}"></script>
+
+        <!-- App js -->
+        <script th:src="@{/assets/js/waves.js}"></script>
+        <script th:src="@{/js/app.js}"></script>
+        <script th:src="@{/notifications/assets/js/app.js}"></script>
+        <script th:src="@{/Loading-Spinner/jquery.preloaders.js}"></script>
+        <script th:src="@{/js/progress.bar.js}"></script>
+        <script th:src="@{/notifications/plugins/select2/select2.min.js}"></script>
+        <!-- Plugins js -->
+
+        <!--        <script th:src="@{/notifications/plugins/jquery-steps/jquery.steps.min.js}"></script>
+                <script th:src="@{/notifications/assets/pages/jquery.form-wizard.init.js}"></script>-->
+
+        <script th:src="@{/notifications/plugins/moment/moment.js}"></script>
+        <script th:src="@{/notifications/plugins/daterangepicker/daterangepicker.js}"></script>
+        <script th:src="@{/notifications/plugins/select2/select2.min.js}"></script>
+        <script th:src="@{/notifications/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js}"></script>
+        <script th:src="@{/notifications/plugins/timepicker/bootstrap-material-datetimepicker.js}"></script>
+        <script th:src="@{/notifications/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js}"></script>
+        <script th:src="@{/notifications/plugins/bootstrap-touchspin/js/jquery.bootstrap-touchspin.min.js}"></script>
+
+        <script th:src="@{/js/compte-autocomplete.js}" type="text/javascript"/>
+        <script th:src="@{/plugins/multiselect/js/jquery.multi-select.js}" type="text/javascript"/>
+        <script th:src="@{/plugins/jquery-quicksearch/jquery.quicksearch.js}" type="text/javascript"/>
+
+        <script th:src="@{/notifications/assets/pages/jquery.forms-advanced.js}"></script>
+        <!--select 2 js-->
+        <script th:src="@{/select2.develop/js/select2.min.js}"></script>
+        <script th:src="@{/select2.develop/js/i18n/fr.js}"></script>
+        <!--selectize select multi-criteres js-->
+        <script th:src="@{/js/selectize/angular-selectize.js}"></script>
+        <script th:src="@{/js/selectize/selectize.js}"></script>
+        <!--selectize select multi-criteres css-->
+        <link th:href="@{/css/selectize/selectize.css}" rel="stylesheet" type="text/css" />
+        <link th:href="@{/css/selectize/style.css}" rel="stylesheet" type="text/css" />
+
+        <script type="text/javascript">
+
+            $(document).ready(function () {
+                $('.mySelecDoc').select2({
+                    placeholder: "--Choisissez--",
+                    //                    allowClear: true,
+                    language: "fr",
+                    //                    dropdownParent: $('.modal')
+                });
+            });
+            $('body').on('shown.bs.modal', '.modal', function () {
+                $(this).find('.mySelecDoc').each(function () {
+                    var dropdownParent = $(document.body);
+                    if ($(this).parents('.modal.in:first').length !== 0)
+                        dropdownParent = $(this).parents('.modal.in:first');
+                    $(this).select2({
+                        dropdownParent: dropdownParent
+                                // ...
+                    });
+                });
+            });
+
+            //                $.fn.modal.Constructor.prototype.enforceFocus = function(){};
+        </script>
+        <script type="text/javascript">
+            doGet("gestion/utilisateur/getUtilisateurConnect", function success(data) {
+                let list = $("#habil");
+                let userConnect = null;
+                list.empty();
+                list.append('<option selected="true"  disabled="true"> choisir</option>');
+                list.prop('selectedIndex', 0);
+                if (data) {
+
+                    userConnect = data.userDTO;
+                    // appTemplate.user = data.userDTO;
+                    $(".client-name-t").text(data.userDTO.firstName + " " + data.userDTO.lastName);
+
+
+                }
+            }, function error(error) {
+                console.info(JSON.stringify(error));
+            });
+
+
+
+        </script>
+    </body>
+    <script>
+        const phoneInputField = document.querySelector("#phone");
+        const phoneInput = window.intlTelInput(phoneInputField, {
+            utilsScript:
+                    "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+        });
+    </script>
+
+</html>

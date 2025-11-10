@@ -1,0 +1,56 @@
+
+<ul class="metismenu left-sidenav-menu" >
+    <li>
+        <a href="javascript: void(0);" sec:authorize="hasAnyAuthority('FC_USER','FC_GROUPE','FC_PROF')" ><i class="fas fa-user-shield"> </i><span>Habilitations</span><span class="menu-arrow"><i class="mdi mdi-chevron-right"></i></span></a>
+        <ul class="nav-second-level" aria-expanded="false" style="width: 300px;">
+            
+            <li class="nav-item"><a class="nav-link" sec:authorize="hasAnyAuthority('FC_USER')" th:href="@{/parametre/utilisateur}"><i class="ti-control-record"></i>Gestion des utilisateurs</a></li>
+            <li class="nav-item"><a class="nav-link" sec:authorize="hasAnyAuthority('FC_GROUPE')" href="#"><i class="ti-control-record"></i>Gestion des groupes</a></li>
+            <li class="nav-item"><a class="nav-link" sec:authorize="hasAnyAuthority('FC_PROF')" th:href="@{/parametre/profil}"><i class="ti-control-record"></i> Gestion des profils</a></li> 
+        </ul>
+    </li>
+    <li>
+        <a href="javascript: void(0);" sec:authorize="hasAnyAuthority('FC_POSTE_POLICE', 'FC_COMMISSARIAT','FC_GENDARMERIE','FC_AGENT')" ><i class="fas fa-sitemap"> </i><span>Services</span><span class="menu-arrow"><i class="mdi mdi-chevron-right"></i></span></a>
+        <ul class="nav-second-level" aria-expanded="false" style="width: 300px;">
+            
+            <li class="nav-item"><a class="nav-link" sec:authorize="hasAnyAuthority('FC_POSTE_POLICE')" th:href="@{/gestion/poste_police}"><i class="ti-control-record"></i>Postes de police</a></li>
+            <li class="nav-item"><a class="nav-link" sec:authorize="hasAnyAuthority('FC_COMMISSARIAT')" th:href="@{/gestion/commissariat}"><i class="ti-control-record"></i>Commissariats</a></li>
+            <li class="nav-item"><a class="nav-link" sec:authorize="hasAnyAuthority('FC_GENDARMERIE')" th:href="@{/gestion/gendarmerie}"><i class="ti-control-record"></i> Gendarmeries</a></li> 
+            <li class="nav-item"><a class="nav-link" sec:authorize="hasAnyAuthority('FC_AGENT')" th:href="@{/gestion/agent}"><i class="ti-control-record"></i> Agents</a></li> 
+        </ul>
+    </li>
+    <li>
+        <a href="javascript: void(0);" sec:authorize="hasAnyAuthority('FC_DECLARANT','FC_PIECE_IDENTITE','FC_PIECE','FC_ENGIN','FC_INFRACTION')"><i class="fas fa-recycle"> </i><span>Gestion des Clients</span><span class="menu-arrow"><i class="mdi mdi-chevron-right"></i></span></a>
+        <ul class="nav-second-level" aria-expanded="false" style="width: 300px;">
+            
+            <li class="nav-item"><a class="nav-link" sec:authorize="hasAnyAuthority('FC_DECLARANT')" th:href="@{/gestion/declarant}"><i class="ti-control-record"></i>Déclarants</a></li>
+            <li class="nav-item"><a class="nav-link" sec:authorize="hasAnyAuthority('FC_PIECE_IDENTITE')" th:href="@{/gestion/piece_identite}"><i class="ti-control-record"></i>Pieces identités</a></li>
+            <li class="nav-item"><a class="nav-link" sec:authorize="hasAnyAuthority('FC_PIECE')" th:href="@{/gestion/piece_perdu}"><i class="ti-control-record"></i> Pièces perdues</a></li> 
+            <li class="nav-item"><a class="nav-link" sec:authorize="hasAnyAuthority('FC_PIECE')" th:href="@{/gestion/piece_requisitionne}"><i class="ti-control-record"></i> Pièces réquisitionnées</a></li> 
+            <li class="nav-item"><a class="nav-link" sec:authorize="hasAnyAuthority('FC_ENGIN')" th:href="@{/gestion/engin_perdu}"><i class="ti-control-record"></i> Engins perdus</a></li> 
+            <li class="nav-item"><a class="nav-link" sec:authorize="hasAnyAuthority('FC_ENGIN')" th:href="@{/gestion/engin_requisitionne}"><i class="ti-control-record"></i> engin_requisitionne</a></li> 
+            <li class="nav-item"><a class="nav-link" sec:authorize="hasAnyAuthority('FC_INFRACTION')" th:href="@{/gestion/infraction}"><i class="ti-control-record"></i> Infractions</a></li> 
+        </ul>
+    </li>
+    <li>
+        <a href="javascript: void(0);" sec:authorize="hasAnyAuthority('FC_DECLARATION','FC_REQUISITION','FC_SMS')" ><i class="fas fa-bullhorn"> </i><span>Déclaration & Réquisition</span><span class="menu-arrow"><i class="mdi mdi-chevron-right"></i></span></a>
+        <ul class="nav-second-level" aria-expanded="false" style="width: 300px;">
+            
+            <li class="nav-item"><a class="nav-link" sec:authorize="hasAnyAuthority('FC_DECLARATION')" th:href="@{/gestion/declaration}"><i class="ti-control-record"></i>Déclarations</a></li>
+            <li class="nav-item"><a class="nav-link" sec:authorize="hasAnyAuthority('FC_REQUISITION')" th:href="@{/gestion/requisition}"><i class="ti-control-record"></i>Réquisitions</a></li>
+            <li class="nav-item"><a class="nav-link" sec:authorize="hasAnyAuthority('FC_SMS')" th:href="@{/gestion/sms}"><i class="ti-control-record"></i> SMS</a></li> 
+        </ul>
+    </li>
+    <li>
+        <a href="javascript: void(0);" sec:authorize="hasAnyAuthority('FC_GRADE','FC_TYPE_ENGIN','FC_TYPE_PIECE','FC_TYPE_SMS','FC_TYPE_INFRACTION')" ><i class="fas fa-cogs"> </i><span>Parametrages</span><span class="menu-arrow"><i class="mdi mdi-chevron-right"></i></span></a>
+        <ul class="nav-second-level" aria-expanded="false" style="width: 300px;">
+            
+            <li class="nav-item"><a class="nav-link" sec:authorize="hasAnyAuthority('FC_GRADE')" th:href="@{/gestion/grade}"><i class="ti-control-record"></i>Grades</a></li>
+            <li class="nav-item"><a class="nav-link" sec:authorize="hasAnyAuthority('FC_TYPE_ENGIN')" th:href="@{/gestion/type_engin}"><i class="ti-control-record"></i>Type d'engins</a></li>
+            <li class="nav-item"><a class="nav-link" sec:authorize="hasAnyAuthority('FC_TYPE_PIECE')" th:href="@{/gestion/type_piece}"><i class="ti-control-record"></i> Type de pièces</a></li> 
+            <li class="nav-item"><a class="nav-link" sec:authorize="hasAnyAuthority('FC_TYPE_SMS')" th:href="@{/gestion/type_sms}"><i class="ti-control-record"></i> Type SMS</a></li> 
+            <li class="nav-item"><a class="nav-link" sec:authorize="hasAnyAuthority('FC_TYPE_INFRACTION')" th:href="@{/gestion/type_infraction}"><i class="ti-control-record"></i> Type Infraction</a></li> 
+        </ul>
+    </li>
+    
+</ul>

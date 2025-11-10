@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org"
+
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+    <head>
+        <meta charset="UTF-8"/>
+        <meta http-equiv="Pragma" content="no-cache" />
+        <meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
+        <meta http-equiv="Expires" content="0"/>
+        <title class="app-title-t"></title>
+
+        <!--         <script>
+        //            alert(" loadin...");            
+                </script>-->
+
+        <!--Datatable-->
+        <link th:href="@{/plugins/datatables/jquery.dataTables.min.css}" rel="stylesheet" type="text/css"/>
+        <!--<link th:href="@{/plugins/datatables/fixedHeader.bootstrap.min.css}" rel="stylesheet" type="text/css"/>-->
+        <link th:href="@{/plugins/datatables/responsive.bootstrap.min.css}" rel="stylesheet" type="text/css"/>
+        <!--<link th:href="@{/plugins/datatables/scroller.bootstrap.min.css}" rel="stylesheet" type="text/css"/>-->
+        <!--<link th:href="@{/plugins/datatables/dataTables.colVis.css}" rel="stylesheet" type="text/css"/>-->
+        <link th:href="@{/plugins/datatables/dataTables.bootstrap.min.css}" rel="stylesheet" type="text/css"/>
+        <!--<link th:href="@{/plugins/datatables/fixedColumns.dataTables.min.css}" rel="stylesheet" type="text/css"/>-->
+        <!--<link th:href="@{/plugins/ladda-buttons/css/ladda-themeless.min.css}" rel="stylesheet" type="text/css"/>-->
+        <link th:href="@{/fonts/font-awesome.min.css}" href="../static/fonts/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+        <!--visualisation de tracking-->
+        <link rel="stylesheet" th:href="@{/plugins/morris/morris.css}"/> 
+        <!--alert notification-->
+        <link th:href="@{/plugins/bootstrap-sweetalert/sweet-alert.css}" rel="stylesheet" type="text/css"/>
+        <link th:href="@{/plugins/sweet-alert2/sweetalert2.min.css}" rel="stylesheet" type="text/css"/>
+
+        <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" type="text/css" />
+        <link th:href="@{/css/core.css}" rel="stylesheet" type="text/css" />
+        <link th:href="@{/css/components.css}" rel="stylesheet" type="text/css" />
+        <link th:href="@{/css/icons.css}" rel="stylesheet" type="text/css" />
+        <link th:href="@{/css/pages.css}" rel="stylesheet" type="text/css"  />
+        <link th:href="@{/css/responsive.css}" rel="stylesheet" type="text/css" />
+        <!--<link th:href="@{/css/bootstrap-nav-wizard.css}" rel="stylesheet" type="text/css"-->
+        <!--href="../static/css/bootstrap-nav-wizard.css" />-->
+
+        <link th:href="@{/plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.css}" rel="stylesheet" type="text/css"/>
+        <link th:href="@{/plugins/switchery/css/switchery.min.css}" rel="stylesheet" type="text/css"/>
+        <link th:href="@{/plugins/multiselect/css/multi-select.css}" rel="stylesheet" type="text/css"/>
+        <link th:href="@{/plugins/select2/css/select2.min.css}" rel="stylesheet" type="text/css"/>
+        <link th:href="@{/plugins/bootstrap-select/css/bootstrap-select.min.css}" rel="stylesheet" type="text/css"/>
+        <!--<link th:href="@{/plugins/bootstrap-touchspin/css/jquery.bootstrap-touchspin.min.css}" rel="stylesheet" type="text/css"/>-->
+
+        <!--<link th:href="@{/plugins/jquery/steps/css/jquery.steps.css}" rel="stylesheet" type="text/css"/>-->
+
+        <link th:href="@{/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css}" rel="stylesheet" type="text/css"/>
+
+        <link th:href="@{/css/sidebar_menu2.css}" rel="stylesheet" type="text/css"/>
+        <link th:href="@{/css/stylepersonaliser.css}" rel="stylesheet" type="text/css"/>
+        <link th:href="@{/plugins/custombox/css/custombox.css}" rel="stylesheet"/>
+        <link th:href="@{/plugins/ladda-buttons/css/ladda-themeless.min.css}" rel="stylesheet"/>
+        <!--        <link th:href="@{/css/own/loading-bar.css}" rel="stylesheet" type="text/css" />-->
+        <link th:href="@{/css/own/nprogress.css}" rel="stylesheet" type="text/css" />
+        <link th:href="@{/css/own/multiple-select.min.css}" rel="stylesheet" type="text/css" />
+        <!--css-->
+
+
+
+        <script th:src="@{/js/jquery.min.js}" type="text/javascript"/>
+        <script>
+            $(document).ready(function () {
+//                alert(" end loading...");
+            });
+        </script>
+
+        <script th:src="@{/js/bootstrap.min.js}" type="text/javascript"/>
+        <script type="text/javascript" th:src="@{/js/own/structurecontrole.js}"></script>
+
+
+        <!--Angular js dependencies--> 
+        <script th:src="@{/webjars/angularjs/1.8.0/angular.js}"></script>
+        <script type="text/javascript" th:src="@{/webjars/angular-animate/1.8.0/angular-animate.js}"></script>
+        <script type="text/javascript" th:src="@{/webjars/angular-sanitize/1.8.0/angular-sanitize.js}"></script>
+        <script type="text/javascript" th:src="@{/js/own/angular-recursion.js}"></script>
+        <script type="text/javascript" th:src="@{/js/own/angular-tree-widget.min.js}"></script>
+        <script type="text/javascript" th:src="@{/js/own/angular-recursion.js}"></script>
+        <script type="text/javascript" th:src="@{/js/own/multiple-select.min.js}"></script>
+        <script type="text/javascript" th:src="@{/js/own/multiselect.min.js}"></script>
+        <script type="text/javascript" th:src="@{/js/own/angular-cookies.js}"></script>
+        <script type="text/javascript" th:src="@{/js/own/angularjs-dropdown-multiselect.js}"></script>
+        <!--<script type="text/javascript" th:src="@{/js/own/select.js}"></script>-->
+
+
+        <!--Angular Chart js-->
+
+        <script type="text/javascript" th:src="@{/js/own/ng-google-chart.js}"></script>
+        <script type="text/javascript" th:src="@{/js/own/ng-google-chart.min.js}"></script>
+        <script type="text/javascript" th:src="@{/js/own/chart.js}"></script>
+        <script type="text/javascript" th:src="@{/js/own/angular-chart.js}"></script>
+        <script type="text/javascript" th:src="@{/js/own/angular-chart.min.js}"></script>
+
+        <!--<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>-->
+        <script type="text/javascript" th:src="@{/js/own/loader.js}"></script>
+
+
+        <!--Angular Chart js-->
+
+
+        <!--Angular workFlow diagramme js-->
+        <!--<script type="text/javascript" th:src="@{/js/own/go.js}"></script>-->
+
+
+        <!--Angular workFlow diagramme js-->
+
+        <script type="text/javascript" th:src="@{/js/own/application.js}"></script>
+        <script type="text/javascript" th:src="@{/js/own/generic_service.js}"></script>
+        <script type="text/javascript" th:src="@{/js/own/propagation_service.js}"></script>
+        <script type="text/javascript" th:src="@{/js/own/generic_statut_service.js}"></script>
+        <script type="text/javascript" th:src="@{/js/own/angular-tree-control.js}"></script>
+        <script type="text/javascript" th:src="@{/js/own/context-menu.js}"></script>
+        <script type="text/javascript" th:src="@{/js/own/angular-toggle-switch.min.js}"></script>
+        <script type="text/javascript" th:src="@{/js/own/ivh-treeview.js}"></script>
+        <script type="text/javascript" th:src="@{/js/own/sweetalert.min.js}"></script>
+
+        <!--pagination-->
+        <!--           <script type="text/javascript" src="webjars/jquery/3.1.0/jquery.min.js"></script>
+                    <script type="text/javascript" src="webjars/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js"></script>
+                    <link rel="stylesheet" href="wejbars/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css"/>-->
+
+
+
+
+
+        <!--Tableau editable css xeditbale-->
+        <link th:href="@{/css/own/tree-control.css}" rel="stylesheet" type="text/css" />
+        <link th:href="@{/css/own/tree-control-attribute.css}" rel="stylesheet" type="text/css" />
+        <link th:href="@{/css/own/ivh-treeview-theme-basic.css}" rel="stylesheet" type="text/css" />
+        <link th:href="@{/css/own/ivh-treeview.css}" rel="stylesheet" type="text/css" />
+        <!--select 2 css-->
+        <link th:href="@{/select2.develop/css/select2.min.css}" rel="stylesheet" type="text/css" />
+        <!--carousel--> 
+        <script type="text/javascript" th:src="@{/js/angular-animate.js}"></script>
+        <script type="text/javascript" th:src="@{/js/ui-bootstrap-tpls-0.13.4.js}"></script>
+        <!--tagsInput-->
+        <link th:href="@{/css/tagsInput/ng-tags-input.bootstrap.min.css}" rel="stylesheet" type="text/css" />
+        <link th:href="@{/css/tagsInput/ng-tags-input.min.css}" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" th:src="@{/js/tagsInput/ng-tags-input.min.js}"></script>
+        <!--selectize select multi-criteres css-->
+        <link th:href="@{/css/selectize/selectize.css}" rel="stylesheet" type="text/css" />
+        <link th:href="@{/css/selectize/style.css}" rel="stylesheet" type="text/css" />
+        <link th:href="@{/css/bootstrap-responsive-tabs.css}" rel="stylesheet" type="text/css" />
+<!--        oi.select
+        <link th:href="@{/css/oi/select.min.css}" rel="stylesheet" type="text/css" />
+        <script th:src="@{/js/oi/select-tpls.min.js}" type="text/javascript"/>
+        oi.select-->
+
+        <style type="text/css">
+            .monstyle{
+                padding-top: 10px;
+                padding-bottom: 10px;
+                background: #f4f8fb !important;
+                border-left: 3px solid #2bb605c4; 
+                border-right: 3px solid #2bb605c4; 
+                margin: 4px 0px;
+                line-height: 1.3;
+                text-align: center;
+                width: 100%;
+            }
+            .subMenuText{
+                color: #36404a;
+            }
+            .subMenuText:hover 
+            {
+                color: #2bb605c4;
+            }
+            .profile img
+            {
+                border: none;
+                height: auto;
+                width: auto;
+                max-width: 36px;
+                max-height: 36px;
+            }
+            footer
+            {
+
+                left: 0 !important;
+            }
+            .content-page-m{
+                margin-left: 0 !important;
+            }
+
+        </style>
+
+    </head>
+    <body class="fixed-left" ng-app="app">
+        <div id="wrapper">
+            <!-- Menu  -->
+            <div class="topbar">
+                <!-- LOGO -->
+                <div class="topbar-left hideleft">
+                    <div class="text-center">
+                        <a style="margin-right: 20px;" href="#" class="dropdown-toggle profile waves-effect waves-light">
+                            <img th:src="@{/menu/client-logo}" alt="user-img" class="img-cube"/>
+                        </a>
+                        <a th:href="@{/}" id="appUrl"/>
+                        <a th:href="@{/}" class="logo clientRes">
+                            <!--<i class="fa fa-home icon-c-logo"></i><span>AB S</span><span style="text-transform: none;">olution</span>-->
+                            <i class="icon-c-logo"></i><span > <a th:href="@{/}" class="img-circle pull-right" style=" margin-top: 5px; margin-right: 70px; font-size: 35px; color: white;"> <i class=" fa fa-home"></i></a></span>
+                        </a>
+                    </div>
+                </div>
+                <!-- Button mobile view to collapse sidebar menu -->
+                <div class="navbar navbar-default" role="navigation">
+                    <div class="container" >
+                        <div class="">
+                            <!--                            <div class="pull-left">
+                                                            <button class="btn-menu-top button-menu-mobile open-left waves-effect waves-light">
+                                                                <i class="md md-menu"></i>
+                                                            </button>
+                                                            <span class="clearfix"></span>
+                                                        </div>-->
+
+
+                            <div class="header-t">
+
+                            </div>
+
+
+                            <ul class="nav navbar-nav bnavbar-right pull-right">
+
+                                <li class="dropdown top-menu-item-xs deconnect">
+                                    <a sec:authorize="hasAnyAuthority('CONNECTED')" href="#" class="dropdown-toggle profile waves-effect waves-light" data-toggle="dropdown" aria-expanded="true"
+                                       style="width: 100%; min-width: 60px;">
+                                        <strong class="col-md-3 col-lg-3 col-sm-3 col-xs-3" >
+                                            <a th:href="@{/}" class="img-circle pull-right" style=" margin-right: 50px; font-size: 90px; color: white;"> <i class=" fa fa-home"></i></a>
+                                        </strong>
+                                        <!--                                            <span  id="username" class="label label-default username names" style="font-size:14px !important; width: 2px;"> 
+                                                                                    </span>-->
+                                        <!--                                        <strong class="col-md-9 col-lg-9 col-sm-9 col-xs-9" style="margin-top: 8px; margin-left: -30px;">
+                                                                                    <span style="text-align: left; font-size: 35px;" class="label label-default  col-md-12 col-lg-12 col-sm-12 col-xs-12">Déconnecter</span>
+                                                                                    
+                                                                                </strong>-->
+                                    </a>
+
+                                    <ul sec:authorize="hasAnyAuthority('CONNECTED')" class="profil-t dropdown-menu" style="width: 100%;">
+
+
+
+                                    </ul>
+
+
+                                </li>
+
+
+                                <li class="dropdown top-menu-item-xs logo-u">
+                                    <a sec:authorize="hasAnyAuthority('CONNECTED')" href="#" class="dropdown-toggle profile waves-effect waves-light" data-toggle="dropdown" aria-expanded="true"
+                                       style="width: 100%; min-width: 60px; ">
+                                        <strong class=" responsiveMenuHiden " >
+                                            <img th:src="@{/menu/user-profil-picture}" alt="user-img" class="img-circle app-logo " style="border:2px solid #edf0f0; margin-right: 12px;"/> 
+                                        </strong>
+                                        <!--                                            <span  id="username" class="label label-default username names" style="font-size:14px !important; width: 2px;"> 
+                                                                                    </span>-->
+                                        <strong class=" " style="margin-top: 13px;">
+                                            <span style="text-align: left; font-size: 11px;" class="label label-default username name  truncate"> </span>
+                                            <span style="text-align: left; font-size: 11px;" class="label label-default firstname name truncate"></span>
+                                        </strong>
+                                    </a>
+
+                                    <ul sec:authorize="hasAnyAuthority('CONNECTED')" class="profil-t dropdown-menu" style="width: 100%;">
+
+
+
+                                    </ul>
+
+
+                                </li>
+                                <li class="dropdown top-menu-item-xs deconnect">
+                                    <a sec:authorize="hasAnyAuthority('CONNECTED')" href="#" class="dropdown-toggle profile waves-effect waves-light" data-toggle="dropdown" aria-expanded="true"
+                                       style="width: 100%; min-width: 60px;">
+                                        <strong class="col-md-3 col-lg-3 col-sm-3 col-xs-3" >
+                                            <a th:href="@{/maleki-start-up/logout}" class="img-circle" style=" font-size: 90px; color: white;"> <i class=" fa fa-power-off"></i></a>
+                                        </strong>
+                                        <!--                                            <span  id="username" class="label label-default username names" style="font-size:14px !important; width: 2px;"> 
+                                                                                    </span>-->
+                                        <!--                                        <strong class="col-md-9 col-lg-9 col-sm-9 col-xs-9" style="margin-top: 8px; margin-left: -30px;">
+                                                                                    <span style="text-align: left; font-size: 35px;" class="label label-default  col-md-12 col-lg-12 col-sm-12 col-xs-12">Déconnecter</span>
+                                                                                    
+                                                                                </strong>-->
+                                    </a>
+
+                                    <ul sec:authorize="hasAnyAuthority('CONNECTED')" class="profil-t dropdown-menu" style="width: 100%;">
+
+
+
+                                    </ul>
+
+
+                                </li>
+                                <li class="hidden-xs ">
+                                    <!--<a href="#" class="right-bar-toggle waves-effect waves-light"><i class="icon-settings"></i></a>-->
+                                    <a href="#" class="dropdown-toggle profile waves-effect waves-light " data-toggle="dropdown" aria-expanded="true">
+                                        <img class="img-cube logoEnse app-logo responsiveMenuHiden" th:src="@{/menu/app-logo}"/>
+                                    </a>
+                                </li>
+                                <!--nom du produit-->
+                                <li class="top-menu-item-xs">
+                                    <div class="logo responsiveMenuHiden" style="line-height: 60px;">
+                                        <i class="icon-c-logo"></i><span class="app-name-t"></span>
+                                    </div>
+                                </li>
+                            </ul>
+                            <!--/.nav-collapse -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="left-t">
+
+            </div>
+        </div>
+
+        <div id="progressbar" class="modal fade" tabindex="-1" role="dialog"
+             aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+            <div class="modal-dialog"> 
+                <div class="modal-content"> 
+                    <div class="modal-body"> 
+                        <img class="ajax_loader"  th:src="@{/img/interwind.gif}"  />
+                    </div>
+                </div> 
+            </div>
+        </div>
+
+        <div id="tracking-modal" class="modal fade secondModal" tabindex="-1" role="dialog" aria-labelledby="custom-width-modalLabel" aria-hidden="true" style="display: none;">
+            <div class="modal-dialog" style="width:50%;height: 70%;">
+                <div class="customModal" style="background: #ebeff2;">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="tracking-content">
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary waves-effect" data-dismiss="modal"><i class="ion-log-out"></i></button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog --> 
+        </div>
+
+        <div id="tracking-workflow" data-backdrop="static" class="modal fade" tabindex="1" role="dialog" aria-labelledby="custom-width-modalLabel" aria-hidden="true" style="display: none; z-index: 1051; background-color: rgba(0, 0, 0, 0.4); padding-top: 12px;">
+            <div class="modal-dialog" style="width:50%;">
+                <div class="customModal" style="background: #ebeff2;">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="tracking-content-cycle">
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary waves-effect" data-dismiss="modal"><i class="ion-log-out"></i></button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog --> 
+        </div>
+
+
+
+
+        <!-- Menu -->
+
+        <!-- ============================================================== -->
+        <!-- Start right Content here -->
+        <!-- ============================================================== -->
+        <div class="content-page-m" th:attr="data-main-href=@{/}" id="main-content-page">
+            <!-- Start content -->
+            <div class="content content-m" >
+
+                <div class="container cont" style="display: block;">
+
+                    <div>
+                        <div class="col-xs-12">
+                            <ol class="breadcrumb" >
+                            </ol>
+                        </div>
+                        <!--<div  class="row col-md-7 col-lg-7 col-sm-7 col-xs-12 pull-right other-t" >-->
+                    </div>
+
+                    <div  class="col-md-12 col-lg-12 col-sm-12 col-xs-12 other-t" >
+
+                    </div>
+
+                    <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12" th:fragment="page" id="page">
+                        <div layout:fragment="errormessage" class="alert alert-dismissable col-xs-12 col-sm-12 col-md-12 col-lg-12" th:if="${apiError}"
+                             id="msg_global" style="display: none"
+                             th:attr="data-msg-visible=${apiError==null ? false : true},data-alert=${apiError.typeError.toString()},data-erreur-principal=${apiError.principal}"
+                             th:classappend="'alert-'+${apiError.typeError.toString()}">
+                            <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                                <i th:if="${apiError.typeError.toString()=='danger'}" class="fa fa-exclamation-triangle fa-3x erroricon"></i>
+                                <i th:if="${apiError.typeError.toString()=='info'}" class="fa fa-check fa-3x erroricon" aria-hidden="true"></i>
+                                <i th:if="${apiError.typeError.toString()=='warning'}" class="fa fa-warning fa-3x erroricon" aria-hidden="true"></i>
+                                <i th:if="${apiError.typeError.toString()=='debug'}" class="fa fa-wrench fa-3x erroricon" aria-hidden="true"></i>
+                            </div>
+                            <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                <h6 th:text="${apiError.principal}"></h6>
+                                <!--<p th:text="${apiError.principal}"></p>-->
+                                <ul>
+                                    <li th:each="err : ${apiError.errorMessages}" th:text="${err.message}" th:attr="data-message=${err.message}"></li>
+                                </ul>
+                            </div>
+                        </div>        
+                        <div layout:fragment="content">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer class="footer">
+                © <span id ="year"></span>
+                . All rights reserved.
+            </footer>
+        </div>
+        <!--</div>  container -->
+        <!-- content -->
+        <img class="ajax_loader pull-right" id="wait_ajax_loader" th:src="@{/img/interwind.gif}" width="50" height="50" style="display:none"/>
+
+        <!-- /second-sidebar -->
+
+
+        <!-- ============================================================== -->
+        <!-- End Right content here -->
+        <!-- ============================================================== -->
+        <!-- second Sidebar -->
+        <div class="side-bar right-bar nicescroll">
+            <!-- <h4 class="text-center">Chat</h4> -->
+            <div class="contact-list nicescroll">
+                <div class="monConteneur">
+
+                </div>    
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            var resizefunc = [];
+        </script>
+
+        <!-- jQuery  -->
+        <script th:src="@{/js/detect.js}" type="text/javascript"/>
+        <script th:src="@{/js/fastclick.js}" type="text/javascript"/>
+        <script th:src="@{/js/jquery.slimscroll.js}" type="text/javascript"/>
+        <script th:src="@{/js/waves.js}" type="text/javascript"/>
+        <script th:src="@{/js/wow.min.js}" type="text/javascript"/>
+        <script th:src="@{/js/jquery.nicescroll.js}" type="text/javascript"/>
+        <script th:src="@{/js/jquery.app.js}" type="text/javascript"/>
+        <script th:src="@{/js/jquery.bootstrap-responsive-tabs.min.js}" type="text/javascript"></script>
+
+        <script th:src="@{/plugins/peity/jquery.peity.min.js}" type="text/javascript"/>
+        <!-- jQuery  -->
+        <script th:src="@{/plugins/waypoints/lib/jquery.waypoints.js}" type="text/javascript"/>
+        <script th:src="@{/plugins/counterup/jquery.counterup.min.js}" type="text/javascript"/>
+
+        <script th:src="@{/plugins/raphael/raphael-min.js}" type="text/javascript"/>
+
+        <script th:src="@{/plugins/jquery-knob/jquery.knob.js}" type="text/javascript"/>
+        <script th:src="@{/plugins/bootstrap-filestyle/js/bootstrap-filestyle.min.js}"  src="../static/plugins/bootstrap-filestyle/js/bootstrap-filestyle.min.js" type="text/javascript"/>
+
+        <script th:src="@{/plugins/datatables/jquery.dataTables.min.js}" type="text/javascript"/>
+        <script th:src="@{/plugins/datatables/dataTables.bootstrap.js}" type="text/javascript"/>
+
+        <script th:src="@{/plugins/morris/morris.min.js}" type="text/javascript"/>
+
+        <!--FooTable-->
+        <script th:src="@{/plugins/footable/js/footable.all.min.js}" type="text/javascript"/>
+
+        <script th:src="@{/pages/bootstrap-select/js/bootstrap-select.min.js}" type="text/javascript"/>
+        <script th:src="@{/pages/datatables.editable.init.js}" type="text/javascript"/>
+
+        <script th:src="@{/plugins/datatables/dataTables.buttons.min.js}" type="text/javascript"/>
+        <script th:src="@{/plugins/datatables/buttons.bootstrap.min.js}" type="text/javascript"/>
+        <!--<script th:src="@{/plugins/datatables/pdfmake.min.js}" type="text/javascript"/>-->
+        <!--<script th:src="@{/plugins/datatables/vfs_fonts.js}" type="text/javascript"/>-->
+        <!--<script th:src="@{/plugins/datatables/dataTables.fixedHeader.min.js}" type="text/javascript"/>-->
+        <!--<script th:src="@{/plugins/datatables/dataTables.keyTable.min.js}" type="text/javascript"/>-->
+        <script th:src="@{/plugins/datatables/dataTables.responsive.min.js}" type="text/javascript"/>
+        <!--<script th:src="@{/plugins/datatables/dataTables.scroller.min.js}" type="text/javascript"/>-->
+        <!--<script th:src="@{/plugins/datatables/dataTables.colVis.js}" type="text/javascript"/>-->
+        <!--<script th:src="@{/plugins/datatables/dataTables.fixedColumns.min.js}" type="text/javascript"/>-->
+        <script th:src="@{/plugins/jquery-datatables-editable/jquery.dataTables.js}" type="text/javascript"/>
+        <script th:src="@{/js/own/nprogress.js}" type="text/javascript"/>
+
+
+        <script th:src="@{/pages/datatables.init.js}" type="text/javascript"/>
+
+        <script th:src="@{/plugins/ladda-buttons/js/spin.min.js}" type="text/javascript"/>
+        <script th:src="@{/plugins/ladda-buttons/js/ladda.min.js}" type="text/javascript"/>
+        <script th:src="@{/plugins/ladda-buttons/js/ladda.jquery.min.js}" type="text/javascript"/>
+
+        <script th:src="@{/js/compte-autocomplete.js}" type="text/javascript"/>
+        <script th:src="@{/plugins/multiselect/js/jquery.multi-select.js}" type="text/javascript"/>
+        <script th:src="@{/plugins/jquery-quicksearch/jquery.quicksearch.js}" type="text/javascript"/>
+
+        <!--wizard initialization-->
+
+
+        <script th:src="@{/plugins/switchery/js/switchery.min.js}" type="text/javascript"/>
+        <!--alert notification js-->
+        <script th:src="@{/plugins/notifyjs/js/notify.js}" type="text/javascript"/>
+        <script th:src="@{/plugins/notifications/notify-metro.js}" type="text/javascript"/>
+
+        <!--<script th:src="@{/plugins/bootstrap-select/js/bootstrap-select.min.js}" type="text/javascript"/>-->
+        <!--<script th:src="@{/plugins/select2/js/select2.min.js}" type="text/javascript"/>-->
+        <script th:src="@{/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js}" type="text/javascript"/>
+        <script th:src="@{/js/jquery.etiquette.menu.js}" type="text/javascript"/>
+
+        <script src="../static/plugins/custombox/js/custombox.min.js" th:src="@{/plugins/custombox/js/custombox.min.js}"></script>
+        <script src="../static/plugins/custombox/js/legacy.min.js" th:src="@{/plugins/custombox/js/legacy.min.js}"></script>
+
+        <!--<script th:src="@{/plugins/jquery/steps/js/jquery.steps.min.js}" type="text/javascript"/>-->
+        <script th:src="@{/plugins/jquery-validation/js/jquery.validate.min.js}" type="text/javascript"/>
+        <!--<script th:src="@{/pages/jquery.wizard-init.js}" type="text/javascript"/>-->
+        <!--select 2 js-->
+        <script th:src="@{/select2.develop/js/select2.min.js}"></script>
+        <script th:src="@{/select2.develop/js/i18n/fr.js}"></script>
+        <!--selectize select multi-criteres js-->
+        <script th:src="@{/js/selectize/angular-selectize.js}"></script>
+        <script th:src="@{/js/selectize/selectize.js}"></script>
+        <script th:src="@{/plugins/jstree/jstree.min.js}"></script>
+        <script th:src="@{/js/ngJsTree.min.js}"></script>
+        <script th:src="@{/Loading-Spinner/jquery.preloaders.js}"></script>
+
+        <script th:src="@{/js/progress.bar.js}"></script>
+        <!--oi.select-->
+        <link th:href="@{/css/oi/select.min.css}" rel="stylesheet" type="text/css" />
+        <script th:src="@{/js/oi/select-tpls.min.js}" type="text/javascript"/>
+        <!--oi.select-->
+
+
+        <!--FooTable Example-->
+        <script type="text/javascript">
+            NProgress.start();
+            showSpinner();
+
+            $(function () {
+                if ($("#msg_global").attr("data-msg-visible")) {
+                    var type;
+                    if ($("#msg_global").attr("data-alert") === "danger") {
+                        type = 'error';
+                    } else if ($("#msg_global").attr("data-alert") === "info") {
+                        type = 'success';
+                    } else {
+                        type = $("#msg_global").attr("data-alert");
+                    }
+                    var detail = "";
+                    $("#msg_global ul li").each(function (i, el) {
+                        detail = detail + $(this).attr("data-message") + "<br/>";
+                    });
+                    $.Notification.notify(type, 'top right', $("#msg_global").attr("data-erreur-principal"),
+                            detail);
+                }
+            });
+            function getUsername() {
+                var appUrl = $('#appUrl').attr("href");
+                $.ajax({
+                    type: "GET",
+                    contentType: 'application/json',
+                    url: appUrl + "menu/connected-user-name",
+                    dataType: 'json',
+                    cache: false,
+                    success: function (data, textStatus, jqXHR) {
+                        console.log("data " + data.username);
+                        $(".username").text(data);
+                    }, error: function (jqXHR, textStatus, errorThrown) {
+                        //console.log("textStatus " + textStatus);
+                        console.info(JSON.stringify(textStatus));
+                    }
+                });
+            }
+
+
+            function getUsername() {
+                doGet(("menu/connected-user-name"),
+                        function (data)
+                        {
+                            //$(".username").text(data);
+                            $(".username").text(data.split(' ')[0]);
+                            $(".firstname").text(data.split(' ')[1]);
+                        },
+                        function (error)
+                        {
+                            console.info(error);
+                        });
+            }
+            function getVersion() {
+                var appUrl = $('#appUrl').attr("href");
+                $("#year").text((new Date().toJSON()).substring(0, 4));
+
+//                doGet(("http://localhost:8086" +appUrl + "api/security/getVersion"),
+//                        function (data)
+//                        {
+//                            jslog(data);
+//                            alert(data);
+//
+//                            //$(".username").text(data);
+////                            $(".username").text(data.split(' ')[0]);
+////                            $(".firstname").text(data.split(' ')[1]);
+//                        },
+//                        function (error)
+//                        {
+//                            console.info(error);
+//                        });
+            }
+
+            function getAppName() {
+                doGet(("menu/app-name"),
+                        function (data)
+                        {
+                            //                            console.info(data)
+                            $(".app-name-t").text(data);
+                        },
+                        function (error)
+                        {
+                            //                            console.info(error)
+                        });
+            }
+
+            function getAppTitle() {
+                doGet(("menu/app-title"),
+                        function (data)
+                        {
+//                                                        console.info("menu app-title "+data);
+                            $(".app-title-t").text(data);
+                        },
+                        function (error)
+                        {
+                            console.info(error);
+                        });
+            }
+            //
+            //
+            //
+            function getHeaderMenu() {
+                doGet(("menu/header-value"),
+                        function (data)
+                        {
+
+                            $(".header-t").html(data);
+                        },
+                        function (error)
+                        {
+                            //                            console.info(error)
+                        });
+            }
+            //
+            //
+            //
+            function getHeaderMenu() {
+                doGet(("menu/header-value"),
+                        function (data)
+                        {
+
+                            $(".header-t").html(data);
+                        },
+                        function (error)
+                        {
+//                            console.info(error)
+                        });
+            }
+
+            function getLeftMenu() {
+                doGet(("menu/left-value"),
+                        function (data)
+                        {
+                            $(".left-t").html(data);
+                            var selectedMenu = sessionStorage.getItem("nomClass");
+                            var selectedSousMenu = sessionStorage.getItem("clickMenuClass");
+                            //activer le menu
+                            if (selectedMenu != '') {
+                                $("." + selectedMenu).addClass('active');
+                                //activer le sous menu du menu selectionné
+                                $("." + selectedMenu + " " + "." + selectedSousMenu).closest('li').addClass('active');
+                            }
+                        },
+                        function (error)
+                        {
+                            console.info(error);
+                        });
+            }
+            function getProfilMenu() {
+                doGet(("menu/profil-value"),
+                        function (data)
+                        {
+
+                            $(".profil-t").html(data);
+                        },
+                        function (error)
+                        {
+
+                        });
+            }
+            function getOtherMenu() {
+                console.log(window.location.pathname);
+                doGet(("menu/other-value?url=" + window.location.pathname),
+                        function (data)
+                        {
+
+                            $(".other-t").html(data);
+                        },
+                        function (error)
+                        {
+                            console.info(error);
+                        });
+            }
+            function getClientName() {
+                doGet(("menu/client-name"),
+                        function (data)
+                        {
+                            $(".client-name-t").text(data);
+                        },
+                        function (error)
+                        {
+
+                        });
+            }
+
+            $(document).ready(function () {
+                NProgress.done();
+                hideSpinner();
+                getAppTitle();
+                getUsername();
+                getAppName();
+                getClientName();
+                getHeaderMenu();
+                getOtherMenu();
+                getLeftMenu();
+                getProfilMenu();
+                getVersion();
+                $('.counter').counterUp({
+                    delay: 100,
+                    time: 1200
+                });
+                $(".knob").knob();
+                // Bind normal buttons
+                $('.ladda-button').ladda('bind', {timeout: 2000});
+                // Bind progress buttons and simulate loading progress
+                Ladda.bind('.progress-demo .ladda-button', {
+                    callback: function (instance) {
+                        var progress = 0;
+                        var interval = setInterval(function () {
+                            progress = Math.min(progress + Math.random() * 0.1, 1);
+                            instance.setProgress(progress);
+                            if (progress === 1) {
+                                instance.stop();
+                                clearInterval(interval);
+                            }
+                        }, 200);
+                    }
+                });
+                var l = $('.ladda-button-demo').ladda();
+                l.click(function () {
+                    // Start loading
+                    l.ladda('start');
+                    // Timeout example
+                    // Do something in backend and then stop ladda
+                    setTimeout(function () {
+                        l.ladda('stop');
+                    }, 12000);
+                });
+            });
+        </script>
+        <th:block layout:fragment="stylesheets"></th:block>
+        <script th:src="@{/pages/jquery.form-advanced.init.js}" type="text/javascript"/>
+        <script th:src="@{/plugins/sweet-alert2/sweetalert2.min.js}"></script>
+        <script th:src="@{/js/own/generic_ajax.js}"></script>
+        <script th:src="@{/js/own/jquery-loading-bar.js}" type="text/javascript"/>
+        <script th:src="@{/js/own/app.js}" type="text/javascript"/>
+        <script th:src="@{/js/own/parsley.min.js}" type="text/javascript"/>
+        <script th:src="@{/js/own/dynamic-number.min.js}" type="text/javascript"/>
+        <script th:src="@{/js/own/en.js}" type="text/javascript"/>
+        <script th:src="@{/js/own/fr.js}" type="text/javascript"/>
+        <script th:src="@{/js/own/editablejs.js}" type="text/javascript"/>
+        <script th:src="@{/js/jquery.core.js}" type="text/javascript"/>
+        <script th:src="@{/plugins/bootstrap-tagsinput/js/bootstrap-tagsinput.min.js}"></script>
+
+        <script th:src="@{/plugins/ladda-buttons/js/spin.min.js}"></script>
+        <script th:src="@{/plugins/ladda-buttons/js/ladda.min.js}"></script>
+        <script th:src="@{/plugins/ladda-buttons/js/ladda.jquery.min.js}"></script>
+
+
+        <!--Jquery file upload-->
+        <script th:src="@{/plugins/jquery-file-upload/js/vendor/jquery.ui.widget.js}"></script>
+        <script th:src="@{/plugins/jquery-file-upload/js/jquery.iframe-transport.js}"></script>
+        <script th:src="@{/plugins/jquery-file-upload/js/jquery.fileupload.js}"></script>
+        <script th:src="@{/pages/jquery.chat.js}" type="text/javascript"></script>
+
+        <!--Angular js xeditable dependencies (tableau editable)-->
+        <!--        <script th:src="@{/js/own/xeditable.js}"></script>
+                <script th:src="@{/js/own/xeditable.min.js}"></script>-->
+
+        <th:block layout:fragment="scripts"></th:block>
+
+        <script type="text/javascript">
+
+            //jfofjfofofjo
+            $(window).bind("load", function () {
+
+            });
+            function usernames() {
+//                console.log("function usernames");
+                $(".names").each(function () {
+                    let urle = "" + $(this).attr("href");
+                    let current = $(this);
+                    $.ajax({
+                        url: urle,
+                        type: "GET",
+                        success: function (data, textStatus, jqXHR) {
+                            current.html(data.value);
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+//                            console.log("error:" + JSON.stringify(errorThrown));
+                        }
+                    });
+                });
+            }
+
+            //initialiser l'ecran
+            $(function () {
+
+                var status = sessionStorage.getItem("status");
+                if (typeof (status) === "undefined") {
+                    $('.button-menu-mobile').click();
+                } else if (status === 'enlarged') {
+                    $('#main-content-page').css("margin-left", "70px");
+                    $('.button-menu-mobile').click();
+                    $('.list-unstyled').css("display", "table-column");
+                } else {
+                    $('#main-content-page').css("margin-left", "240px");
+                    $('.list-unstyled').css("display", "block");
+                }
+
+            });
+            $(function () {
+                let menuCrnt = $("#welcomen").attr("data-id");
+                let activeMenu = sessionStorage.getItem("nomClass");
+
+//                console.log("MENU ACTIVE  " + activeMenu);
+                if (menuCrnt === "paramContexte") {
+                    menuCrnt = activeMenu;
+                }
+//                console.log("MENU CRNT " + menuCrnt);
+//                console.log("MENU ACTIVE MENU " + activeMenu);
+                if (activeMenu != menuCrnt) {
+                    if (activeMenu != '') {
+                        $("." + activeMenu).removeClass("active");
+                    }
+                    sessionStorage.setItem("nomClass", menuCrnt);
+                    var selector = sessionStorage.getItem("nomClass");
+                    if (selector != '') {
+                        $("." + selector).addClass("active");
+                    }
+                }
+            });
+            /**
+             * fonction qui sauvegarde le menu sélectionné 
+             * @param {type} nomClass
+             * @returns {undefined}
+             */
+            function saveInSession(nomClass) {
+                sessionStorage.setItem("nomClass", nomClass);
+                $('.content').css("display", "none");
+                $('.tabcont').css("display", "block");
+            }
+
+            /**
+             * fonction qui sauvegarde le sous menu sélectionné
+             * @param {type} event
+             * @returns {undefined}
+             */
+            function getClassSession(event) {
+                var myClas = $(event).attr('class');
+                sessionStorage.setItem("clickMenuClass", myClas);
+            }
+
+            function viderLeContainer() {
+//                console.log("Trace !");
+//                console.log("Trace 2!");
+                $('.tabcont').css("display", "none");
+            }
+
+            function afficherLeCont() {
+//                console.log("Trace !");
+//                console.log("Trace 2!");
+                $('.tabcont').css("display", "block");
+            }
+
+            function jslog(logText) {
+                console.log(logText);
+            }
+        </script>
+
+        <script type="text/javascript">
+
+            function viewTracking(event) {
+                var conceptMetier = $(event).attr("data-concept-metier");
+                var id = $(event).attr("data-row-id");
+                var url = "tracking/" + conceptMetier + "/" + id;
+//                alert(url);
+//                console.log("conc " + conceptMetier);
+//                console.log("id " + id);
+                $('#tracking-content').html("");
+                doGet((url),
+                        function (data) {
+                            $('#tracking-content').html(data);
+                            usernames();
+                        },
+                        function (error) {
+//                            console.info(JSON.stringify(error));
+                        });
+            }
+            function viewTrackingCycle(event) {
+                var conceptMetier = $(event).attr("data-concept-metier");
+                var id = $(event).attr("data-row-id");
+                var url = "tracking/w/" + conceptMetier + "/" + id;
+                jslog("viewTrackingCycle url: " + url);
+//                console.log("conc " + conceptMetier);
+//                console.log("id " + id);
+                $('#tracking-content-cycle').html("");
+                doGet((url),
+                        function (data) {
+                            $('#tracking-content-cycle').html(data);
+                            usernames();
+                        },
+                        function (error) {
+//                            console.info(JSON.stringify(error));
+                        });
+            }
+
+
+        </script>
+
+        <!--        <script type="text/javascript">
+                    $('.selectGenerale').val(['1', '2']);
+                    $('.selectGenerale').select2({
+                        placeholder: 'Select an option',
+                        //                    set("theme", "classic")
+                        //                    ajax: {
+                        //                        url: 'api/parameter/reseau/typeActeur/listCategorie'
+                        //                    }
+                    });
+                </script>-->
+    </body>
+</html>

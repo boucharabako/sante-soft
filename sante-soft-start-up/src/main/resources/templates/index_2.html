@@ -1,0 +1,310 @@
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org" 
+      layout:decorator="template">
+    <head>
+        <title>achat-soft</title>
+        <link th:href="@{/plugins/jstree/style.css}" rel="stylesheet" type="text/css" />
+        <link th:href="@{/plugins/multiselect/css/multi-select.css}"  rel="stylesheet" type="text/css" />
+        <link th:href="@{/plugins/bootstrap-select/css/bootstrap-select.min.css}" rel="stylesheet" />
+        <!-- DataTables -->
+        <link th:href="@{/plugins/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet" type="text/css" />
+        <link th:href="@{/plugins/datatables/buttons.bootstrap4.min.css}" rel="stylesheet" type="text/css" />
+        <!-- Responsive datatable examples -->
+        <link th:href="@{/plugins/datatables/responsive.bootstrap4.min.css}" rel="stylesheet" type="text/css" /> 
+        <script th:src="@{/js/controllers/userController.js}"></script>
+        <style type="text/css">
+            .myScrool{
+                overflow-y: scroll; 
+                height: 350px!important;
+                max-height: 350px!important;
+            }
+            .row
+            {
+                margin-left: -20px;
+                margin-right: -20px;
+            }
+            .second-card{
+                box-shadow: 0 0px 15px 0 rgba(0, 0, 0, 0.09), 2px 4px 24px 0 rgba(0, 0, 0, 0.02);
+            }
+            fieldset.scheduler-border {
+                border: 1px solid #c1bdbd !important;
+                border-radius: 5px;
+            }
+            h4, strong, .text-muted {
+                font-size: 17px;
+            }
+            .bg-gray
+            {
+                background-color: #cccccc  !important;
+            }
+            .bg-custom {
+                background-color: #7e57c2 !important;
+            }
+            .alink{
+                font-size: 11px;
+            }
+            .alink:link {
+                color:black;
+            }
+            .alink:visited {
+                color:black;
+            }
+            .alink:hover {
+                color:#2bb605 !important;
+            }
+            .table-box .table-detail-b {
+                display: inherit;
+                vertical-align: middle;
+                padding: 0;
+                margin: -15px 0px 15px -10px;
+            }
+            .table-box .table-detail-n {
+                display: inherit;
+                margin-left: auto;
+                margin-right: auto;
+                font-weight: bold;
+
+            }
+            .custom-width{
+                width: 20% !important;
+            }
+        </style>
+        <style type="text/css">
+            .side-menu.left {
+
+
+            }
+            .footer {
+
+            }
+            .content-page {
+
+            }
+        </style>
+    </head> 
+    <body>
+
+        <div layout:fragment="content"  id="welcomen" data-id="profils" data-ng-cloak="" ng-controller="userController">
+            <!-- Page-Title -->
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="page-title-box">
+                        <ul class="nav nav-pills nav-justified" role="tablist">
+                            <li class="nav-item waves-effect waves-light">
+                                <a class="nav-link active" data-toggle="tab" id="tout" href="#home-1" role="tab"   ng-click="tableauDeBordTout()" aria-selected="true">Tout Services</a>
+                            </li>
+                            <li class="nav-item waves-effect waves-light">
+                                <a class="nav-link" data-toggle="tab" href="#profile-1" id="tout" role="tab" ng-click="tableauDeBordMoi()" aria-selected="false">Mon Service</a>
+                            </li>
+                            <li class="nav-item waves-effect waves-light">
+                                <a class="nav-link" data-toggle="tab" href="#settings-1" role="tab" aria-selected="false" ng-click="tableauDeBordAutre()" >Autres</a>
+                            </li>
+                        </ul>
+
+                        <!--                        <h4 class="page-title">Tableau de Bord</h4>-->
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!--            <div class="row">
+                            
+                            <canvas id="graph"></canvas>
+            
+                            <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+                            
+                            
+            
+                        </div>end row-->
+            <div class="row">
+                <div class="col-lg-8"> 
+
+                    <div class="row">
+
+                        <div class="col-lg-3">
+                            <div class="card dash-data-card text-center">
+                                <div class="card-body"> 
+                                    <div class="icon-info mb-3">
+                                        <i class="fas fa-bell bg-soft-warning"></i>
+                                    </div>
+                                    <h3 class="text-warning" ng-bind="totalDeclaration"></h3>
+                                    <h6 class="font-14 text-dark">Total Déclarations</h6>                                                                                                                            
+                                </div><!--end card-body--> 
+                            </div><!--end card-->   
+                        </div><!-- end col-->
+                        <div class="col-lg-3">
+                            <div class="card dash-data-card text-center">
+                                <div class="card-body"> 
+                                    <div class="icon-info mb-3">
+                                        <i class="fas fa-handshake bg-soft-info"></i>
+                                    </div>
+                                    <h3 class="text-info" ng-bind="totalDeclarationAvecSuite"></h3>
+                                    <h6 class="font-14 text-dark">Déclaration avec suite</h6>                                                                                                                            
+                                </div><!--end card-body--> 
+                            </div><!--end card-->   
+                        </div><!-- end col-->  
+                        <div class="col-lg-3">
+                            <div class="card dash-data-card text-center">
+                                <div class="card-body"> 
+                                    <div class="icon-info mb-3">
+                                        <i class="fas fa-thumbs-up bg-soft-success"></i>
+                                    </div>
+                                    <h3 class="text-success" ng-bind="totalRequisition"></h3>
+                                    <h6 class="font-14 text-dark">Total Réquisitions</h6>                                                                                                                            
+                                </div><!--end card-body--> 
+                            </div><!--end card-->   
+                        </div><!-- end col-->
+                        <div class="col-lg-3">
+                            <div class="card dash-data-card text-center">
+                                <div class="card-body"> 
+                                    <div class="icon-info mb-3">
+                                        <i class="fas fa-handshake bg-soft-primary"></i>
+                                    </div>
+                                    <h3 class="text-primary" ng-bind="totalRequisitionAvecSuite"></h3>
+                                    <h6 class="font-14 text-dark">Réquisition Avec suite</h6>                                                                                                                            
+                                </div><!--end card-body--> 
+                            </div><!--end card-->   
+                        </div><!-- end col-->                       
+
+
+                    </div><!--end row-->                                                      
+                    <div class="card">
+                        <div class="card-body">  
+                            <h4 class="header-title mt-0">Statistique par année</h4>
+                            <div class="form-group row d-flex align-items-center">
+                                <!--<h4 class="header-title mt-0">Année</h4>-->
+                                <div class="col-sm-2 ml-5" >
+                                    <label class="control-label">Année</label>
+                                    <input type="number" min="1900" max="2099" step="1"    ng-model="annee" ng-change="tableauDeBord()" class="form-control">
+                                </div><!--end col-->
+                            </div>
+
+                            <div class="">
+                                <div id="diagramme-annuel" class="apex-charts"></div>
+                            </div>  
+                        </div><!--end card-body-->                                
+                    </div><!--end card-->                            
+                </div><!--end col-->
+                <div class="col-lg-4">                            
+                    <div class="card">
+                        <div class="card-body">
+                            <!--<canvas id="graph"></canvas>-->
+                            <h4 class="header-title mt-0">Statut des SMS</h4>
+
+                            <div id="digramme-sms" class="apex-charts mt-4"></div>                                                                       
+                            <div class="table-responsive">
+                                <table class="table border-dashed mb-0">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th class="border-bottom-0">Etat SMS</th>
+                                            <th class="border-bottom-0 text-right">Nombre</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th class="border-top-0 text-dark" scope="row"><i class="far fa-grin-stars text-success font-24 mr-2 align-middle"></i>SMS Livré</th>
+                                            <td class="border-top-0 text-right" ng-bind="totalSMSLivre"></td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-dark" scope="row"><i class="far fa-smile text-primary font-24 mr-2 align-middle"></i>SMS en Attente</th>
+                                            <td class="text-right" ng-bind="totalSMSExpire" ></td>                                                 
+                                        </tr>
+                                        <tr>
+                                            <th class="text-dark" scope="row"><i class="far fa-meh text-warning font-24 mr-2 align-middle"></i>SMS Expiré</th>
+                                            <td class="text-right" ng-bind="totalSMSEnAttente"></td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-dark" scope="row" ><i class="far fa-frown text-pink font-24 mr-2 align-middle"></i>Non livré</th>
+                                            <td class="text-right" ng-bind="totalSMSNonLivre"></td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div><!--end card-body-->
+                    </div><!--end card-->                            
+                </div><!--end col-->
+            </div><!--end row-->
+
+
+        </div>
+        <script th:src="@{/js/controllers/userController.js}"></script>
+        <!-- jQuery  -->
+        <script th:src="@{/assets/js/jquery.min.js}"></script>
+        <script th:src="@{/assets/js/jquery-ui.min.js}"></script>
+        <script th:src="@{/assets/js/bootstrap.bundle.min.js}"></script>
+        <script th:src="@{/assets/js/metismenu.min.js}"></script>
+        <script th:src="@{/assets/js/waves.js}"></script>
+        <script th:src="@{/assets/js/feather.min.js}"></script>
+        <script th:src="@{/assets/js/jquery.slimscroll.min.js}"></script>    
+
+        <!-- Required datatable js -->
+        <script th:src="@{/plugins/datatables/jquery.dataTables.min.js}"></script>
+        <script th:src="@{/plugins/datatables/dataTables.bootstrap4.min.js}"></script>
+        <!-- Buttons examples -->
+        <script th:src="@{/plugins/datatables/dataTables.buttons.min.js}"></script>
+        <script th:src="@{/plugins/datatables/buttons.bootstrap4.min.js}"></script>
+        <script th:src="@{/plugins/datatables/jszip.min.js}"></script>
+        <script th:src="@{/plugins/datatables/pdfmake.min.js}"></script>
+        <script th:src="@{/plugins/datatables/vfs_fonts.js}"></script>
+        <script th:src="@{/plugins/datatables/buttons.html5.min.js}"></script>
+        <script th:src="@{/plugins/datatables/buttons.print.min.js}"></script>
+        <script th:src="@{/plugins/datatables/buttons.colVis.min.js}"></script>
+        <!-- Responsive examples -->
+        <script th:src="@{/plugins/datatables/dataTables.responsive.min.js}"></script>
+        <script th:src="@{/plugins/datatables/responsive.bootstrap4.min.js}"></script>
+        <script th:src="@{/assets/pages/jquery.datatable.init.js}"></script>
+
+        <!-- App js -->
+        <script th:src="@{/assets/js/app.js}"></script>
+
+        <th:block layout:fragment="scripts">
+            <script type="text/javascript">
+
+                $(function () {
+                    viderLeContainer();
+                });
+            </script>
+            <script type="text/javascript">
+                $('body').on('shown.bs.modal', '.modal', function () {
+                    $(this).find('.mySelecDoc').each(function () {
+                        var dropdownParent = $(document.body);
+                        if ($(this).parents('.modal.in:first').length !== 0)
+                            dropdownParent = $(this).parents('.modal.in:first');
+                        $(this).select2({
+                            dropdownParent: dropdownParent
+                                    // ...
+                        });
+                    });
+                });
+
+                function verifierCaracteres(event) {
+                    var keyCode = event.which ? event.which : event.keyCode;
+                    var touche = String.fromCharCode(keyCode);
+                    var champ = document.getElementById('code_profil');
+                    var caracteres = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_@.';
+                    if (caracteres.indexOf(touche) >= 0) {
+                        champ.value += touche;
+                    }
+
+                }
+                ;
+
+                //                $(document).ready(function () {
+                //
+                //                    $("#entiteactive").on("select_node.jstree",
+                //                            function (evt, data) {
+                //                                $('#entiteOrg').val(data.node.id);
+                //                                $('#labelEntite').attr('data-id', data.node.id);
+                //                                loadEntite();
+                //                            }
+                //                    );
+                //
+                //                });
+
+            </script>
+        </th:block>
+    </body>
+
+</html>

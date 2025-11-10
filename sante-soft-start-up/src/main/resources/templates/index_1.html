@@ -1,0 +1,325 @@
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org" 
+      layout:decorator="template">
+    <head>
+        <title>achat-soft</title>
+        <link th:href="@{/plugins/jstree/style.css}" rel="stylesheet" type="text/css" />
+        <link th:href="@{/plugins/multiselect/css/multi-select.css}"  rel="stylesheet" type="text/css" />
+        <link th:href="@{/plugins/bootstrap-select/css/bootstrap-select.min.css}" rel="stylesheet" />
+        <!-- DataTables -->
+        <link th:href="@{/plugins/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet" type="text/css" />
+        <link th:href="@{/plugins/datatables/buttons.bootstrap4.min.css}" rel="stylesheet" type="text/css" />
+        <!-- Responsive datatable examples -->
+        <link th:href="@{/plugins/datatables/responsive.bootstrap4.min.css}" rel="stylesheet" type="text/css" /> 
+        <script th:src="@{/js/controllers/userController.js}"></script>
+        <style type="text/css">
+            .myScrool{
+                overflow-y: scroll; 
+                height: 350px!important;
+                max-height: 350px!important;
+            }
+            .row
+            {
+                margin-left: -20px;
+                margin-right: -20px;
+            }
+            .second-card{
+                box-shadow: 0 0px 15px 0 rgba(0, 0, 0, 0.09), 2px 4px 24px 0 rgba(0, 0, 0, 0.02);
+            }
+            fieldset.scheduler-border {
+                border: 1px solid #c1bdbd !important;
+                border-radius: 5px;
+            }
+            h4, strong, .text-muted {
+                font-size: 17px;
+            }
+            .bg-gray
+            {
+                background-color: #cccccc  !important;
+            }
+            .bg-custom {
+                background-color: #7e57c2 !important;
+            }
+            .alink{
+                font-size: 11px;
+            }
+            .alink:link {
+                color:black;
+            }
+            .alink:visited {
+                color:black;
+            }
+            .alink:hover {
+                color:#2bb605 !important;
+            }
+            .table-box .table-detail-b {
+                display: inherit;
+                vertical-align: middle;
+                padding: 0;
+                margin: -15px 0px 15px -10px;
+            }
+            .table-box .table-detail-n {
+                display: inherit;
+                margin-left: auto;
+                margin-right: auto;
+                font-weight: bold;
+
+            }
+            .custom-width{
+                width: 20% !important;
+            }
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                background-color: #f7f7f7;
+            }
+
+            header .top-bar {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px;
+                background-color: #2dbd9f;
+            }
+
+            header .top-bar .logo img {
+                height: 40px;
+            }
+
+            header .top-bar .search-bar {
+                flex: 1;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            header .top-bar .search-bar input {
+                width: 300px;
+                padding: 5px;
+                border: none;
+                border-radius: 5px;
+            }
+
+            header .top-bar .search-bar button {
+                background-color: #ff5050;
+                color: white;
+                border: none;
+                padding: 5px 10px;
+                border-radius: 5px;
+                margin-left: 5px;
+            }
+
+            header .top-bar .menu a {
+                color: white;
+                text-decoration: none;
+                margin: 0 10px;
+            }
+
+            .banner img {
+                width: 100%;
+            }
+
+            .flash-sales {
+                background-color: white;
+                padding: 20px;
+                margin: 20px;
+                border-radius: 10px;
+            }
+
+            .flash-sales .product-list {
+                display: flex;
+                justify-content: space-around;
+            }
+
+            .flash-sales .product {
+                text-align: center;
+            }
+
+            .flash-sales .product img {
+                max-width: 100px;
+            }
+
+            .flash-sales .product .price {
+                color: #ff5050;
+            }
+
+            .flash-sales .product .old-price {
+                text-decoration: line-through;
+                color: grey;
+                margin-left: 5px;
+            }
+
+            aside {
+                position: fixed;
+                right: 20px;
+                top: 100px;
+                width: 200px;
+                background-color: white;
+                padding: 10px;
+                border-radius: 10px;
+            }
+
+            aside h3 {
+                margin-top: 0;
+            }
+
+            footer {
+                background-color: #2dbd9f;
+                color: white;
+                text-align: center;
+                padding: 10px;
+                position: fixed;
+                bottom: 0;
+                width: 100%;
+            }
+        </style>
+        <style type="text/css">
+            .side-menu.left {
+
+
+            }
+            .footer {
+
+            }
+            .content-page {
+
+            }
+        </style>
+    </head> 
+    <body>
+
+        <div layout:fragment="content"  id="welcomen" data-id="profils" data-ng-cloak="" ng-controller="userController">
+            <!-- Page-Title -->
+             <div class="search-bar">
+                <input type="text" placeholder="Flexofytol, Vitamines...">
+                <button>🔍</button>
+            </div>
+            <div class="menu">
+                <a href="#">Aide</a>
+                <a href="#">Se connecter</a>
+                <a href="#">Mon Panier</a>
+            </div>
+        </div>
+    </header>
+    <main>
+        <section class="banner">
+            <img src="checklist-banner.png" alt="Vérifiez votre pharmacie de vacances avec notre check-list">
+        </section>
+        <section class="flash-sales">
+            <h2>Ventes Flash</h2>
+            <div class="product-list">
+                <div class="product">
+                    <img src="nerixx.png" alt="Nerixx 30 Comprimés">
+                    <p class="price">16.77€</p>
+                </div>
+                <div class="product">
+                    <img src="flexofytol-forte.png" alt="Flexofytol Forte 84 Comprimés">
+                    <p class="price">33.54€ <span class="old-price">59.9€</span></p>
+                </div>
+                <div class="product">
+                    <img src="vinalac.png" alt="Vinalac DHA/EPA 60 Comprimés + 60 Capsules">
+                    <p class="price">31.53€ <span class="old-price">48.5€</span></p>
+                </div>
+            </div>
+        </section>
+    </main>
+    <aside>
+        <div class="transporters">
+            <h3>Nos transporteurs</h3>
+            <ul>
+                <li>bpost</li>
+                <li>colissimo</li>
+                <li>dpd</li>
+            </ul>
+        </div>
+        <div class="loyalty">
+            <h3>Votre fidélité récompensée</h3>
+            <p>500 POINTS = 5€</p>
+        </div>
+        <div class="social">
+            <h3>Rejoignez-nous sur Facebook!</h3>
+        </div>
+    </aside>
+    <footer>
+        <p>Pharmacodel.com est une pharmacie en ligne développée par la Pharmacie Centrale de Maurage.</p>
+    </footer>
+        <script th:src="@{/js/controllers/userController.js}"></script>
+        <!-- jQuery  -->
+        <script th:src="@{/assets/js/jquery.min.js}"></script>
+        <script th:src="@{/assets/js/jquery-ui.min.js}"></script>
+        <script th:src="@{/assets/js/bootstrap.bundle.min.js}"></script>
+        <script th:src="@{/assets/js/metismenu.min.js}"></script>
+        <script th:src="@{/assets/js/waves.js}"></script>
+        <script th:src="@{/assets/js/feather.min.js}"></script>
+        <script th:src="@{/assets/js/jquery.slimscroll.min.js}"></script>    
+
+        <!-- Required datatable js -->
+        <script th:src="@{/plugins/datatables/jquery.dataTables.min.js}"></script>
+        <script th:src="@{/plugins/datatables/dataTables.bootstrap4.min.js}"></script>
+        <!-- Buttons examples -->
+        <script th:src="@{/plugins/datatables/dataTables.buttons.min.js}"></script>
+        <script th:src="@{/plugins/datatables/buttons.bootstrap4.min.js}"></script>
+        <script th:src="@{/plugins/datatables/jszip.min.js}"></script>
+        <script th:src="@{/plugins/datatables/pdfmake.min.js}"></script>
+        <script th:src="@{/plugins/datatables/vfs_fonts.js}"></script>
+        <script th:src="@{/plugins/datatables/buttons.html5.min.js}"></script>
+        <script th:src="@{/plugins/datatables/buttons.print.min.js}"></script>
+        <script th:src="@{/plugins/datatables/buttons.colVis.min.js}"></script>
+        <!-- Responsive examples -->
+        <script th:src="@{/plugins/datatables/dataTables.responsive.min.js}"></script>
+        <script th:src="@{/plugins/datatables/responsive.bootstrap4.min.js}"></script>
+        <script th:src="@{/assets/pages/jquery.datatable.init.js}"></script>
+
+        <!-- App js -->
+        <script th:src="@{/assets/js/app.js}"></script>
+
+        <th:block layout:fragment="scripts">
+            <script type="text/javascript">
+
+                $(function () {
+                    viderLeContainer();
+                });
+            </script>
+            <script type="text/javascript">
+                $('body').on('shown.bs.modal', '.modal', function () {
+                    $(this).find('.mySelecDoc').each(function () {
+                        var dropdownParent = $(document.body);
+                        if ($(this).parents('.modal.in:first').length !== 0)
+                            dropdownParent = $(this).parents('.modal.in:first');
+                        $(this).select2({
+                            dropdownParent: dropdownParent
+                                    // ...
+                        });
+                    });
+                });
+
+                function verifierCaracteres(event) {
+                    var keyCode = event.which ? event.which : event.keyCode;
+                    var touche = String.fromCharCode(keyCode);
+                    var champ = document.getElementById('code_profil');
+                    var caracteres = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_@.';
+                    if (caracteres.indexOf(touche) >= 0) {
+                        champ.value += touche;
+                    }
+
+                }
+                ;
+
+                //                $(document).ready(function () {
+                //
+                //                    $("#entiteactive").on("select_node.jstree",
+                //                            function (evt, data) {
+                //                                $('#entiteOrg').val(data.node.id);
+                //                                $('#labelEntite').attr('data-id', data.node.id);
+                //                                loadEntite();
+                //                            }
+                //                    );
+                //
+                //                });
+
+            </script>
+        </th:block>
+    </body>
+
+</html>
