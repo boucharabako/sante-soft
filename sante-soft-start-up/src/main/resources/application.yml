@@ -16,9 +16,9 @@ system:
         label: francais
     user:
         username: admin
-        email: dev.ngsafrica@gmail.com
-        first-name: ngs
-        last-name: ngs
+        email: bb@gmail.com
+        first-name: bb
+        last-name: bb
     user-password:
         password: admin2020
     

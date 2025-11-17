@@ -1,0 +1,19 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 19 juin 2018, 10:17:49
+    Author     : Hermann NGS_002
+*/
+
+.icon-car {
+  background-image: url('../path/to/icons/icon.png');
+  background-position: center center;
+  height: 16px;
+  width: 16px;
+}
+
+
+

@@ -30,16 +30,10 @@ public class TypeEtablissement extends AbstractAuditingEntity implements Seriali
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
     @Column(name = "id")
     private String id;
-    @Column(name = "code_etablissement")
-    private String codeEtablissement;
-    @Column(name = "libelle_etablissement")
-    private String libelleEtablissement;
-    @Column(name = "region_etablissement")
-    private String regionEtablissement;
-    @Column(name = "type_etablissement")
-    private String typeEtablissement;
-    @Column(name = "adresse_etablissement")
-    private String adresse;
+    @Column(name = "code_type_etablissement")
+    private String codeTypeEtablissement;
+    @Column(name = "libelle_type_etablissement")
+    private String libelleTypeEtablissement;
 
     public String getId() {
         return id;
@@ -49,50 +43,26 @@ public class TypeEtablissement extends AbstractAuditingEntity implements Seriali
         this.id = id;
     }
 
-    public String getCodeEtablissement() {
-        return codeEtablissement;
+    public String getCodeTypeEtablissement() {
+        return codeTypeEtablissement;
     }
 
-    public void setCodeEtablissement(String codeEtablissement) {
-        this.codeEtablissement = codeEtablissement;
+    public void setCodeTypeEtablissement(String codeTypeEtablissement) {
+        this.codeTypeEtablissement = codeTypeEtablissement;
     }
 
-    public String getLibelleEtablissement() {
-        return libelleEtablissement;
+    public String getLibelleTypeEtablissement() {
+        return libelleTypeEtablissement;
     }
 
-    public void setLibelleEtablissement(String libelleEtablissement) {
-        this.libelleEtablissement = libelleEtablissement;
-    }
-
-    public String getRegionEtablissement() {
-        return regionEtablissement;
-    }
-
-    public void setRegionEtablissement(String regionEtablissement) {
-        this.regionEtablissement = regionEtablissement;
-    }
-
-    public String getTypeEtablissement() {
-        return typeEtablissement;
-    }
-
-    public void setTypeEtablissement(String typeEtablissement) {
-        this.typeEtablissement = typeEtablissement;
-    }
-
-    public String getAdresse() {
-        return adresse;
-    }
-
-    public void setAdresse(String adresse) {
-        this.adresse = adresse;
+    public void setLibelleTypeEtablissement(String libelleTypeEtablissement) {
+        this.libelleTypeEtablissement = libelleTypeEtablissement;
     }
 
     @Override
     public String toString() {
-        return "Etablissement{" + "id=" + id + ", codeEtablissement=" + codeEtablissement + ", libelleEtablissement=" + libelleEtablissement + ", regionEtablissement=" + regionEtablissement + ", typeEtablissement=" + typeEtablissement + ", adresse=" + adresse + '}';
+        return "TypeEtablissement{" + "id=" + id + ", codeTypeEtablissement=" + codeTypeEtablissement + ", libelleTypeEtablissement=" + libelleTypeEtablissement + '}';
     }
-    
-    
+
+   
 }

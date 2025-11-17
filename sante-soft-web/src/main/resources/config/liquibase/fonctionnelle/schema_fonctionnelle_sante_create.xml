@@ -1,0 +1,450 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    
+    
+    <changeSet author="Bouchara (generated)" id="16-10-2025-1-5">
+        <createTable schemaName="${sante_schema_name}" tableName="type_etablissement">
+            <column name="id" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+
+            <!-- Colonnes d'audit -->
+            <column name="created_by" type="VARCHAR(50)"/>
+            <column name="created_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="created_user_ip_adresse" type="VARCHAR(255)"/>
+            <column name="created_user_agent_info" type="VARCHAR(255)"/>
+            <column name="created_user_device" type="VARCHAR(255)"/>
+            <column name="created_user_zone" type="VARCHAR(255)"/>
+
+            <column name="last_modified_by" type="VARCHAR(50)"/>
+            <column name="last_modified_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="last_modified_user_ip_adresse" type="VARCHAR(255)"/>
+            <column name="last_modified_user_agent_info" type="VARCHAR(255)"/>
+            <column name="last_modified_user_device" type="VARCHAR(255)"/>
+            <column name="last_modified_user_zone" type="VARCHAR(255)"/>
+
+            <!-- Colonnes de TypeEtablissement -->
+            <column name="code_type_etablissement" type="VARCHAR(15)"/>
+            <column name="libelle_type_etablissement" type="VARCHAR(100)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-21">
+        <addPrimaryKey schemaName="${sante_schema_name}" columnNames="id" constraintName="type_etablissement_pkey" tableName="type_etablissement"/>
+    </changeSet>
+ 
+
+    <changeSet author="Bouchara (generated)" id="16-10-2025-1-2">
+        <createTable schemaName="${sante_schema_name}" tableName="etablissement">
+            <column name="id" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+
+            <!-- Colonnes d'audit -->
+            <column name="created_by" type="VARCHAR(50)"/>
+            <column name="created_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="created_user_ip_adresse" type="VARCHAR(255)"/>
+            <column name="created_user_agent_info" type="VARCHAR(255)"/>
+            <column name="created_user_device" type="VARCHAR(255)"/>
+            <column name="created_user_zone" type="VARCHAR(255)"/>
+
+            <column name="last_modified_by" type="VARCHAR(50)"/>
+            <column name="last_modified_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="last_modified_user_ip_adresse" type="VARCHAR(255)"/>
+            <column name="last_modified_user_agent_info" type="VARCHAR(255)"/>
+            <column name="last_modified_user_device" type="VARCHAR(255)"/>
+            <column name="last_modified_user_zone" type="VARCHAR(255)"/>
+
+            <!-- Colonnes de l'entité -->
+            <column name="code_etablissement" type="VARCHAR(15)"/>
+            <column name="libelle_etablissement" type="VARCHAR(100)"/>
+            <column name="region_etablissement" type="VARCHAR(100)"/>
+            <column name="type_etablissement" type="VARCHAR(15)"/>
+            <column name="adresse_etablissement" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-22">
+        <addPrimaryKey schemaName="${sante_schema_name}" columnNames="id" constraintName="etablissement_pkey" tableName="etablissement"/>
+    </changeSet>
+    
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-23">
+        <addForeignKeyConstraint baseTableSchemaName="${sante_schema_name}" baseColumnNames="type_etablissement" baseTableName="etablissement" constraintName="type_ets_on_etablisement_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="type_etablissement" referencedTableSchemaName="${sante_schema_name}"/>
+    </changeSet>
+ 
+    <changeSet author="Bouchara (generated)" id="16-10-2025-1-3">
+        <createTable schemaName="${sante_schema_name}" tableName="patient">
+            <column name="id" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+
+            <!-- Colonnes d'audit -->
+            <column name="created_by" type="VARCHAR(50)"/>
+            <column name="created_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="created_user_ip_adresse" type="VARCHAR(255)"/>
+            <column name="created_user_agent_info" type="VARCHAR(255)"/>
+            <column name="created_user_device" type="VARCHAR(255)"/>
+            <column name="created_user_zone" type="VARCHAR(255)"/>
+
+            <column name="last_modified_by" type="VARCHAR(50)"/>
+            <column name="last_modified_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="last_modified_user_ip_adresse" type="VARCHAR(255)"/>
+            <column name="last_modified_user_agent_info" type="VARCHAR(255)"/>
+            <column name="last_modified_user_device" type="VARCHAR(255)"/>
+            <column name="last_modified_user_zone" type="VARCHAR(255)"/>
+
+            <!-- Colonnes de l'entité Patient -->
+            <column name="groupe_sanguin" type="VARCHAR(255)"/>
+            <column name="numero_carnet" type="VARCHAR(255)"/>
+            <column name="date_enregistrement" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-24">
+        <addPrimaryKey schemaName="${sante_schema_name}" columnNames="id" constraintName="patient_pkey" tableName="patient"/>
+    </changeSet>
+
+
+    <changeSet author="Bouchara (generated)" id="16-10-2025-1-4">
+        <createTable schemaName="${sante_schema_name}" tableName="professionnel_sante">
+            <column name="id" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <!-- Colonnes d'audit -->
+            <column name="created_by" type="VARCHAR(50)"/>
+            <column name="created_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="created_user_ip_adresse" type="VARCHAR(255)"/>
+            <column name="created_user_agent_info" type="VARCHAR(255)"/>
+            <column name="created_user_device" type="VARCHAR(255)"/>
+            <column name="created_user_zone" type="VARCHAR(255)"/>
+
+            <column name="last_modified_by" type="VARCHAR(50)"/>
+            <column name="last_modified_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="last_modified_user_ip_adresse" type="VARCHAR(255)"/>
+            <column name="last_modified_user_agent_info" type="VARCHAR(255)"/>
+            <column name="last_modified_user_device" type="VARCHAR(255)"/>
+            <column name="last_modified_user_zone" type="VARCHAR(255)"/>
+
+            <column name="numero_ordre" type="VARCHAR(50)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-25">
+        <addPrimaryKey schemaName="${sante_schema_name}" columnNames="id" constraintName="professionnel_sante_pkey" tableName="professionnel_sante"/>
+    </changeSet>
+    
+    
+    <changeSet author="Bouchara (generated)" id="16-10-2025-1-26">
+        <createTable schemaName="${sante_schema_name}" tableName="type_antecedent">
+            <column name="id" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <!-- Colonnes d'audit -->
+            <column name="created_by" type="VARCHAR(50)"/>
+            <column name="created_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="created_user_ip_adresse" type="VARCHAR(255)"/>
+            <column name="created_user_agent_info" type="VARCHAR(255)"/>
+            <column name="created_user_device" type="VARCHAR(255)"/>
+            <column name="created_user_zone" type="VARCHAR(255)"/>
+            <column name="last_modified_by" type="VARCHAR(50)"/>
+            <column name="last_modified_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="last_modified_user_ip_adresse" type="VARCHAR(255)"/>
+            <column name="last_modified_user_agent_info" type="VARCHAR(255)"/>
+            <column name="last_modified_user_device" type="VARCHAR(255)"/>
+            <column name="last_modified_user_zone" type="VARCHAR(255)"/>
+            
+            <column name="code_type_antecedent" type="VARCHAR(15)"/>
+            <column name="categorie_antecedent" type="VARCHAR(50)"/>
+            <column name="description" type="TEXT"/>
+            <column name="libelle" type="VARCHAR(100)"/>
+        </createTable>
+    </changeSet>
+    
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-27">
+        <addPrimaryKey schemaName="${sante_schema_name}" columnNames="id" constraintName="type_antecedant_pkey" tableName="type_antecedent"/>
+    </changeSet>
+    
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-28">
+        <createTable schemaName="${sante_schema_name}" tableName="antecedant_medical">
+            <column name="id" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <!-- Colonnes d'audit -->
+            <column name="created_by" type="VARCHAR(50)"/>
+            <column name="created_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="created_user_ip_adresse" type="VARCHAR(255)"/>
+            <column name="created_user_agent_info" type="VARCHAR(255)"/>
+            <column name="created_user_device" type="VARCHAR(255)"/>
+            <column name="created_user_zone" type="VARCHAR(255)"/>
+            <column name="last_modified_by" type="VARCHAR(50)"/>
+            <column name="last_modified_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="last_modified_user_ip_adresse" type="VARCHAR(255)"/>
+            <column name="last_modified_user_agent_info" type="VARCHAR(255)"/>
+            <column name="last_modified_user_device" type="VARCHAR(255)"/>
+            <column name="last_modified_user_zone" type="VARCHAR(255)"/>
+            
+            <column name="id_patient" type="VARCHAR(50)"/>
+            <column name="type_antecedent" type="VARCHAR(255)"/>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="date_debut" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="date_fin" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="traitement_suivi" type="VARCHAR(255)"/>
+            <column name="statut" type="VARCHAR(255)"/>
+            <column name="observateur" type="VARCHAR(255)"/>
+            <column name="contact_observateur" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-29">
+        <addPrimaryKey schemaName="${sante_schema_name}" columnNames="id" constraintName="antecedant_pkey" tableName="antecedant_medical"/>
+    </changeSet>
+    
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-30">
+        <addForeignKeyConstraint baseTableSchemaName="${sante_schema_name}" baseColumnNames="id_patient" baseTableName="antecedant_medical" constraintName="patient_on_entecedant_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="patient" referencedTableSchemaName="${sante_schema_name}"/>
+    </changeSet>
+    
+       
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-310">
+        <addForeignKeyConstraint baseTableSchemaName="${sante_schema_name}" baseColumnNames="type_antecedent" baseTableName="antecedant_medical" constraintName="type_on_antecedent_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="type_antecedent" referencedTableSchemaName="${sante_schema_name}"/>
+    </changeSet>
+    
+    
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-32">
+        <createTable schemaName="${sante_schema_name}" tableName="consultation">
+            <column name="id" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <!-- Colonnes d'audit -->
+            <column name="created_by" type="VARCHAR(50)"/>
+            <column name="created_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="created_user_ip_adresse" type="VARCHAR(255)"/>
+            <column name="created_user_agent_info" type="VARCHAR(255)"/>
+            <column name="created_user_device" type="VARCHAR(255)"/>
+            <column name="created_user_zone" type="VARCHAR(255)"/>
+            <column name="last_modified_by" type="VARCHAR(50)"/>
+            <column name="last_modified_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="last_modified_user_ip_adresse" type="VARCHAR(255)"/>
+            <column name="last_modified_user_agent_info" type="VARCHAR(255)"/>
+            <column name="last_modified_user_device" type="VARCHAR(255)"/>
+            <column name="last_modified_user_zone" type="VARCHAR(255)"/>
+            
+            <column name="motif" type="TEXT"/>
+            <column name="id_patient" type="VARCHAR(50)"/>
+            <column name="id_professionnel_sante" type="VARCHAR(50)"/>
+
+            <column name="diagnostic" type="TEXT"/>
+
+            <column name="traitement" type="VARCHAR(255)"/>
+            <column name="date_consultation" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+      
+        </createTable>
+    </changeSet>
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-33">
+        <addPrimaryKey schemaName="${sante_schema_name}" columnNames="id" constraintName="consultation_pkey" tableName="consultation"/>
+    </changeSet>
+    
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-34">
+        <addForeignKeyConstraint baseTableSchemaName="${sante_schema_name}" baseColumnNames="id_patient" baseTableName="consultation" constraintName="patient_on_consultation_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="patient" referencedTableSchemaName="${sante_schema_name}"/>
+    </changeSet>
+    
+       
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-35">
+        <addForeignKeyConstraint baseTableSchemaName="${sante_schema_name}" baseColumnNames="id_professionnel_sante" baseTableName="consultation" constraintName="professionel_on_consultation_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="professionnel_sante" referencedTableSchemaName="${sante_schema_name}"/>
+    </changeSet>
+    
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-360">
+        <createTable schemaName="${sante_schema_name}" tableName="document">
+            <column name="id" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <!-- Colonnes d'audit -->
+            <column name="created_by" type="VARCHAR(50)"/>
+            <column name="created_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="created_user_ip_adresse" type="VARCHAR(255)"/>
+            <column name="created_user_agent_info" type="VARCHAR(255)"/>
+            <column name="created_user_device" type="VARCHAR(255)"/>
+            <column name="created_user_zone" type="VARCHAR(255)"/>
+            <column name="last_modified_by" type="VARCHAR(50)"/>
+            <column name="last_modified_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="last_modified_user_ip_adresse" type="VARCHAR(255)"/>
+            <column name="last_modified_user_agent_info" type="VARCHAR(255)"/>
+            <column name="last_modified_user_device" type="VARCHAR(255)"/>
+            <column name="last_modified_user_zone" type="VARCHAR(255)"/>
+            
+            <column name="type_document" type="VARCHAR(30)"/>
+            <column name="chemin_fichier" type="VARCHAR(100)"/>
+
+            <column name="date_ajout" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="id_patient" type="VARCHAR(50)"/>
+      
+        </createTable>
+    </changeSet>
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-37">
+        <addPrimaryKey schemaName="${sante_schema_name}" columnNames="id" constraintName="document_pkey" tableName="document"/>
+    </changeSet>
+    
+     <changeSet author="Bouchara (generated)" id="16-11-2025-1-38">
+        <addForeignKeyConstraint baseTableSchemaName="${sante_schema_name}" baseColumnNames="id_patient" baseTableName="document" constraintName="patient_on_doccument_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="patient" referencedTableSchemaName="${sante_schema_name}"/>
+    </changeSet>
+    
+     <changeSet author="Bouchara (generated)" id="16-11-2025-1-39">
+        <createTable schemaName="${sante_schema_name}" tableName="observation">
+            <column name="id" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <!-- Colonnes d'audit -->
+            <column name="created_by" type="VARCHAR(50)"/>
+            <column name="created_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="created_user_ip_adresse" type="VARCHAR(255)"/>
+            <column name="created_user_agent_info" type="VARCHAR(255)"/>
+            <column name="created_user_device" type="VARCHAR(255)"/>
+            <column name="created_user_zone" type="VARCHAR(255)"/>
+            <column name="last_modified_by" type="VARCHAR(50)"/>
+            <column name="last_modified_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="last_modified_user_ip_adresse" type="VARCHAR(255)"/>
+            <column name="last_modified_user_agent_info" type="VARCHAR(255)"/>
+            <column name="last_modified_user_device" type="VARCHAR(255)"/>
+            <column name="last_modified_user_zone" type="VARCHAR(255)"/>
+            
+            <column name="type_observation" type="VARCHAR(50)"/>
+            <column name="valeur" type="VARCHAR(50)"/>
+            <column name="unite" type="VARCHAR(50)"/>
+            <column name="id_patient" type="VARCHAR(50)"/>
+
+            <column name="date_observation" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+      
+        </createTable>
+    </changeSet>
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-40">
+        <addPrimaryKey schemaName="${sante_schema_name}" columnNames="id" constraintName="observation_pkey" tableName="document"/>
+    </changeSet>
+
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-41">
+        <addForeignKeyConstraint baseTableSchemaName="${sante_schema_name}" baseColumnNames="id_patient" baseTableName="observation" constraintName="patient_on_observation_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="patient" referencedTableSchemaName="${sante_schema_name}"/>
+    </changeSet>
+    
+    
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-42">
+        <createTable schemaName="${sante_schema_name}" tableName="vaccination">
+            <column name="id" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <!-- Colonnes d'audit -->
+            <column name="created_by" type="VARCHAR(50)"/>
+            <column name="created_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="created_user_ip_adresse" type="VARCHAR(255)"/>
+            <column name="created_user_agent_info" type="VARCHAR(255)"/>
+            <column name="created_user_device" type="VARCHAR(255)"/>
+            <column name="created_user_zone" type="VARCHAR(255)"/>
+            <column name="last_modified_by" type="VARCHAR(50)"/>
+            <column name="last_modified_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="last_modified_user_ip_adresse" type="VARCHAR(255)"/>
+            <column name="last_modified_user_agent_info" type="VARCHAR(255)"/>
+            <column name="last_modified_user_device" type="VARCHAR(255)"/>
+            <column name="last_modified_user_zone" type="VARCHAR(255)"/>
+            
+            <column name="vaccin" type="VARCHAR(255)"/>
+            <column name="lieu" type="VARCHAR(255)"/>
+            <column name="unite" type="VARCHAR(50)"/>
+            <column name="id_patient" type="VARCHAR(50)"/>
+
+            <column name="date_vaccination" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="date_rappel" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+
+      
+        </createTable>
+    </changeSet>
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-43">
+        <addPrimaryKey schemaName="${sante_schema_name}" columnNames="id" constraintName="vaccination_pkey" tableName="vaccination"/>
+    </changeSet>
+
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-44">
+        <addForeignKeyConstraint baseTableSchemaName="${sante_schema_name}" baseColumnNames="id_patient" baseTableName="vaccination" constraintName="patient_on_vaccination_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="patient" referencedTableSchemaName="${sante_schema_name}"/>
+    </changeSet>
+    
+    
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-45">
+        <createTable schemaName="${sante_schema_name}" tableName="prescription">
+            <column name="id" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <!-- Colonnes d'audit -->
+            <column name="created_by" type="VARCHAR(50)"/>
+            <column name="created_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="created_user_ip_adresse" type="VARCHAR(255)"/>
+            <column name="created_user_agent_info" type="VARCHAR(255)"/>
+            <column name="created_user_device" type="VARCHAR(255)"/>
+            <column name="created_user_zone" type="VARCHAR(255)"/>
+            <column name="last_modified_by" type="VARCHAR(50)"/>
+            <column name="last_modified_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="last_modified_user_ip_adresse" type="VARCHAR(255)"/>
+            <column name="last_modified_user_agent_info" type="VARCHAR(255)"/>
+            <column name="last_modified_user_device" type="VARCHAR(255)"/>
+            <column name="last_modified_user_zone" type="VARCHAR(255)"/>
+            
+            <column name="vaccin" type="VARCHAR(255)"/>
+            <column name="lieu" type="VARCHAR(255)"/>
+            <column name="unite" type="VARCHAR(50)"/>
+            <column name="id_consultation" type="VARCHAR(50)"/>
+
+            <column name="date_vaccination" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="date_rappel" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+
+      
+        </createTable>
+    </changeSet>
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-46">
+        <addPrimaryKey schemaName="${sante_schema_name}" columnNames="id" constraintName="prescription_pkey" tableName="prescription"/>
+    </changeSet>
+
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-47">
+        <addForeignKeyConstraint baseTableSchemaName="${sante_schema_name}" baseColumnNames="id_consultation" baseTableName="prescription" constraintName="consultation_on_precription_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="prescription" referencedTableSchemaName="${sante_schema_name}"/>
+    </changeSet>
+    
+    
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-48">
+        <createTable schemaName="${sante_schema_name}" tableName="examen">
+            <column name="id" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <!-- Colonnes d'audit -->
+            <column name="created_by" type="VARCHAR(50)"/>
+            <column name="created_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="created_user_ip_adresse" type="VARCHAR(255)"/>
+            <column name="created_user_agent_info" type="VARCHAR(255)"/>
+            <column name="created_user_device" type="VARCHAR(255)"/>
+            <column name="created_user_zone" type="VARCHAR(255)"/>
+            <column name="last_modified_by" type="VARCHAR(50)"/>
+            <column name="last_modified_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="last_modified_user_ip_adresse" type="VARCHAR(255)"/>
+            <column name="last_modified_user_agent_info" type="VARCHAR(255)"/>
+            <column name="last_modified_user_device" type="VARCHAR(255)"/>
+            <column name="last_modified_user_zone" type="VARCHAR(255)"/>
+            
+            <column name="type_examen" type="VARCHAR(50)"/>
+            <column name="resultat" type="VARCHAR(255)"/>
+            <column name="fichier_joint" type="VARCHAR(255)"/>
+            <column name="id_consultation" type="VARCHAR(50)"/>
+
+        </createTable>
+    </changeSet>
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-49">
+        <addPrimaryKey schemaName="${sante_schema_name}" columnNames="id" constraintName="examen_pkey" tableName="examen"/>
+    </changeSet>
+
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-50">
+        <addForeignKeyConstraint baseTableSchemaName="${sante_schema_name}" baseColumnNames="id_consultation" baseTableName="examen" constraintName="consultation_on_examen_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="consultation" referencedTableSchemaName="${sante_schema_name}"/>
+    </changeSet>
+   
+   
+    <!--    <changeSet author="Bouchara (generated)" id="24-07-2024-1-1-17">
+        <addColumn tableName="ordonnance" schemaName="${achat_schema_name}">
+            <column name="type_fichier" type="VARCHAR(50)"/>
+        </addColumn>    
+    </changeSet>-->
+    
+</databaseChangeLog>

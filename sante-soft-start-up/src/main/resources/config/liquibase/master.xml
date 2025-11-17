@@ -13,7 +13,7 @@
     <property name="sante_schema_name" value="sante"/>
 
     
-     <include file="config/liquibase/socle/socle-change-log-v1.0.0.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/socle/socle-change-log-v1.0.0.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/sec/sec-change-log-v1.0.0.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/fonctionnelle/fonctionnelle-change-log-v1.0.0.xml" relativeToChangelogFile="false"/>
     

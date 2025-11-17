@@ -18,7 +18,7 @@ import org.hibernate.annotations.GenericGenerator;
  * @author NANO TECH
  */
 @Entity
-@Table(name = "professionnelSante", schema = "sante")
+@Table(name = "professionnel_sante", schema = "sante")
 public class ProfessionelSante {
      @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "system-uuid")

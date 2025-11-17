@@ -42,6 +42,8 @@ public class AntecedantMedical {
     private String observateur;
     @Column(name = "contact_observateur")
     private String contactObservateur;
+    @Column(name = "type_antecedent")
+    private String typeAntecedent;
 
     public String getId() {
         return id;
@@ -106,6 +108,24 @@ public class AntecedantMedical {
     public void setContactObservateur(String contactObservateur) {
         this.contactObservateur = contactObservateur;
     }
+
+    public String getTypeAntecedent() {
+        return typeAntecedent;
+    }
+
+    public void setTypeAntecedent(String typeAntecedent) {
+        this.typeAntecedent = typeAntecedent;
+    }
+
+   
+    public String getIdPatient() {
+        return idPatient;
+    }
+
+    public void setIdPatient(String idPatient) {
+        this.idPatient = idPatient;
+    }
+    
 
     public AntecedantMedical() {
     }
