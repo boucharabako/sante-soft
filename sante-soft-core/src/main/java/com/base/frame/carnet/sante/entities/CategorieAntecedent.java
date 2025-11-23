@@ -15,11 +15,11 @@ import org.hibernate.annotations.GenericGenerator;
 
 /**
  *
- * @author NANO TECH
+ * @author Bouchara
  */
 @Entity
-@Table(name = "type_antecedent", schema = "sante")
-public class TypeAntecedant {
+@Table(name = "categorie_antecedent", schema = "sante")
+public class CategorieAntecedent {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "system-uuid")
@@ -27,9 +27,7 @@ public class TypeAntecedant {
     @Column(name = "id")
     private String id;
     @Column(name = "code")
-    private String codeTypeAntecedent;
-    @Column(name = "categorie_antecedent")
-    private String idCategorieAntecedent;
+    private String code;
     @Column(name = "libelle")
     private String libelle;
     @Column(name = "description")
@@ -43,20 +41,12 @@ public class TypeAntecedant {
         this.id = id;
     }
 
-    public String getCodeTypeAntecedent() {
-        return codeTypeAntecedent;
+    public String getCode() {
+        return code;
     }
 
-    public void setCodeTypeAntecedent(String codeTypeAntecedent) {
-        this.codeTypeAntecedent = codeTypeAntecedent;
-    }
-
-    public String getIdCategorieAntecedent() {
-        return idCategorieAntecedent;
-    }
-
-    public void setIdCategorieAntecedent(String idCategorieAntecedent) {
-        this.idCategorieAntecedent = idCategorieAntecedent;
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getLibelle() {
@@ -77,8 +67,8 @@ public class TypeAntecedant {
 
     @Override
     public String toString() {
-        return "TypeAntecedant{" + "id=" + id + ", codeTypeAntecedent=" + codeTypeAntecedent + ", idCategorieAntecedent=" + idCategorieAntecedent + ", libelle=" + libelle + ", description=" + description + '}';
+        return "CategorieAntecedent{" + "id=" + id + ", code=" + code + ", libelle=" + libelle + ", description=" + description + '}';
     }
-   
+    
 
 }

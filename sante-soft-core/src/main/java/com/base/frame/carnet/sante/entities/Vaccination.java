@@ -29,10 +29,12 @@ public class Vaccination extends AbstractAuditingEntity implements Serializable 
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
     @Column(name = "id")
     private String id;
-    @Column(name = "vaccin")
-    private String vaccin;
-    @Column(name = "lieu")
-    private String lieu;
+    @Column(name = "id_vaccin")
+    private String idVaccin;
+    @Column(name = "id_patient")
+    private String idPatient;
+    @Column(name = "lieu_vaccination")
+    private String lieuVaccination;
     @Column(name = "date_vaccination")
     private Instant dateVaccination;
     @Column(name = "date_rappel")
@@ -46,20 +48,28 @@ public class Vaccination extends AbstractAuditingEntity implements Serializable 
         this.id = id;
     }
 
-    public String getVaccin() {
-        return vaccin;
+    public String getIdVaccin() {
+        return idVaccin;
     }
 
-    public void setVaccin(String vaccin) {
-        this.vaccin = vaccin;
+    public void setIdVaccin(String idVaccin) {
+        this.idVaccin = idVaccin;
     }
 
-    public String getLieu() {
-        return lieu;
+    public String getIdPatient() {
+        return idPatient;
     }
 
-    public void setLieu(String lieu) {
-        this.lieu = lieu;
+    public void setIdPatient(String idPatient) {
+        this.idPatient = idPatient;
+    }
+
+    public String getLieuVaccination() {
+        return lieuVaccination;
+    }
+
+    public void setLieuVaccination(String lieuVaccination) {
+        this.lieuVaccination = lieuVaccination;
     }
 
     public Instant getDateVaccination() {
@@ -80,8 +90,9 @@ public class Vaccination extends AbstractAuditingEntity implements Serializable 
 
     @Override
     public String toString() {
-        return "Vaccination{" + "id=" + id + ", vaccin=" + vaccin + ", lieu=" + lieu + ", dateVaccination=" + dateVaccination + ", dateRappel=" + dateRappel + '}';
+        return "Vaccination{" + "id=" + id + ", idVaccin=" + idVaccin + ", idPatient=" + idPatient + ", lieuVaccination=" + lieuVaccination + ", dateVaccination=" + dateVaccination + ", dateRappel=" + dateRappel + '}';
     }
-    
+
+   
 
 }

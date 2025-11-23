@@ -20,7 +20,7 @@ import org.hibernate.annotations.GenericGenerator;
  */
 @Entity
 @Table(name = "antecedant_medical", schema = "sante")
-public class AntecedantMedical {
+public class AntecedentMedical {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
@@ -38,10 +38,6 @@ public class AntecedantMedical {
     private String traitementSuivi;
     @Column(name = "statut")
     private String statut;
-    @Column(name = "observateur")
-    private String observateur;
-    @Column(name = "contact_observateur")
-    private String contactObservateur;
     @Column(name = "type_antecedent")
     private String typeAntecedent;
 
@@ -93,22 +89,6 @@ public class AntecedantMedical {
         this.statut = statut;
     }
 
-    public String getObservateur() {
-        return observateur;
-    }
-
-    public void setObservateur(String observateur) {
-        this.observateur = observateur;
-    }
-
-    public String getContactObservateur() {
-        return contactObservateur;
-    }
-
-    public void setContactObservateur(String contactObservateur) {
-        this.contactObservateur = contactObservateur;
-    }
-
     public String getTypeAntecedent() {
         return typeAntecedent;
     }
@@ -125,23 +105,10 @@ public class AntecedantMedical {
     public void setIdPatient(String idPatient) {
         this.idPatient = idPatient;
     }
-    
 
-    public AntecedantMedical() {
+    @Override
+    public String toString() {
+        return "AntecedentMedical{" + "id=" + id + ", idPatient=" + idPatient + ", description=" + description + ", dateDebut=" + dateDebut + ", dateFin=" + dateFin + ", traitementSuivi=" + traitementSuivi + ", statut=" + statut + ", typeAntecedent=" + typeAntecedent + '}';
     }
-    
-
-    public AntecedantMedical(String id, String description, Instant dateDebut, Instant dateFin, String traitementSuivi, String statut, String observateur, String contactObservateur) {
-        this.id = id;
-        this.description = description;
-        this.dateDebut = dateDebut;
-        this.dateFin = dateFin;
-        this.traitementSuivi = traitementSuivi;
-        this.statut = statut;
-        this.observateur = observateur;
-        this.contactObservateur = contactObservateur;
-    }
-     
-     
      
 }

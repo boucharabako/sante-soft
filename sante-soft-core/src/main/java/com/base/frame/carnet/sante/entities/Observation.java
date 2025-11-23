@@ -30,13 +30,15 @@ public class Observation extends AbstractAuditingEntity implements Serializable 
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
     @Column(name = "id")
     private String id;
+    @Column(name = "id_patient")
+    private String idPatient;
     @Column(name = "type_observation")
     private String typeObservation;
     @Column(name = "valeur")
     private String valeur;
-    @Column(name = "unite")
-    private String unite;
-     @Column(name = "date_observation")
+    @Column(name = "commentaire")
+    private String commentaire;
+    @Column(name = "date_observation")
     private Instant dateObservation;
 
     public String getId() {
@@ -63,13 +65,14 @@ public class Observation extends AbstractAuditingEntity implements Serializable 
         this.valeur = valeur;
     }
 
-    public String getUnite() {
-        return unite;
+    public String getCommentaire() {
+        return commentaire;
     }
 
-    public void setUnite(String unite) {
-        this.unite = unite;
+    public void setCommentaire(String commentaire) {
+        this.commentaire = commentaire;
     }
+
 
     public Instant getDateObservation() {
         return dateObservation;
@@ -79,10 +82,19 @@ public class Observation extends AbstractAuditingEntity implements Serializable 
         this.dateObservation = dateObservation;
     }
 
+    public String getIdPatient() {
+        return idPatient;
+    }
+
+    public void setIdPatient(String idPatient) {
+        this.idPatient = idPatient;
+    }
+    
+
     @Override
     public String toString() {
-        return "Observation{" + "id=" + id + ", typeObservation=" + typeObservation + ", valeur=" + valeur + ", unite=" + unite + ", dateObservation=" + dateObservation + '}';
+        return "Observation{" + "id=" + id + ", typeObservation=" + typeObservation + ", valeur=" + valeur + ", commentaire=" + commentaire + ", dateObservation=" + dateObservation + '}';
     }
-     
+
      
 }
