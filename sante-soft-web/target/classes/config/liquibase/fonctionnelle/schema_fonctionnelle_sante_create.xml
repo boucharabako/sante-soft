@@ -320,7 +320,7 @@ and open the template in the editor.
         </createTable>
     </changeSet>
     <changeSet author="Bouchara (generated)" id="16-11-2025-1-40">
-        <addPrimaryKey schemaName="${sante_schema_name}" columnNames="id" constraintName="observation_pkey" tableName="document"/>
+        <addPrimaryKey schemaName="${sante_schema_name}" columnNames="id" constraintName="observation_pkey" tableName="observation"/>
     </changeSet>
 
     <changeSet author="Bouchara (generated)" id="16-11-2025-1-41">

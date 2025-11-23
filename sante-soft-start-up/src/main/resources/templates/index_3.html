@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org" 
+      layout:decorator="template">
+    <head>
+        <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Produits E-commerce avec Panier</title>
+                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+                    <style>
+                        body {
+                            font-family: Arial, sans-serif;background-color: #edf0f5;
+                        }
+                        .navbar {
+                            margin-bottom: 20px;
+                        }
+                        .page-content {
+                            display: flex;
+                            flex-wrap: wrap;
+                            justify-content: center;
+                            gap: 20px;
+                            padding: 20px;
+                        }
+                        .product {
+                            border: 1px solid #ddd;
+                            border-radius: 5px;
+                            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                            overflow: hidden;
+                            width: 300px;
+                            text-align: center;
+                            background: #fff;
+                            transition: transform 0.3s;
+                        }
+                        .product:hover {
+                            transform: scale(1.05);
+                        }
+                        .product img {
+                            max-width: 100%;
+                            height: auto;
+                        }
+                        .product h2 {
+                            font-size: 1.5em;
+                            margin: 10px 0;
+                        }
+                        .product p {
+                            padding: 0 10px;
+                            height: 60px;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                        }
+                        .price {
+                            font-size: 1.2em;
+                            color: #28a745;
+                            margin: 10px 0;
+                        }
+                        .buy-button {
+                            background-color: #007bff;
+                            color: white;
+                            padding: 10px 20px;
+                            border: none;
+                            border-radius: 5px;
+                            cursor: pointer;
+                            transition: background-color 0.3s;
+                        }
+                        .buy-button:hover {
+                            background-color: #0056b3;
+                        }
+                        .cart {
+                            position: fixed;
+                            top: 20px;
+                            right: 20px;
+                            width: 300px;
+                            border: 1px solid #ddd;
+                            border-radius: 5px;
+                            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                            background: #fff;
+                            padding: 10px;
+                        }
+                        .cart h2 {
+                            text-align: center;
+                        }
+                        .cart ul {
+                            list-style-type: none;
+                            padding: 0;
+                        }
+                        .cart li {
+                            display: flex;
+                            flex-direction: column;
+                            border-bottom: 1px solid #ddd;
+                            padding: 10px 0;
+                        }
+                        .cart-item-details {
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                        }
+                        .cart-item-actions {
+                            margin-top: 10px;
+                        }
+                        .cart-item-actions input[type="number"] {
+                            width: 60px;
+                        }
+                        .checkout-button {
+                            background-color: #28a745;
+                            color: white;
+                            padding: 10px 20px;
+                            border: none;
+                            border-radius: 5px;
+                            cursor: pointer;
+                            display: block;
+                            margin: 20px auto;
+                            transition: background-color 0.3s;
+                        }
+                        .checkout-button:hover {
+                            background-color: #218838;
+                        }
+                        .remove-button {
+                            background-color: #dc3545;
+                            color: white;
+                            padding: 5px 10px;
+                            border: none;
+                            border-radius: 5px;
+                            cursor: pointer;
+                            transition: background-color 0.3s;
+                        }
+                        .remove-button:hover {
+                            background-color: #c82333;
+                        }
+                        .search-container {
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            margin-bottom: 20px;
+                        }
+
+                        .search-bar {
+                            width: 60%; /* Adjust this value as needed */
+                            max-width: 400px; /* Adjust this value as needed */
+                            height: 40px; /* Adjust this value as needed */
+                            margin-right: 10px;
+                            padding: 5px;
+                        }
+
+                        .search-button {
+                            height: 40px; /* Same height as the search bar */
+                        }
+
+                    </style>
+                    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+                    <!--<script src="https://js.stripe.com/v3/"></script>-->
+                    <!--<script src="StripeService.js"></script>-->
+                    <!--<script src="https://js.stripe.com/v3/"></script>-->
+                     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+                    <script th:src="@{/js/controllers/produitController.js}"></script>
+                    <script src="app.js"></script>
+                    </head>
+                    <body ng-controller="produitController">
+                        
+                        <div layout:fragment="content" id="productList" data-ng-cloak="">
+                            
+                            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                                <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                                    <div>
+                                        <div class="cart">
+                                            <h2>Panier</h2>
+                                            <ul>
+                                                <li ng-repeat="item in cart">
+                                                    <div class="cart-item-details">
+                                                        <span>{{ item.libelle}}</span>
+                                                        <span>{{ item.prix | currency:"CFA" }}</span>
+                                                    </div>
+                                                    <div class="cart-item-actions">
+                                                        <input type="number" ng-model="item.quantity" min="1">
+                                                            <button class="remove-button" ng-click="removeFromCart(item)">Retirer</button>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                            <div class="text-right font-weight-bold" ng-if="afficheJointureOrdonnance">
+                                                <input type="file" class="form-control" ng-model="objet.code" onchange="angular.element(this).scope().uploadOrdonnance(this)"/>
+                                            </div>
+                                            <div class="text-right font-weight-bold">Total: {{ getTotalPrice() + " CFA"}}</div>
+                                            <!-- Bouton pour ouvrir la modale -->
+                                            <button type="button" class="btn btn-primary" ng-click="openCheckoutForm()">Passer à la caisse</button>
+
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </nav>
+                            <!-- Modale pour le formulaire client -->
+                            <div class="modal fade" id="checkoutModal" tabindex="-1" role="dialog" aria-labelledby="checkoutModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="checkoutModalLabel">Informations du client</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form name="checkoutForm">
+                                                <div class="form-group">
+                                                    <label for="nomClient">Nom</label>
+                                                    <input type="text" class="form-control" id="nomClient" ng-model="objetCommande.nomClient" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="prenomsClient">Prénoms</label>
+                                                    <input type="text" class="form-control" id="prenomsClient" ng-model="objetCommande.prenomsClient" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="numeroTelephone">Téléphone</label>
+                                                    <input type="text" class="form-control" id="numeroTelephone" ng-model="objetCommande.numeroTelephone" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="emailClient">Email</label>
+                                                    <input type="email" class="form-control" id="emailClient" ng-model="objetCommande.emailClient" required>
+                                                </div>
+                                                <button type="button" class="btn btn-primary" ng-click="submitOrder()">Valider la commande</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="container">
+                                <div class="search-container text-center my-4">
+                                    <input type="text" ng-model="searchObjectProduit"  placeholder="Rechercher un produit..." class="form-control search-bar">
+                                        <!--<button class="btn btn-primary search-button" ng-click="searchProducts()">Rechercher</button>-->
+                                        <button title="Rechercher" ng-click="loadProduits()" class="btn btn-primary pull-right m-t-10"><i class="fa fa-search"></i></button>
+                                </div>
+                                <h2 class="text-center my-4">Produits Disponibles</h2>
+                                <div class="page-content">
+                                    <div class="product" ng-repeat="product in listeDesProduits| filter:searchQuery">
+                                        <img ng-src="{{ product.image}}" alt="{{ product.libelle}}">
+                                            <h2>{{ product.libelle}}</h2>
+                                            <h2>{{ product.libelleTypeProduit}}</h2>
+                                            <p>{{ product.description}}</p>
+                                            <div class="price">{{ product.prix + " CFA"}}</div>
+                                            <button class="buy-button" ng-click="addToCart(product)">Ajouter au Panier</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <form id="payment-form" ng-submit="handlePayment()">
+                                <!--  <div id="card-element">
+                                     A Stripe Element will be inserted here. 
+                                  </div>
+                                
+                                  <div id="card-errors" role="alert"></div>
+                                
+                                  <button type="submit">Payer</button>
+                                </form>-->
+                        </div>
+
+                    </body>
+                    </html>
