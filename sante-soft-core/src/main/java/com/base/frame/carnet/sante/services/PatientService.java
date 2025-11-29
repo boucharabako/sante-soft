@@ -16,6 +16,7 @@ import com.base.frame.carnet.sante.daos.PatientDAO;
 import com.base.frame.carnet.sante.dtos.PatientDTO;
 import com.base.frame.carnet.sante.entities.Patient;
 import com.base.frame.carnet.sante.repositories.PatientRepository;
+import com.base.frame.socle.core.iservice.ISocleGenericService;
 import com.base.frame.socle.core.workflow.entity.Etat;
 import com.base.frame.socle.core.workflow.service.IWorkflowService;
 import com.base.frame.socle.utils.exceptions.ObjectValidationException;
@@ -58,10 +59,47 @@ public class PatientService {
 
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
+    @Autowired
+    private ISocleGenericService socleGenericService;
+
+    /**
+     * Génère un numéro de carnet unique et incrémental Format: ANNÉE-NUMÉRO
+     * (ex: 2025-001, 2025-002, etc.)
+     */
+    private String generateNumeroCarnet() {
+        // Obtenir l'année courante
+        int currentYear = java.time.Year.now().getValue();
+        String yearPrefix = currentYear + "-%";
+
+        // Trouver le numéro maximum pour l'année courante
+        Optional<Integer> maxNumero = patientRepository.findMaxNumeroCarnetByYear(yearPrefix);
+        int nextNumero;
+
+        if (maxNumero.isPresent() && maxNumero.get() != null) {
+            nextNumero = maxNumero.get() + 1;
+        } else {
+            // Premier numéro de carnet pour cette année
+            nextNumero = 1;
+        }
+
+        // Formater le numéro: ANNÉE-XXX (3 chiffres minimum)
+        return String.format("%d-%03d", currentYear, nextNumero);
+    }
+
+    /**
+     * Récupère le prochain numéro de carnet disponible (pour affichage dans le
+     * formulaire)
+     */
+    public String getNextNumeroCarnet() {
+        return this.generateNumeroCarnet();
+    }
+
     public PatientDTO mapEntityIntoDTO(Patient entity) {
         PatientDTO dto = new PatientDTO();
         dto.setId(entity.getId());
         dto.setNumeroCarnet(entity.getNumeroCarnet());
+
+        // Garder l'ID du groupe sanguin pour que le select fonctionne
         dto.setGroupeSanguin(entity.getGroupeSanguin());
         dto.setDateEnregistrement(entity.getDateEnregistrement());
 
@@ -69,6 +107,10 @@ public class PatientService {
         dto.setUsername(entity.getUsername());
         dto.setFirstName(entity.getFirstName());
         dto.setLastName(entity.getLastName());
+
+        // Garder l'ID du sexe pour que le select fonctionne
+        dto.setSexe(entity.getSexe());
+        dto.setDateNaissance(entity.getDateNaissance());
         dto.setEmail(entity.getEmail());
         dto.setTel(entity.getTel());
         dto.setTitre(entity.getTitre());
@@ -91,17 +133,31 @@ public class PatientService {
             // Définir l'état initial pour un nouvel utilisateur
             Etat e = workflowCycleService.getEtatInitial("WKFL_UTILISATEUR");
             entity.setEtat(e);
+
+            // Générer automatiquement le numéro de carnet pour un nouveau patient
+            String numeroCarnet = this.generateNumeroCarnet();
+            entity.setNumeroCarnet(numeroCarnet);
+            dto.setNumeroCarnet(numeroCarnet);
+
+            // Générer automatiquement la date d'enregistrement pour un nouveau patient
+            java.time.Instant dateEnregistrement = java.time.Instant.now();
+            entity.setDateEnregistrement(dateEnregistrement);
+            dto.setDateEnregistrement(dateEnregistrement);
         }
 
-        // Mapper les champs spécifiques au patient
-        entity.setNumeroCarnet(dto.getNumeroCarnet());
+        // Mapper les champs spécifiques au patient (sauf numeroCarnet et dateEnregistrement pour les nouveaux patients)
+        if (!isNew) {
+            entity.setNumeroCarnet(dto.getNumeroCarnet());
+            entity.setDateEnregistrement(dto.getDateEnregistrement());
+        }
         entity.setGroupeSanguin(dto.getGroupeSanguin());
-        entity.setDateEnregistrement(dto.getDateEnregistrement());
 
         // Mapper les champs de Utilisateur
         entity.setUsername(dto.getUsername());
         entity.setFirstName(dto.getFirstName());
         entity.setLastName(dto.getLastName());
+        entity.setSexe(dto.getSexe());
+        entity.setDateNaissance(dto.getDateNaissance());
         entity.setEmail(dto.getEmail());
         entity.setTel(dto.getTel());
         entity.setTitre(dto.getTitre());
@@ -228,4 +284,3 @@ public class PatientService {
         return this.mapEntitiesIntoDTOs(patientDAO.findListePatient(mc));
     }
 }
-

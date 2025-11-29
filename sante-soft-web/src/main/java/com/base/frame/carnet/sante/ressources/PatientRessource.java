@@ -7,6 +7,9 @@ package com.base.frame.carnet.sante.ressources;
 
 import com.base.frame.carnet.sante.dtos.PatientDTO;
 import com.base.frame.carnet.sante.services.PatientService;
+import com.base.frame.socle.core.entity.ParamList;
+import com.base.frame.socle.core.iservice.ISocleGenericService;
+import com.base.frame.socle.core.utils.SocleConstant;
 import com.base.frame.socle.utils.Constants;
 import com.base.frame.socle.utils.validators.MessageSourceKV;
 import java.util.HashMap;
@@ -37,6 +40,8 @@ public class PatientRessource {
 
     @Autowired
     private MessageSourceKV messageSource;
+    @Autowired
+    private ISocleGenericService socleGenericService;
 
     @RequestMapping(value = "/saveOrUpdatePatient", method = RequestMethod.POST)
     public ResponseEntity<HashMap<String, Object>> saveOrUpdatePatient(@RequestBody PatientDTO patientDto) throws CloneNotSupportedException {
@@ -106,6 +111,39 @@ public class PatientRessource {
         headers.add(Constants.PROPRIETE_HEADERS_RESPONDED, Constants.PROPRIETE_HEADERS_TIMEZONESCONTROLLER);
         return ResponseEntity.accepted().headers(headers).body(model);
 
+    }
+    
+    @RequestMapping(value = "/listSexe", method = RequestMethod.GET)
+    public ResponseEntity<HashMap<String, Object>> listSexe() {
+        HashMap<String, Object> model = new HashMap<>();
+        List<ParamList> listSexe = this.socleGenericService.findParamListByCodeParamCode(SocleConstant.CODIFICATION_SEXE);
+        model.put("listSexe", listSexe);
+        System.out.println("LISTE SEXE *******"+listSexe);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(Constants.PROPRIETE_HEADERS_RESPONDED, Constants.PROPRIETE_HEADERS_TIMEZONESCONTROLLER);
+        return ResponseEntity.accepted().headers(headers).body(model);
+    }
+    
+   @RequestMapping(value = "/listGroupeSanguin", method = RequestMethod.GET)
+    public ResponseEntity<HashMap<String, Object>> listGroupeSanguin() {
+        HashMap<String, Object> model = new HashMap<>();
+        List<ParamList> listGroupeSanguin = this.socleGenericService.findParamListByCodeParamCode(SocleConstant.CODIFICATION_GROUPE_SANGUIN);
+        model.put("listGroupeSanguin", listGroupeSanguin);
+        System.out.println("LISTE GROUPE SANGUIN *******"+listGroupeSanguin);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(Constants.PROPRIETE_HEADERS_RESPONDED, Constants.PROPRIETE_HEADERS_TIMEZONESCONTROLLER);
+        return ResponseEntity.accepted().headers(headers).body(model);
+    }
+
+    @RequestMapping(value = "/getNextNumeroCarnet", method = RequestMethod.GET)
+    public ResponseEntity<HashMap<String, Object>> getNextNumeroCarnet() {
+        HashMap<String, Object> model = new HashMap<>();
+        String nextNumeroCarnet = this.patientService.getNextNumeroCarnet();
+        model.put("nextNumeroCarnet", nextNumeroCarnet);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(Constants.PROPRIETE_HEADERS_RESPONDED, Constants.PROPRIETE_HEADERS_TIMEZONESCONTROLLER);
+        return ResponseEntity.accepted().headers(headers).body(model);
     }
 }
 

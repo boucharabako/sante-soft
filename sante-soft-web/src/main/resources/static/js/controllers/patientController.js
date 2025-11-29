@@ -16,10 +16,22 @@ App.controller("patientController", ['$scope', 'GenericService', function ($scop
         const saveOrUpdatePatientURL = urlBase + "/saveOrUpdatePatient";
         const detailPatientURL = urlBase + "/getPatient";
         const deletePatientURL = urlBase + "/deletePatient";
+        const listSexeURL = urlBase + "/listSexe";
+        const listGroupeSanguinURL = urlBase + "/listGroupeSanguin";
+        const getNextNumeroCarnetURL = urlBase + "/getNextNumeroCarnet";
 
         var listPatients = [];
-        $scope.objetPatient = {id: null, username: null, firstName: null, lastName: null, email: null, tel: null, titre: null, numeroCarnet: null, groupeSanguin: null, dateEnregistrement: null, password: null, confirmPassword: null};
-        $scope.objetPatientMaster = {id: null, username: null, firstName: null, lastName: null, email: null, tel: null, titre: null, numeroCarnet: null, groupeSanguin: null, dateEnregistrement: null, password: null, confirmPassword: null};
+        $scope.listeSexes = [];
+        $scope.listeGroupesSanguins = [];
+        $scope.objetPatient = {id: null, username: null, firstName: null, lastName: null, sexe: null, dateNaissance: null, email: null, tel: null, titre: null, numeroCarnet: null, groupeSanguin: null, dateEnregistrement: null, password: null, confirmPassword: null};
+        $scope.objetPatientMaster = {id: null, username: null, firstName: null, lastName: null, sexe: null, dateNaissance: null, email: null, tel: null, titre: null, numeroCarnet: null, groupeSanguin: null, dateEnregistrement: null, password: null, confirmPassword: null};
+
+        // Date maximale pour la date de naissance (aujourd'hui)
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0');
+        var yyyy = today.getFullYear();
+        $scope.maxDate = yyyy + '-' + mm + '-' + dd;
         $scope.searchObject = {mc: '', numeroCarnet: '', groupeSanguin: ''};
 
         $scope.totalElements = 0;
@@ -99,15 +111,25 @@ App.controller("patientController", ['$scope', 'GenericService', function ($scop
             $scope.modeEdition = 0;
             $scope.titleModale = "Ajout d'un nouveau patient ";
             $scope.objetPatient = angular.copy($scope.objetPatientMaster);
+
+            // Charger le prochain numéro de carnet
+            $scope.loadNextNumeroCarnet();
+
+            // Initialiser la date d'enregistrement avec la date/heure actuelle
+            $scope.objetPatient.dateEnregistrement = new Date();
+
             $('#detail-patient').modal('show');
         };
 
         $scope.savePatient = function (objetPatient) {
-            // Convertir la date si nécessaire
+            // Convertir les dates si nécessaire
             if (objetPatient.dateEnregistrement) {
                 objetPatient.dateEnregistrement = new Date(objetPatient.dateEnregistrement).toISOString();
             }
-            
+            if (objetPatient.dateNaissance) {
+                objetPatient.dateNaissance = new Date(objetPatient.dateNaissance).toISOString();
+            }
+
             GenericService.post(saveOrUpdatePatientURL, angular.toJson(objetPatient))
                     .then(
                             function (data) {
@@ -122,9 +144,12 @@ App.controller("patientController", ['$scope', 'GenericService', function ($scop
         };
 
         $scope.savePatientEtContinuer = function (objetPatient) {
-            // Convertir la date si nécessaire
+            // Convertir les dates si nécessaire
             if (objetPatient.dateEnregistrement) {
                 objetPatient.dateEnregistrement = new Date(objetPatient.dateEnregistrement).toISOString();
+            }
+            if (objetPatient.dateNaissance) {
+                objetPatient.dateNaissance = new Date(objetPatient.dateNaissance).toISOString();
             }
 
             GenericService.post(saveOrUpdatePatientURL, angular.toJson(objetPatient))
@@ -183,11 +208,15 @@ App.controller("patientController", ['$scope', 'GenericService', function ($scop
                             function (data) {
                                 if (data) {
                                     $scope.objetPatient = data.patient;
-                                    
-                                    // Convertir la date pour l'affichage dans le champ datetime-local
+
+                                    // Convertir les dates pour l'affichage
                                     if ($scope.objetPatient.dateEnregistrement) {
                                         var date = new Date($scope.objetPatient.dateEnregistrement);
                                         $scope.objetPatient.dateEnregistrement = date.toISOString().slice(0, 16);
+                                    }
+                                    if ($scope.objetPatient.dateNaissance) {
+                                        var dateNaissance = new Date($scope.objetPatient.dateNaissance);
+                                        $scope.objetPatient.dateNaissance = dateNaissance.toISOString().slice(0, 10);
                                     }
 
                                     $scope.displaySaveButton = true;
@@ -238,6 +267,50 @@ App.controller("patientController", ['$scope', 'GenericService', function ($scop
         };
 
         $scope.loadPatients();
+
+        // Charger la liste des sexes depuis le backend
+        $scope.getListeSexes = function () {
+            GenericService.get(listSexeURL)
+                    .then(
+                            function (data) {
+                                if (data) {
+                                    $scope.listeSexes = data.listSexe;
+                                }
+                            },
+                            function () {
+                            }
+                    );
+        };
+        $scope.getListeSexes();
+
+        // Charger la liste des groupes sanguins depuis le backend
+        $scope.getListeGroupesSanguins = function () {
+            GenericService.get(listGroupeSanguinURL)
+                    .then(
+                            function (data) {
+                                if (data) {
+                                    $scope.listeGroupesSanguins = data.listGroupeSanguin;
+                                }
+                            },
+                            function () {
+                            }
+                    );
+        };
+        $scope.getListeGroupesSanguins();
+
+        // Charger le prochain numéro de carnet disponible
+        $scope.loadNextNumeroCarnet = function () {
+            GenericService.get(getNextNumeroCarnetURL)
+                    .then(
+                            function (data) {
+                                if (data && data.nextNumeroCarnet) {
+                                    $scope.objetPatient.numeroCarnet = data.nextNumeroCarnet;
+                                }
+                            },
+                            function () {
+                            }
+                    );
+        };
 
     }]);
 

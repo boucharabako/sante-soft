@@ -1,8 +1,8 @@
 com\base\frame\achat\fonctionnelle\ressources\PaymentController.class
 com\base\frame\achat\fonctionnelle\ressources\ProduitRessource.class
+com\base\frame\carnet\sante\ressources\PatientRessource.class
 com\base\frame\carnet\sante\controller\PatientController.class
 com\base\frame\achat\fonctionnelle\ressources\CommandeRessource.class
 com\base\frame\achat\fonctionnelle\controller\CommandeController.class
 com\base\frame\achat\fonctionnelle\controller\ProduitController.class
-com\base\frame\carnet\sante\ressources\PatientRessource.class
 com\base\frame\achat\fonctionnelle\controller\EcommerceController.class

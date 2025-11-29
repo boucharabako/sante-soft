@@ -22,6 +22,8 @@ public class PatientDTO {
     private String username;
     private String firstName;
     private String lastName;
+    private String sexe;
+    private Instant dateNaissance;
     private String email;
     private String tel;
     private String titre;
@@ -144,11 +146,28 @@ public class PatientDTO {
         this.confirmPassword = confirmPassword;
     }
 
+    public String getSexe() {
+        return sexe;
+    }
+
+    public void setSexe(String sexe) {
+        this.sexe = sexe;
+    }
+
+    public Instant getDateNaissance() {
+        return dateNaissance;
+    }
+
+    public void setDateNaissance(Instant dateNaissance) {
+        this.dateNaissance = dateNaissance;
+    }
+
     @Override
     public String toString() {
         return "PatientDTO{" + "id=" + id + ", numeroCarnet=" + numeroCarnet + ", groupeSanguin=" + groupeSanguin
                 + ", dateEnregistrement=" + dateEnregistrement + ", username=" + username + ", firstName=" + firstName
-                + ", lastName=" + lastName + ", email=" + email + ", tel=" + tel + '}';
+                + ", lastName=" + lastName + ", sexe=" + sexe + ", dateNaissance=" + dateNaissance
+                + ", email=" + email + ", tel=" + tel + '}';
     }
 }
 
