@@ -5,6 +5,8 @@
  */
 package com.base.frame.carnet.sante.entities;
 
+import com.base.frame.account.entity.Utilisateur;
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,7 +21,7 @@ import org.hibernate.annotations.GenericGenerator;
  */
 @Entity
 @Table(name = "professionnel_sante", schema = "sante")
-public class ProfessionelSante {
+public class ProfessionelSante extends Utilisateur implements Serializable{
      @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid")

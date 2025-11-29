@@ -5,16 +5,12 @@
  */
 package com.base.frame.carnet.sante.entities;
 
-import com.base.frame.socle.utils.audit.AbstractAuditingEntity;
+import com.base.frame.account.entity.Utilisateur;
 import java.io.Serializable;
 import java.time.Instant;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.Table;
-import org.hibernate.annotations.GenericGenerator;
 
 /**
  *
@@ -22,27 +18,14 @@ import org.hibernate.annotations.GenericGenerator;
  */
 @Entity
 @Table(name = "patient", schema = "sante")
-public class Patient extends AbstractAuditingEntity implements Serializable {
+public class Patient extends Utilisateur implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "system-uuid")
-    @GenericGenerator(name = "system-uuid", strategy = "uuid")
-    @Column(name = "id")
-    private String id;
     @Column(name = "groupe_sanguin")
     private String groupeSanguin;
     @Column(name = "numero_carnet")
     private String numeroCarnet;
     @Column(name = "date_enregistrement")
     private Instant dateEnregistrement;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getGroupeSanguin() {
         return groupeSanguin;

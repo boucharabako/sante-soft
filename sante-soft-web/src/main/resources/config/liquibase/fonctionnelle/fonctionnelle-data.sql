@@ -66,3 +66,86 @@ api_uri_base =EXCLUDED.api_uri_base,
 parent =EXCLUDED.parent,
 type_fonction =EXCLUDED.type_fonction,
 niveau_habilitation_max =EXCLUDED.niveau_habilitation_max;
+
+
+
+
+INSERT INTO sante.categorie_antecedent(id, code, libelle, description) 
+VALUES 
+('1','AME','Antécédents médicaux','Antécédents médicaux'),
+('2','ACH','Antécédents chirurgicaux','Antécédents chirurgicaux'),
+('3','AFA','Antécédents familiaux','Antécédents familiaux'),
+('4','AAL','Antécédents allergiques','Antécédents allergiques'),
+('5','AOG','Antécédents obstétricaux et gynécologiques','Antécédents obstétricaux et gynécologiques (concernent exclusivement les femmes)'),
+('6','ATR','Antécédents traumatiques','Antécédents traumatiques'),
+('7','AMD','Antécédents médicamenteux','Antécédents médicamenteux (ex. traitements au long cours)'),
+('8','ASO','Antécédents sociaux','Antécédents sociaux (tabac, alcool, cadre de vie)')
+
+ON CONFLICT (id) DO UPDATE 
+SET
+code= EXCLUDED.code,
+libelle= EXCLUDED.libelle,
+description= EXCLUDED.description;
+
+
+INSERT INTO sante.type_antecedent(id, code, categorie_antecedent, libelle, description) 
+VALUES 
+
+-- Antécédents médicaux (AME)
+('1', 'MCR', '1', 'Maladies chroniques', 'Maladies chroniques'),
+('2', 'MIN', '1', 'Maladies infectieuses', 'Maladies infectieuses'),
+('3', 'MME', '1', 'Maladies métaboliques', 'Maladies métaboliques'),
+('4', 'MCV', '1', 'Maladies cardiovasculaires', 'Maladies cardiovasculaires'),
+('5', 'MRE', '1', 'Maladies respiratoires', 'Maladies respiratoires'),
+('6', 'MNE', '1', 'Maladies neurologiques', 'Maladies neurologiques'),
+
+-- Antécédents chirurgicaux (ACH)
+('7', 'CDI', '2', 'Chirurgie digestive', 'Chirurgie digestive'),
+('8', 'CCV', '2', 'Chirurgie cardiovasculaire', 'Chirurgie cardiovasculaire'),
+('9', 'COR', '2', 'Chirurgie ORL', 'Chirurgie ORL'),
+('10', 'COB', '2', 'Chirurgie obstétrique', 'Chirurgie obstétrique'),
+('11', 'COT', '2', 'Chirurgie orthopédique', 'Chirurgie orthopédique'),
+
+-- Antécédents familiaux (AFA)
+('16', 'MHF', '3', 'Maladies héréditaires', 'Maladies héréditaires'),
+('17', 'MCF', '3', 'Maladies cardiovasculaires familiales', 'Maladies cardiovasculaires familiales'),
+('18', 'CAF', '3', 'Cancers familiaux', 'Cancers familiaux'),
+('19', 'DIF', '3', 'Diabète familial', 'Diabète familial'),
+
+
+-- Antécédents allergiques (AAL)
+('12', 'ALM', '4', 'Allergie médicamenteuse', 'Allergie médicamenteuse'),
+('13', 'ALA', '4', 'Allergie alimentaire', 'Allergie alimentaire'),
+('14', 'ALR', '4', 'Allergie respiratoire', 'Allergie respiratoire'),
+('15', 'ALC', '4', 'Allergie de contact', 'Allergie de contact'),
+
+
+-- Antécédents obstétricaux / gynécologiques (AOG)
+('20', 'GRP', '5', 'Grossesses précédentes', 'Grossesses précédentes'),
+('21', 'ACC', '5', 'Accouchements antérieurs', 'Accouchements antérieurs'),
+('22', 'COP', '5', 'Complications obstétricales', 'Complications obstétricales')
+
+ON CONFLICT (id) DO UPDATE 
+SET
+code= EXCLUDED.code,
+categorie_antecedent= EXCLUDED.categorie_antecedent,
+libelle= EXCLUDED.libelle,
+description= EXCLUDED.description;
+
+
+INSERT INTO sante.categorie_consultation(id, code, libelle, description) 
+VALUES 
+('1','AME','Antécédents médicaux','Antécédents médicaux'),
+('2','ACH','Antécédents chirurgicaux','Antécédents chirurgicaux'),
+('3','AFA','Antécédents familiaux','Antécédents familiaux'),
+('4','AAL','Antécédents allergiques','Antécédents allergiques'),
+('5','AOG','Antécédents obstétricaux et gynécologiques','Antécédents obstétricaux et gynécologiques (concernent exclusivement les femmes)'),
+('6','ATR','Antécédents traumatiques','Antécédents traumatiques'),
+('7','AMD','Antécédents médicamenteux','Antécédents médicamenteux (ex. traitements au long cours)'),
+('8','ASO','Antécédents sociaux','Antécédents sociaux (tabac, alcool, cadre de vie)')
+
+ON CONFLICT (id) DO UPDATE 
+SET
+code= EXCLUDED.code,
+libelle= EXCLUDED.libelle,
+description= EXCLUDED.description;

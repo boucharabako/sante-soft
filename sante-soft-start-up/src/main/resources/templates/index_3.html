@@ -1,11 +1,13 @@
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" 
       xmlns:th="http://www.thymeleaf.org" 
       layout:decorator="template">
     <head>
         <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Sante-soft</title>
                 <title>Produits E-commerce avec Panier</title>
+
                 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
                     <style>
                         body {
@@ -147,9 +149,9 @@
 
                     </style>
                     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
-                    <!--<script src="https://js.stripe.com/v3/"></script>-->
-                    <!--<script src="StripeService.js"></script>-->
-                    <!--<script src="https://js.stripe.com/v3/"></script>-->
+                    <script src="https://js.stripe.com/v3/"></script>
+                    <script src="StripeService.js"></script>
+                    <script src="https://js.stripe.com/v3/"></script>
                      <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
@@ -181,7 +183,7 @@
                                                 <input type="file" class="form-control" ng-model="objet.code" onchange="angular.element(this).scope().uploadOrdonnance(this)"/>
                                             </div>
                                             <div class="text-right font-weight-bold">Total: {{ getTotalPrice() + " CFA"}}</div>
-                                            <!-- Bouton pour ouvrir la modale -->
+                                             Bouton pour ouvrir la modale 
                                             <button type="button" class="btn btn-primary" ng-click="openCheckoutForm()">Passer à la caisse</button>
 
 
@@ -190,7 +192,7 @@
                                     </div>
                                 </div>
                             </nav>
-                            <!-- Modale pour le formulaire client -->
+                             Modale pour le formulaire client 
                             <div class="modal fade" id="checkoutModal" tabindex="-1" role="dialog" aria-labelledby="checkoutModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
@@ -227,7 +229,7 @@
                             <div class="container">
                                 <div class="search-container text-center my-4">
                                     <input type="text" ng-model="searchObjectProduit"  placeholder="Rechercher un produit..." class="form-control search-bar">
-                                        <!--<button class="btn btn-primary search-button" ng-click="searchProducts()">Rechercher</button>-->
+                                        <button class="btn btn-primary search-button" ng-click="searchProducts()">Rechercher</button>
                                         <button title="Rechercher" ng-click="loadProduits()" class="btn btn-primary pull-right m-t-10"><i class="fa fa-search"></i></button>
                                 </div>
                                 <h2 class="text-center my-4">Produits Disponibles</h2>
@@ -243,15 +245,15 @@
                                 </div>
                             </div>
                             <form id="payment-form" ng-submit="handlePayment()">
-                                <!--  <div id="card-element">
+                                  <div id="card-element">
                                      A Stripe Element will be inserted here. 
                                   </div>
                                 
                                   <div id="card-errors" role="alert"></div>
                                 
                                   <button type="submit">Payer</button>
-                                </form>-->
+                                </form>
                         </div>
 
                     </body>
-                    </html>
+                    </html>-->
