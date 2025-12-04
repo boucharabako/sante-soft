@@ -6,39 +6,8 @@ and open the template in the editor.
 -->
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
     
-    
-    <changeSet author="Bouchara (generated)" id="16-10-2025-1-5">
-        <createTable schemaName="${sante_schema_name}" tableName="type_etablissement">
-            <column name="id" type="VARCHAR(50)">
-                <constraints nullable="false"/>
-            </column>
 
-            <!-- Colonnes d'audit -->
-            <column name="created_by" type="VARCHAR(50)"/>
-            <column name="created_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
-            <column name="created_user_ip_adresse" type="VARCHAR(255)"/>
-            <column name="created_user_agent_info" type="VARCHAR(255)"/>
-            <column name="created_user_device" type="VARCHAR(255)"/>
-            <column name="created_user_zone" type="VARCHAR(255)"/>
-
-            <column name="last_modified_by" type="VARCHAR(50)"/>
-            <column name="last_modified_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
-            <column name="last_modified_user_ip_adresse" type="VARCHAR(255)"/>
-            <column name="last_modified_user_agent_info" type="VARCHAR(255)"/>
-            <column name="last_modified_user_device" type="VARCHAR(255)"/>
-            <column name="last_modified_user_zone" type="VARCHAR(255)"/>
-
-            <!-- Colonnes de TypeEtablissement -->
-            <column name="code_type_etablissement" type="VARCHAR(15)"/>
-            <column name="libelle_type_etablissement" type="VARCHAR(100)"/>
-        </createTable>
-    </changeSet>
-
-    <changeSet author="Bouchara (generated)" id="16-11-2025-1-21">
-        <addPrimaryKey schemaName="${sante_schema_name}" columnNames="id" constraintName="type_etablissement_pkey" tableName="type_etablissement"/>
-    </changeSet>
  
-
     <changeSet author="Bouchara (generated)" id="16-10-2025-1-2">
         <createTable schemaName="${sante_schema_name}" tableName="etablissement">
             <column name="id" type="VARCHAR(50)">
@@ -74,7 +43,11 @@ and open the template in the editor.
     </changeSet>
     
     <changeSet author="Bouchara (generated)" id="16-11-2025-1-23">
-        <addForeignKeyConstraint baseTableSchemaName="${sante_schema_name}" baseColumnNames="type_etablissement" baseTableName="etablissement" constraintName="type_ets_on_etablisement_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="type_etablissement" referencedTableSchemaName="${sante_schema_name}"/>
+        <addForeignKeyConstraint baseTableSchemaName="${sante_schema_name}" baseColumnNames="type_etablissement" baseTableName="etablissement" constraintName="type_ets_on_etablisement_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="socle_param_list" referencedTableSchemaName="${socle_schema_name}"/>
+    </changeSet>
+    
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-230">
+        <addForeignKeyConstraint baseTableSchemaName="${sante_schema_name}" baseColumnNames="region_etablissement" baseTableName="etablissement" constraintName="region_ets_on_etablisement_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="socle_param_list" referencedTableSchemaName="${socle_schema_name}"/>
     </changeSet>
  
     <changeSet author="Bouchara (generated)" id="16-10-2025-1-3">
@@ -130,12 +103,56 @@ and open the template in the editor.
             <column name="last_modified_user_device" type="VARCHAR(255)"/>
             <column name="last_modified_user_zone" type="VARCHAR(255)"/>
 
-            <column name="numero_ordre" type="VARCHAR(50)"/>
+            <!-- Colonnes de l'entité ProfessionnelSante -->
+            <column name="numero_ordre" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
 
     <changeSet author="Bouchara (generated)" id="16-11-2025-1-25">
         <addPrimaryKey schemaName="${sante_schema_name}" columnNames="id" constraintName="professionnel_sante_pkey" tableName="professionnel_sante"/>
+    </changeSet>
+    
+    
+    <changeSet author="Bouchara (generated)" id="16-10-2025-1-401">
+        <createTable schemaName="${sante_schema_name}" tableName="affectation">
+            <column name="id" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <!-- Colonnes d'audit -->
+            <column name="created_by" type="VARCHAR(50)"/>
+            <column name="created_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="created_user_ip_adresse" type="VARCHAR(255)"/>
+            <column name="created_user_agent_info" type="VARCHAR(255)"/>
+            <column name="created_user_device" type="VARCHAR(255)"/>
+            <column name="created_user_zone" type="VARCHAR(255)"/>
+
+            <column name="last_modified_by" type="VARCHAR(50)"/>
+            <column name="last_modified_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="last_modified_user_ip_adresse" type="VARCHAR(255)"/>
+            <column name="last_modified_user_agent_info" type="VARCHAR(255)"/>
+            <column name="last_modified_user_device" type="VARCHAR(255)"/>
+            <column name="last_modified_user_zone" type="VARCHAR(255)"/>
+
+            <column name="id_professionnel" type="VARCHAR(50)"/>
+            <column name="id_specialite" type="VARCHAR(50)"/>
+            <column name="id_etablissement" type="VARCHAR(50)"/>
+            <column name="date_debut" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="date_fin" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+
+        </createTable>
+    </changeSet>
+
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-402">
+        <addPrimaryKey schemaName="${sante_schema_name}" columnNames="id" constraintName="affectation_pkey" tableName="affectation"/>
+    </changeSet>
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-403">
+        <addForeignKeyConstraint baseTableSchemaName="${sante_schema_name}" baseColumnNames="id_professionnel" baseTableName="affectation" constraintName="profess_on_affectation_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="professionnel_sante" referencedTableSchemaName="${sante_schema_name}"/>
+    </changeSet>
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-404">
+        <addForeignKeyConstraint baseTableSchemaName="${sante_schema_name}" baseColumnNames="id_specialite" baseTableName="affectation" constraintName="specialite_on_affectation_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="socle_param_list" referencedTableSchemaName="${socle_schema_name}"/>
+    </changeSet>
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-405">
+        <addForeignKeyConstraint baseTableSchemaName="${sante_schema_name}" baseColumnNames="id_etablissement" baseTableName="affectation" constraintName="etablis_on_affectation_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="etablissement" referencedTableSchemaName="${sante_schema_name}"/>
     </changeSet>
     
     
@@ -250,7 +267,7 @@ and open the template in the editor.
     
     
     
-     <changeSet author="Bouchara (generated)" id="16-10-2025-1-311">
+    <changeSet author="Bouchara (generated)" id="16-10-2025-1-311">
         <createTable schemaName="${sante_schema_name}" tableName="categorie_consultation">
             <column name="id" type="VARCHAR(50)">
                 <constraints nullable="false"/>
@@ -279,7 +296,7 @@ and open the template in the editor.
         <addPrimaryKey schemaName="${sante_schema_name}" columnNames="id" constraintName="catg_consultation_pkey" tableName="categorie_consultation"/>
     </changeSet>
     
-     <changeSet author="Bouchara (generated)" id="16-11-2025-1-313">
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-313">
         <createTable schemaName="${sante_schema_name}" tableName="type_consultation">
             <column name="id" type="VARCHAR(50)">
                 <constraints nullable="false"/>
@@ -390,14 +407,14 @@ and open the template in the editor.
         <addPrimaryKey schemaName="${sante_schema_name}" columnNames="id" constraintName="document_pkey" tableName="document"/>
     </changeSet>
     
-     <changeSet author="Bouchara (generated)" id="16-11-2025-1-38">
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-38">
         <addForeignKeyConstraint baseTableSchemaName="${sante_schema_name}" baseColumnNames="id_patient" baseTableName="document" constraintName="patient_on_doccument_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="patient" referencedTableSchemaName="${sante_schema_name}"/>
     </changeSet>
     
     
     
     
-        <changeSet author="Bouchara (generated)" id="16-10-2025-1-381">
+    <changeSet author="Bouchara (generated)" id="16-10-2025-1-381">
         <createTable schemaName="${sante_schema_name}" tableName="type_observation">
             <column name="id" type="VARCHAR(50)">
                 <constraints nullable="false"/>
@@ -430,7 +447,7 @@ and open the template in the editor.
     </changeSet>
     
     
-     <changeSet author="Bouchara (generated)" id="16-11-2025-1-39">
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-39">
         <createTable schemaName="${sante_schema_name}" tableName="observation">
             <column name="id" type="VARCHAR(50)">
                 <constraints nullable="false"/>
@@ -653,7 +670,7 @@ and open the template in the editor.
         <addForeignKeyConstraint baseTableSchemaName="${sante_schema_name}" baseColumnNames="id_antecedent" baseTableName="historique_antecedent" constraintName="ant_on_historique_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="antecedant_medical" referencedTableSchemaName="${sante_schema_name}"/>
     </changeSet>
     
-        <changeSet author="Bouchara (generated)" id="16-11-2025-1-54">
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-54">
         <addForeignKeyConstraint baseTableSchemaName="${sante_schema_name}" baseColumnNames="id_professionnel" baseTableName="historique_antecedent" constraintName="prof_on_historique_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="professionnel_sante" referencedTableSchemaName="${sante_schema_name}"/>
     </changeSet>
    

@@ -327,37 +327,37 @@
 
                             <div class="patient-details">
                                 <div class="patient-detail-item">
-                                    <i class="fas fa-id-card"></i>
+                                    <i class="fas fa-id-card" style="color: #3498db;"></i>
                                     <span class="patient-detail-label">Carnet:</span>
                                     <span class="patient-detail-value">{{p.numeroCarnet}}</span>
                                 </div>
                                 <div class="patient-detail-item">
-                                    <i class="fas fa-venus-mars"></i>
+                                    <i class="fas fa-venus-mars" style="color: #9b59b6;"></i>
                                     <span class="patient-detail-label">Sexe:</span>
-                                    <span class="patient-detail-value">{{p.sexe === 'M' ? 'Masculin' : (p.sexe === 'F' ? 'Féminin' : 'Non renseigné')}}</span>
+                                    <span class="patient-detail-value">{{p.sexeLibelle || 'Non renseigné'}}</span>
                                 </div>
                                 <div class="patient-detail-item">
-                                    <i class="fas fa-birthday-cake"></i>
+                                    <i class="fas fa-birthday-cake" style="color: #e74c3c;"></i>
                                     <span class="patient-detail-label">Né(e) le:</span>
                                     <span class="patient-detail-value">{{p.dateNaissance | date:'dd/MM/yyyy' || 'Non renseigné'}}</span>
                                 </div>
                                 <div class="patient-detail-item">
-                                    <i class="fas fa-tint"></i>
+                                    <i class="fas fa-tint" style="color: #c0392b;"></i>
                                     <span class="patient-detail-label">Groupe:</span>
-                                    <span class="patient-detail-value">{{p.groupeSanguin || 'Non renseigné'}}</span>
+                                    <span class="patient-detail-value">{{p.groupeSanguinLibelle || 'Non renseigné'}}</span>
                                 </div>
                                 <div class="patient-detail-item">
-                                    <i class="fas fa-envelope"></i>
+                                    <i class="fas fa-envelope" style="color: #f39c12;"></i>
                                     <span class="patient-detail-label">Email:</span>
                                     <span class="patient-detail-value" style="font-size: 12px;">{{p.email || 'Non renseigné'}}</span>
                                 </div>
                                 <div class="patient-detail-item">
-                                    <i class="fas fa-phone"></i>
+                                    <i class="fas fa-phone" style="color: #27ae60;"></i>
                                     <span class="patient-detail-label">Tél:</span>
                                     <span class="patient-detail-value">{{p.tel || 'Non renseigné'}}</span>
                                 </div>
                                 <div class="patient-detail-item">
-                                    <i class="fas fa-calendar"></i>
+                                    <i class="fas fa-calendar" style="color: #16a085;"></i>
                                     <span class="patient-detail-label">Inscrit le:</span>
                                     <span class="patient-detail-value">{{p.dateEnregistrement | date:'dd/MM/yyyy'}}</span>
                                 </div>

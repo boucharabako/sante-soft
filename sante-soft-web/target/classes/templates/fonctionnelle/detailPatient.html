@@ -39,7 +39,7 @@
                                 <label class="control-label">Sexe *</label>
                                 <select class="form-control" ng-model="objetPatient.sexe" required>
                                     <option value="">-- Sélectionner --</option>
-                                    <option data-ng-repeat="sexe in listeSexes" value="{{sexe.id}}">{{sexe.libelle}}</option>
+                                    <option data-ng-repeat="se in listeSexes" value="{{se.id}}">{{se.libelle}}</option>
                                 </select>
                             </div>
                             <div class="col-sm-6">
@@ -76,8 +76,8 @@
                                        title="Le numéro de carnet est généré automatiquement" />
                             </div>
                             <div class="col-sm-6">
-                                <label class="control-label">Groupe Sanguin *</label>
-                                <select class="form-control" ng-model="objetPatient.groupeSanguin" required>
+                                <label class="control-label">Groupe Sanguin </label>
+                                <select class="form-control" ng-model="objetPatient.groupeSanguin">
                                     <option value="">-- Sélectionner --</option>
                                     <option data-ng-repeat="gs in listeGroupesSanguins" value="{{gs.id}}">{{gs.libelle}}</option>
                                 </select>

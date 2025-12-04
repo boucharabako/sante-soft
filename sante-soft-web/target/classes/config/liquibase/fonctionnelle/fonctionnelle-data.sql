@@ -54,11 +54,18 @@ categorie_produit= EXCLUDED.categorie_produit;
 -- description_produit= EXCLUDED.description_produit,
 -- type_produit= EXCLUDED.type_produit;
 
-INSERT INTO  socle.socle_fonction(code,libelle,page_uri_base,api_uri_base,parent,type_fonction,niveau_habilitation_max) 
-VALUES 
+
+
+
+INSERT INTO  socle.socle_fonction(code,libelle,page_uri_base,api_uri_base,parent,type_fonction,niveau_habilitation_max)
+VALUES
 ('FC_PROD','Gestion des produits','/gestion','/gestion/produit', 'FC_HABILIT','FONCTION','PARAM_NVX_SA'),
-('FC_COMM','Gestion des commandes','/gestion','/gestion/commande', 'FC_HABILIT','FONCTION','PARAM_NVX_SA')
-ON CONFLICT (code) DO UPDATE 
+('FC_COMM','Gestion des commandes','/gestion','/gestion/commande', 'FC_HABILIT','FONCTION','PARAM_NVX_SA'),
+('FC_PATIENT','Gestion des patients','/gestion','/gestion/patient', 'FC_HABILIT','FONCTION','PARAM_NVX_SA'),
+('FC_PROFESSIONNEL','Gestion des professionnels de santé','/gestion','/gestion/professionnel', 'FC_HABILIT','FONCTION','PARAM_NVX_SA'),
+('FC_ETABLISSEMENT','Gestion des établissements','/gestion','/gestion/etablissement', 'FC_HABILIT','FONCTION','PARAM_NVX_SA')
+
+ON CONFLICT (code) DO UPDATE
 SET
 libelle= EXCLUDED.libelle,
 page_uri_base =EXCLUDED.page_uri_base,
@@ -133,19 +140,18 @@ libelle= EXCLUDED.libelle,
 description= EXCLUDED.description;
 
 
-INSERT INTO sante.categorie_consultation(id, code, libelle, description) 
-VALUES 
-('1','AME','Antécédents médicaux','Antécédents médicaux'),
-('2','ACH','Antécédents chirurgicaux','Antécédents chirurgicaux'),
-('3','AFA','Antécédents familiaux','Antécédents familiaux'),
-('4','AAL','Antécédents allergiques','Antécédents allergiques'),
-('5','AOG','Antécédents obstétricaux et gynécologiques','Antécédents obstétricaux et gynécologiques (concernent exclusivement les femmes)'),
-('6','ATR','Antécédents traumatiques','Antécédents traumatiques'),
-('7','AMD','Antécédents médicamenteux','Antécédents médicamenteux (ex. traitements au long cours)'),
-('8','ASO','Antécédents sociaux','Antécédents sociaux (tabac, alcool, cadre de vie)')
+INSERT INTO sante.type_observation (id, libelle, description, unite, valeur_min, valeur_max)
+VALUES
+('1', 'Température', 'Température corporelle mesurée avec un thermomètre', '°C', '30.0', '43.0'),
+('2', 'Poids', 'Poids du patient mesuré sur une balance médicale', 'kg', '1.0', '350.0'),
+('3', 'Taille', 'Taille du patient mesurée debout', 'cm', '40', '280'),
+('4', 'Pression artérielle systolique', 'Pression artérielle systolique (tension haute)', 'mmHg', '60', '260'),
+('5', 'Pression artérielle diastolique', 'Pression artérielle diastolique (tension basse)', 'mmHg', '30', '160')
 
 ON CONFLICT (id) DO UPDATE 
 SET
-code= EXCLUDED.code,
 libelle= EXCLUDED.libelle,
-description= EXCLUDED.description;
+description= EXCLUDED.description,
+unite= EXCLUDED.unite,
+valeur_min= EXCLUDED.valeur_min,
+valeur_max= EXCLUDED.valeur_max;
