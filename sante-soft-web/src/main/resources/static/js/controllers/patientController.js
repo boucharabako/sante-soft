@@ -164,7 +164,7 @@ App.controller("patientController", ['$scope', 'GenericService','PropagationServ
                             function () {}
                     );
         };
-        
+
         $scope.closeModalAddUser = function () {
             $('#detail-patient').modal('hide');
         };
@@ -183,6 +183,17 @@ App.controller("patientController", ['$scope', 'GenericService','PropagationServ
                             function (data) {
                                 if (data) {
                                     $scope.objetPatient = data.patient;
+
+                                    // Convertir les dates en objets Date pour AngularJS
+                                    if ($scope.objetPatient.dateEnregistrement) {
+                                        $scope.objetPatient.dateEnregistrement = new Date($scope.objetPatient.dateEnregistrement);
+                                    }
+                                    if ($scope.objetPatient.dateNaissance) {
+                                        $scope.objetPatient.dateNaissance = new Date($scope.objetPatient.dateNaissance);
+                                    }
+
+                                    $scope.getListeGroupesSanguins();
+                                    $scope.getListeSexes();
                                     $scope.displaySaveButton = true;
                                     $scope.displayCancelButton = true;
                                     $scope.displayExitButton = false;
@@ -197,27 +208,29 @@ App.controller("patientController", ['$scope', 'GenericService','PropagationServ
 
                     );
         };
-        
+
         $scope.editPatient = function (id) {
             $scope.modeEdition = 3;
             $scope.titleModale = "Modification d'un patient";
             $scope.disable = true;
             $scope.disableCode = true;
+
             GenericService.get(detailPatientURL + "?id=" + id)
                     .then(
                             function (data) {
                                 if (data) {
                                     $scope.objetPatient = data.patient;
 
-                                    // Convertir les dates pour l'affichage
+                                    // Convertir les dates en objets Date pour AngularJS
                                     if ($scope.objetPatient.dateEnregistrement) {
-                                        var date = new Date($scope.objetPatient.dateEnregistrement);
-                                        $scope.objetPatient.dateEnregistrement = date.toISOString().slice(0, 16);
+                                        $scope.objetPatient.dateEnregistrement = new Date($scope.objetPatient.dateEnregistrement);
                                     }
                                     if ($scope.objetPatient.dateNaissance) {
-                                        var dateNaissance = new Date($scope.objetPatient.dateNaissance);
-                                        $scope.objetPatient.dateNaissance = dateNaissance.toISOString().slice(0, 10);
+                                        $scope.objetPatient.dateNaissance = new Date($scope.objetPatient.dateNaissance);
                                     }
+
+                                    $scope.getListeGroupesSanguins();
+                                    $scope.getListeSexes();
 
                                     $scope.displaySaveButton = true;
                                     $scope.displayCancelButton = true;
@@ -285,6 +298,8 @@ App.controller("patientController", ['$scope', 'GenericService','PropagationServ
                             function (data) {
                                 if (data) {
                                     $scope.listeSexes = data.listSexe;
+                                    jslog("listeSexes:" + $scope.listeSexes);
+
                                 }
                             },
                             function () {
@@ -300,6 +315,7 @@ App.controller("patientController", ['$scope', 'GenericService','PropagationServ
                             function (data) {
                                 if (data) {
                                     $scope.listeGroupesSanguins = data.listGroupeSanguin;
+                                    jslog("listeGroupesSanguins:" + $scope.listeGroupesSanguins);
                                 }
                             },
                             function () {

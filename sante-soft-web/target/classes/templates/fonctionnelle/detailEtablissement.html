@@ -1,0 +1,64 @@
+<!-- Modal Etablissement -->
+<div class="modal fade compose-modal" id="detail-etablissement" tabindex="-1" role="dialog" aria-hidden="true" style="max-height: 100%; margin: 50px 10px 50px -90px;">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width:200%; height: 70%;">
+            <div class="modal-header">
+                <h5 class="modal-title mt-0" id="exampleModalLabel">{{titleModale}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="form-group row d-flex align-items-end">
+                            <div class="col-sm-6">
+                                <label class="control-label">Code Établissement <span style="color: red;">*</span></label>
+                                <input class="form-control" ng-model="objetEtablissement.codeEtablissement" placeholder="Ex: ETB001" />
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="control-label">Libellé <span style="color: red;">*</span></label>
+                                <input class="form-control" ng-model="objetEtablissement.libelleEtablissement" placeholder="Ex: Hôpital Central" />
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="control-label">Région <span style="color: red;">*</span></label>
+                                <select class="form-control mySelecDoc" ng-model="objetEtablissement.regionEtablissement"
+                                        id="selectRegionEtablissement">
+                                    <option value="">-- Sélectionner une région --</option>
+                                    <option data-ng-repeat="region in listeRegions" value="{{region.id}}">{{region.libelle}}</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="control-label">Type Établissement <span style="color: red;">*</span></label>
+                                <select class="form-control mySelecDoc" ng-model="objetEtablissement.typeEtablissement"
+                                        id="selectTypeEtablissement">
+                                    <option value="">-- Sélectionner un type --</option>
+                                    <option data-ng-repeat="type in listeTypeEtablissements" value="{{type.id}}">{{type.libelle}}</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-12">
+                                <label class="control-label">Adresse <span style="color: red;">*</span></label>
+                                <textarea class="form-control" ng-model="objetEtablissement.adresse" rows="3" placeholder="Ex: Avenue de la chance, Lomé"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group row d-flex align-items-end" style="margin-left: 65%;">
+                            <span name="add" class="btn btn-primary" style="margin-left: 20px;"
+                                  ng-if="modeEdition === 0" ng-click="saveEtablissement(objetEtablissement)">Ajouter
+                            </span>
+                            <span name="add" ng-if="modeEdition === 3" class="btn btn-primary" style="margin-left: 20px;"
+                                  ng-click="saveEtablissement(objetEtablissement)">Modifier
+                            </span>
+                            <span ng-if="modeEdition === 0" class="btn btn-primary" style="margin-left: 20px;" ng-click="saveEtablissementEtContinuer(objetEtablissement)">
+                                Ajouter et continuer
+                            </span>
+                            <span class="btn btn-primary" style="margin-left: 20px;" ng-click="closeModalEtablissement()">
+                                <i class="fas fa-sign-out-alt"></i>
+                            </span>
+                        </div>
+                    </div><!--end col-->
+                </div><!--end row-->
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -8,6 +8,7 @@ package com.base.frame.carnet.sante.services;
 import com.base.frame.account.core.repository.ProfilRepository;
 import com.base.frame.account.core.repository.UtilisateurPasswordRepository;
 import com.base.frame.account.core.repository.UtilisateurProfilRepository;
+import com.base.frame.account.core.repository.UtilisateurRepository;
 import com.base.frame.account.entity.Profil;
 import com.base.frame.account.entity.UtilisateurPassword;
 import com.base.frame.account.entity.UtilisateurProfil;
@@ -41,6 +42,9 @@ public class PatientService {
 
     @Autowired
     private PatientRepository patientRepository;
+    
+      @Autowired
+    private UtilisateurRepository utilisateurRepository;
 
     @Autowired
     private PatientDAO patientDAO;
@@ -99,17 +103,20 @@ public class PatientService {
         dto.setId(entity.getId());
         dto.setNumeroCarnet(entity.getNumeroCarnet());
 
-        // Garder l'ID du groupe sanguin pour que le select fonctionne
-        dto.setGroupeSanguin(entity.getGroupeSanguin());
+        if (entity.getGroupeSanguin() != null && !entity.getGroupeSanguin().isEmpty()) {
+            dto.setGroupeSanguin(entity.getGroupeSanguin());
+            dto.setGroupeSanguinLibelle(this.socleGenericService.findParamListById(entity.getGroupeSanguin()).get().getLibelle());
+        }
         dto.setDateEnregistrement(entity.getDateEnregistrement());
 
-        // Mapper les champs de Utilisateur
         dto.setUsername(entity.getUsername());
         dto.setFirstName(entity.getFirstName());
         dto.setLastName(entity.getLastName());
 
-        // Garder l'ID du sexe pour que le select fonctionne
-        dto.setSexe(entity.getSexe());
+        if (entity.getSexe() != null && !entity.getSexe().isEmpty()) {
+            dto.setSexe(entity.getSexe());
+            dto.setSexeLibelle(this.socleGenericService.findParamListById(entity.getSexe()).get().getLibelle());
+        }
         dto.setDateNaissance(entity.getDateNaissance());
         dto.setEmail(entity.getEmail());
         dto.setTel(entity.getTel());
@@ -123,6 +130,9 @@ public class PatientService {
     }
 
     public PatientDTO savePatient(PatientDTO dto) {
+        // Valider les données du patient
+        this.controleValidationObjetPatient(dto);
+
         Patient entity = new Patient();
         boolean isNew = false;
 
@@ -282,5 +292,80 @@ public class PatientService {
 
     public List<PatientDTO> getAllPatient(String mc) {
         return this.mapEntitiesIntoDTOs(patientDAO.findListePatient(mc));
+    }
+
+    /**
+     * Méthode de validation des données du patient
+     * @param dto
+     */
+    public void controleValidationObjetPatient(PatientDTO dto) {
+        // Validation du nom d'utilisateur (username)
+        if (dto.getUsername() == null || dto.getUsername().trim().isEmpty()) {
+            throw new ObjectValidationException("Nom d'utilisateur obligatoire", null);
+        }
+
+        // Vérifier si le username existe déjà
+        if (this.utilisateurRepository.findByUsername(dto.getUsername()).isPresent()) {
+            if (dto.getId() == null || dto.getId().trim().isEmpty() || !this.patientRepository.existsById(dto.getId())) {
+                throw new ObjectValidationException("Nom d'utilisateur existe déjà", null);
+            } else {
+                Patient patient = this.patientRepository.findById(dto.getId()).get();
+                if (!patient.getUsername().equalsIgnoreCase(dto.getUsername())) {
+                    throw new ObjectValidationException("Nom d'utilisateur existe déjà", null);
+                }
+            }
+        }
+
+        // Validation du nom (lastName)
+        if (dto.getLastName() == null || dto.getLastName().trim().isEmpty()) {
+            throw new ObjectValidationException("Nom obligatoire", null);
+        }
+
+        // Validation du prénom (firstName)
+        if (dto.getFirstName() == null || dto.getFirstName().trim().isEmpty()) {
+            throw new ObjectValidationException("Prénom obligatoire", null);
+        }
+
+        // Validation du sexe
+        if (dto.getSexe() == null || dto.getSexe().trim().isEmpty()) {
+            throw new ObjectValidationException("Sexe obligatoire", null);
+        }
+
+        // Validation de la date de naissance
+        if (dto.getDateNaissance() == null) {
+            throw new ObjectValidationException("Date de naissance obligatoire", null);
+        }
+
+//        // Validation du groupe sanguin
+//        if (dto.getGroupeSanguin() == null || dto.getGroupeSanguin().trim().isEmpty()) {
+//            throw new ObjectValidationException("Groupe sanguin obligatoire", null);
+//        }
+
+        // Vérifier si l'email existe déjà (si fourni)
+        if (dto.getEmail() != null && !dto.getEmail().trim().isEmpty()) {
+            if (this.utilisateurRepository.findByEmail(dto.getEmail()).isPresent()) {
+                if (dto.getId() == null || dto.getId().trim().isEmpty() || !this.patientRepository.existsById(dto.getId())) {
+                    throw new ObjectValidationException("Email existe déjà", null);
+                } else {
+                    Patient patient = this.patientRepository.findById(dto.getId()).get();
+                    if (!patient.getEmail().equalsIgnoreCase(dto.getEmail())) {
+                        throw new ObjectValidationException("Email existe déjà", null);
+                    }
+                }
+            }
+        }
+
+        // Validation du mot de passe pour un nouveau patient
+        if (dto.getId() == null || dto.getId().trim().isEmpty()) {
+            if (dto.getPassword() == null || dto.getPassword().trim().isEmpty()) {
+                throw new ObjectValidationException("Mot de passe obligatoire", null);
+            }
+            if (dto.getConfirmPassword() == null || dto.getConfirmPassword().trim().isEmpty()) {
+                throw new ObjectValidationException("Confirmation du mot de passe obligatoire", null);
+            }
+            if (!dto.getPassword().equals(dto.getConfirmPassword())) {
+                throw new ObjectValidationException("Confirmation et mot de passe ne correspondent pas", null);
+            }
+        }
     }
 }

@@ -16,6 +16,7 @@ public class PatientDTO {
     private String id;
     private String numeroCarnet;
     private String groupeSanguin;
+    private String groupeSanguinLibelle;
     private Instant dateEnregistrement;
 
     // Champs hérités de Utilisateur
@@ -23,6 +24,8 @@ public class PatientDTO {
     private String firstName;
     private String lastName;
     private String sexe;
+    private String sexeLibelle;
+
     private Instant dateNaissance;
     private String email;
     private String tel;
@@ -161,6 +164,24 @@ public class PatientDTO {
     public void setDateNaissance(Instant dateNaissance) {
         this.dateNaissance = dateNaissance;
     }
+
+    public String getGroupeSanguinLibelle() {
+        return groupeSanguinLibelle;
+    }
+
+    public void setGroupeSanguinLibelle(String groupeSanguinLibelle) {
+        this.groupeSanguinLibelle = groupeSanguinLibelle;
+    }
+
+    public String getSexeLibelle() {
+        return sexeLibelle;
+    }
+
+    public void setSexeLibelle(String sexeLibelle) {
+        this.sexeLibelle = sexeLibelle;
+    }
+    
+    
 
     @Override
     public String toString() {
