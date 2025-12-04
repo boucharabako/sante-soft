@@ -15,6 +15,7 @@ App.factory('PropagationService', ['$rootScope', function ($rootScope) {
         var classificationObject = {idClassification: null, libelleClassification: null, parentClassification: null};
         var associationLigneBudgetaireCompteObject = {ligneBudObject: null, compteObject: null};
         var listValeurIndicateur = [];
+        var patient = {id: null, nom: null,prenoms: null, numeroCarnet:null, dataNaissance:null};
         var ob = {};
         var loi = {add: false, view: false, selectedTypeLoi: null};
         var operation = {end: false};

@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorator="template">
+    <head>
+        <title>Nouvelle Consultation</title>
+        <link th:href="@{/plugins/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
+        <link th:href="@{/plugins/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet"/>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+        <script th:src="@{/js/controllers/consultationController.js}"></script>
+        <script src="app.js"></script>
+        <style type="text/css">
+            .section-card {
+                border: 1px solid #e0e0e0;
+                border-radius: 10px;
+                padding: 20px;
+                margin-bottom: 25px;
+                background: #fff;
+            }
+            .section-header {
+                font-size: 20px;
+                font-weight: 600;
+                color: #333;
+                margin-bottom: 20px;
+                padding-bottom: 10px;
+                border-bottom: 2px solid #e0e0e0;
+                display: flex;
+                align-items: center;
+            }
+            .section-header i {
+                margin-right: 10px;
+                font-size: 24px;
+            }
+            .patient-info {
+                background: #f8f9fa;
+                border-left: 4px solid #667eea;
+                padding: 20px;
+                border-radius: 8px;
+                margin-bottom: 25px;
+            }
+            .observation-item {
+                background: #e8f5e9;
+                border-left: 4px solid #4caf50;
+                padding: 12px;
+                margin-bottom: 10px;
+                border-radius: 5px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .antecedent-item {
+                background: #e1f5fe;
+                border-left: 4px solid #03a9f4;
+                padding: 12px;
+                margin-bottom: 10px;
+                border-radius: 5px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .prescription-item {
+                background: #f3e5f5;
+                border-left: 4px solid #9c27b0;
+                padding: 12px;
+                margin-bottom: 10px;
+                border-radius: 5px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .examen-item {
+                background: #fff3e0;
+                border-left: 4px solid #ff9800;
+                padding: 12px;
+                margin-bottom: 10px;
+                border-radius: 5px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .btn-add {
+                background: #4caf50;
+                color: white;
+                border: none;
+            }
+            .btn-add:hover {
+                background: #45a049;
+                color: white;
+            }
+            .btn-remove {
+                background: #f44336;
+                color: white;
+                border: none;
+                padding: 5px 10px;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+            .btn-remove:hover {
+                background: #da190b;
+            }
+            .form-label {
+                font-weight: 600;
+                color: #555;
+                margin-bottom: 8px;
+            }
+            .required::after {
+                content: " *";
+                color: red;
+            }
+            .page-header-custom {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                padding: 20px;
+                border-radius: 8px;
+                margin-bottom: 20px;
+            }
+            .badge-custom {
+                padding: 5px 10px;
+                border-radius: 4px;
+                font-size: 12px;
+                font-weight: 600;
+            }
+        </style>
+    </head>
+    <body>
+        <div layout:fragment="content" id="consultationForm" data-ng-cloak="">
+            <div class="row" ng-controller="consultationController" data-ng-cloak="">
+                
+                <!-- En-tête -->
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body page-header-custom">
+                            <div class="row align-items-center">
+                                <div class="col-md-8">
+                                    <h3 class="mb-0"><i class="fas fa-stethoscope"></i> Nouvelle Consultation</h3>
+                                    <p class="mb-0">Enregistrement d'une consultation médicale</p>
+                                </div>
+                                <div class="col-md-4 text-right">
+                                    <label class="text-white mr-2">Date de consultation:</label>
+                                    <input type="date" class="form-control d-inline-block" style="width: auto;" ng-model="consultation.dateConsultation">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Informations Patient -->
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="patient-info">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h5><i class="fas fa-user-circle"></i> Informations Patient</h5>
+                                        <div class="row mt-3">
+                                            <div class="col-md-3">
+                                                <strong>Nom complet:</strong> {{patient.prenom}} {{patient.nom}}
+                                            </div>
+                                            <div class="col-md-3">
+                                                <strong>Groupe sanguin:</strong> {{patient.groupeSanguin}}
+                                            </div>
+                                            <div class="col-md-3">
+                                                <strong>N° Carnet:</strong> {{patient.numeroCamet}}
+                                            </div>
+                                            <div class="col-md-3">
+                                                <strong>Date de naissance:</strong> {{patient.dateNaissance | date: 'dd/MM/yyyy'}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Observations Médicales -->
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="section-header">
+                                <i class="fas fa-heartbeat text-success"></i>
+                                Observations Médicales
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-3">
+                                    <select class="form-control" ng-model="nouvelleObservation.type">
+                                        <option value="">Type d'observation</option>
+                                        <option ng-repeat="type in typesObservation" value="{{type}}">{{type}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" ng-model="nouvelleObservation.valeur" 
+                                           placeholder="Valeur">
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" ng-model="nouvelleObservation.unite" 
+                                           placeholder="Unité (mmHg, °C, kg...)">
+                                </div>
+                                <div class="col-md-3">
+                                    <button class="btn btn-add btn-block" ng-click="ajouterObservation()">
+                                        <i class="fas fa-plus"></i> Ajouter
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div ng-show="observations.length > 0">
+                                <div class="observation-item" ng-repeat="obs in observations">
+                                    <div>
+                                        <strong>{{obs.type}}:</strong> {{obs.valeur}} {{obs.unite}}
+                                    </div>
+                                    <button class="btn-remove" ng-click="supprimerObservation($index)">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div ng-show="observations.length === 0" class="text-muted text-center py-3">
+                                Aucune observation enregistrée
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Antécédents Médicaux -->
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="section-header">
+                                <i class="fas fa-history text-info"></i>
+                                Antécédents Médicaux
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-3">
+                                    <select class="form-control" ng-model="nouvelAntecedent.type">
+                                        <option value="">Type d'antécédent</option>
+                                        <option value="Médical">Médical</option>
+                                        <option value="Chirurgical">Chirurgical</option>
+                                        <option value="Familial">Familial</option>
+                                        <option value="Allergique">Allergique</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" ng-model="nouvelAntecedent.description" 
+                                           placeholder="Description de l'antécédent">
+                                </div>
+                                <div class="col-md-3">
+                                    <button class="btn btn-add btn-block" ng-click="ajouterAntecedent()">
+                                        <i class="fas fa-plus"></i> Ajouter
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div ng-show="antecedents.length > 0">
+                                <div class="antecedent-item" ng-repeat="ant in antecedents">
+                                    <div>
+                                        <span class="badge badge-info badge-custom">{{ant.type}}</span>
+                                        <strong class="ml-2">{{ant.description}}</strong>
+                                        <small class="text-muted ml-2" ng-show="ant.dateDebut">Depuis: {{ant.dateDebut | date:'dd/MM/yyyy'}}</small>
+                                    </div>
+                                    <button class="btn-remove" ng-click="supprimerAntecedent($index)">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div ng-show="antecedents.length === 0" class="text-muted text-center py-3">
+                                Aucun antécédent enregistré
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Informations Générales de la Consultation -->
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="section-header">
+                                <i class="fas fa-file-medical text-primary"></i>
+                                Informations Générales
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label required">Motif de la consultation</label>
+                                <textarea class="form-control" rows="2" ng-model="consultation.motif" 
+                                          placeholder="Ex: Douleurs abdominales, Contrôle de routine..."></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label required">Diagnostic</label>
+                                <textarea class="form-control" rows="3" ng-model="consultation.diagnostic" 
+                                          placeholder="Diagnostic médical détaillé..."></textarea>
+                            </div>
+
+                            <div class="form-group mb-0">
+                                <label class="form-label">Traitement recommandé</label>
+                                <textarea class="form-control" rows="2" ng-model="consultation.traitement" 
+                                          placeholder="Plan de traitement..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Prescriptions -->
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="section-header">
+                                <i class="fas fa-pills" style="color: #9c27b0;"></i>
+                                Prescriptions
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" ng-model="nouvellePrescription.medicament" 
+                                           placeholder="Médicament">
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" ng-model="nouvellePrescription.posologie" 
+                                           placeholder="Posologie (ex: 2x/jour)">
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" ng-model="nouvellePrescription.duree" 
+                                           placeholder="Durée (ex: 7 jours)">
+                                </div>
+                                <div class="col-md-2">
+                                    <button class="btn btn-add btn-block" ng-click="ajouterPrescription()">
+                                        <i class="fas fa-plus"></i> Ajouter
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div ng-show="prescriptions.length > 0">
+                                <div class="prescription-item" ng-repeat="pres in prescriptions">
+                                    <div>
+                                        <strong>{{pres.medicament}}</strong> - {{pres.posologie}}
+                                        <span ng-show="pres.duree"> pendant {{pres.duree}}</span>
+                                    </div>
+                                    <button class="btn-remove" ng-click="supprimerPrescription($index)">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div ng-show="prescriptions.length === 0" class="text-muted text-center py-3">
+                                Aucune prescription enregistrée
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Examens Complémentaires -->
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="section-header">
+                                <i class="fas fa-vial text-warning"></i>
+                                Examens Complémentaires
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-3">
+                                    <select class="form-control" ng-model="nouvelExamen.typeExamen">
+                                        <option value="">Type d'examen</option>
+                                        <option ng-repeat="type in typesExamen" value="{{type}}">{{type}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" ng-model="nouvelExamen.resultat" 
+                                           placeholder="Résultat de l'examen">
+                                </div>
+                                <div class="col-md-3">
+                                    <button class="btn btn-add btn-block" ng-click="ajouterExamen()">
+                                        <i class="fas fa-plus"></i> Ajouter
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div ng-show="examens.length > 0">
+                                <div class="examen-item" ng-repeat="exam in examens">
+                                    <div>
+                                        <strong>{{exam.typeExamen}}</strong>
+                                        <span ng-show="exam.resultat"> - {{exam.resultat}}</span>
+                                    </div>
+                                    <button class="btn-remove" ng-click="supprimerExamen($index)">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div ng-show="examens.length === 0" class="text-muted text-center py-3">
+                                Aucun examen enregistré
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Boutons d'action -->
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="text-right">
+                                <button class="btn btn-secondary mr-2" ng-click="annuler()">
+                                    <i class="fas fa-times"></i> Annuler
+                                </button>
+                                <button class="btn btn-primary" ng-click="enregistrerConsultation()">
+                                    <i class="fas fa-save"></i> Enregistrer la consultation
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </body>
+</html>

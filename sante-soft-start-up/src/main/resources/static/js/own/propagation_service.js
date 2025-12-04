@@ -16,6 +16,7 @@ App.factory('PropagationService', ['$rootScope', function ($rootScope) {
         var associationLigneBudgetaireCompteObject = {ligneBudObject: null, compteObject: null};
         var listValeurIndicateur = [];
         var ob = {};
+        var patient = {id: null, nom: null,prenoms: null, numeroCarnet:null, dataNaissance:null};
         var loi = {add: false, view: false, selectedTypeLoi: null};
         var operation = {end: false};
         var listRoleMetierObject = [];
@@ -552,6 +553,19 @@ App.factory('PropagationService', ['$rootScope', function ($rootScope) {
                 $rootScope.$broadcast("tiersPayementPieceObjectSent");
                 //jslog("Envoie de la piece au formulaire de tiers reussi" + angular.toJson(tiersPayementPieceObject));
             },
+            setPatientSender: function (patien) {
+                patient.id = patien.id;
+                patient.nom = patien.nom;
+                patient.prenoms = patien.prenoms;
+                patient.numeroCarnet = patien.numeroCarnet;
+                patient.dateNaissance = patien.dateNaissance;
+                
+                $rootScope.$broadcast("patientSender");
+            },
+
+            getPatientSender: function () {
+                return patient;
+            },
             getTiersReservationObject: function () {
                 return tiersPayementPieceObject;
             },
@@ -837,6 +851,8 @@ App.factory('PropagationService', ['$rootScope', function ($rootScope) {
             getOppositionObject: function () {
                 return infoOpposition;
             }
+            
+            
         };
     }]);
 

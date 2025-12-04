@@ -8,7 +8,7 @@
 'use strict';
 var App;
 
-App.controller("patientController", ['$scope', 'GenericService', function ($scope, GenericService) {
+App.controller("patientController", ['$scope', 'GenericService','PropagationService','$location','$rootScope', function ($scope, GenericService,PropagationService,$location,$rootScope) {
 
         const urlBase = appUrl + "api/patient";
         const listePatients = urlBase + "/paginatePatient";
@@ -232,6 +232,16 @@ App.controller("patientController", ['$scope', 'GenericService', function ($scop
                             }
 
                     );
+        };
+        
+        $scope.consulterPatient = function (patient) {
+            $scope.modeEdition = 3;
+            $scope.titleModale = "Modification d'un patient";
+            $scope.disable = true;
+            $scope.disableCode = true;
+            console.log('ddddddddddddddddddddd:'+angular.toJson(patient));
+            PropagationService.setPatientSender(patient);
+            window.location.href = 'consultation';
         };
 
         $scope.deletePatient = function (id) {
