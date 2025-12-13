@@ -1,0 +1,170 @@
+<!-- Modal Antécédent -->
+<div class="modal fade compose-modal" id="detail-antecedent" tabindex="-1" role="dialog" aria-hidden="true" style="max-height: 100%; margin: 50px 10px 50px -90px;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title mt-0">
+                    <i class="fas fa-notes-medical"></i> {{titleModale}}
+                </h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+                <div class="container-fluid">
+                    <!-- Sélection en cascade : Catégorie → Type → Antécédent -->
+<!--                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle"></i> 
+                                <strong>Sélection guidée :</strong> Choisissez d'abord une catégorie, puis un type, et enfin l'antécédent spécifique.
+                            </div>
+                        </div>
+                    </div>-->
+
+                    <!-- Ligne 1 : Catégorie, Type, Antécédent -->
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label class="control-label font-weight-bold">
+                              Catégorie <span style="color: red;">*</span>
+                            </label>
+                            <select class="form-control mySelecDoc" ng-model="objetAntecedent.categorieAntecedent"
+                                    ng-class="{'is-invalid': formErrors.categorieAntecedent}"
+                                    id="selectCategorieAntecedent">
+                                <option value="">-- Sélectionner une catégorie --</option>
+                                <option data-ng-repeat="cat in listeCategoriesAntecedent" value="{{cat.id}}">{{cat.libelle}}</option>
+                            </select>
+                            <div class="invalid-feedback" ng-show="formErrors.categorieAntecedent" style="display: block;">
+                                {{formErrors.categorieAntecedent}}
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="control-label font-weight-bold">
+                                 Type Antécédent <span style="color: red;">*</span>
+                            </label>
+                            <select class="form-control mySelecDoc" ng-model="objetAntecedent.typeAntecedent"
+                                    ng-class="{'is-invalid': formErrors.typeAntecedent}"
+                                    id="selectTypeAntecedent"
+                                    ng-disabled="!objetAntecedent.categorieAntecedent">
+                                <option value="">-- Sélectionner un type --</option>
+                                <option data-ng-repeat="type in listeTypesAntecedentModal" value="{{type.id}}">{{type.libelle}}</option>
+                            </select>
+                            <div class="invalid-feedback" ng-show="formErrors.typeAntecedent" style="display: block;">
+                                {{formErrors.typeAntecedent}}
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="control-label font-weight-bold">
+                                Antécédent <span style="color: red;">*</span>
+                            </label>
+                            <select class="form-control mySelecDoc" ng-model="objetAntecedent.antecedent"
+                                    ng-class="{'is-invalid': formErrors.antecedent}"
+                                    id="selectAntecedent"
+                                    ng-disabled="!objetAntecedent.typeAntecedent">
+                                <option value="">-- Sélectionner un antécédent --</option>
+                                <option data-ng-repeat="ant in listeAntecedentsModal" value="{{ant.id}}">{{ant.libelle}}</option>
+                            </select>
+                            <div class="invalid-feedback" ng-show="formErrors.antecedent" style="display: block;">
+                                {{formErrors.antecedent}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <!-- Ligne 2 : Description -->
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label class="control-label font-weight-bold">
+                                 Description <span class="text-danger">*</span>
+                            </label>
+                            <textarea class="form-control"
+                                      ng-class="{'is-invalid': formErrors.description}"
+                                      ng-model="objetAntecedent.description"
+                                      rows="3"
+                                      placeholder="Décrivez l'antécédent médical en détail..."></textarea>
+                            <div class="invalid-feedback" ng-show="formErrors.description" style="display: block;">
+                                {{formErrors.description}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ligne 3 : Dates -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="control-label font-weight-bold">
+                                Date début <span class="text-danger">*</span>
+                            </label>
+                            <input type="date"
+                                   class="form-control"
+                                   ng-class="{'is-invalid': formErrors.dateDebut}"
+                                   ng-model="objetAntecedent.dateDebut" />
+                            <div class="invalid-feedback" ng-show="formErrors.dateDebut" style="display: block;">
+                                {{formErrors.dateDebut}}
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="control-label font-weight-bold">
+                                 Date fin
+                            </label>
+                            <input type="date"
+                                   class="form-control"
+                                   ng-class="{'is-invalid': formErrors.dateFin}"
+                                   ng-model="objetAntecedent.dateFin" />
+                            <div class="invalid-feedback" ng-show="formErrors.dateFin" style="display: block;">
+                                {{formErrors.dateFin}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ligne 4 : Statut et Traitement -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="control-label font-weight-bold">
+                                 Statut
+                            </label>
+                            <select class="form-control" ng-model="objetAntecedent.statut">
+                                <option value="Actif">Actif</option>
+                                <option value="Résolu">Résolu</option>
+                                <option value="En traitement">En traitement</option>
+                                <option value="Chronique">Chronique</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="control-label font-weight-bold">
+                                 Traitement suivi
+                            </label>
+                            <textarea class="form-control" 
+                                      ng-model="objetAntecedent.traitementSuivi" 
+                                      rows="2"
+                                      placeholder="Traitement en cours ou suivi..."></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer bg-light">
+                <button ng-if="modeEdition === 0" class="btn btn-success" ng-click="saveAntecedent(objetAntecedent)" ng-disabled="isSaving">
+                    <i class="fas fa-save" ng-if="!isSaving"></i>
+                    <i class="fas fa-spinner fa-spin" ng-if="isSaving"></i>
+                    {{isSaving ? 'Enregistrement...' : 'Ajouter'}}
+                </button>
+                <button ng-if="modeEdition === 3" class="btn btn-success" ng-click="saveAntecedent(objetAntecedent)" ng-disabled="isSaving">
+                    <i class="fas fa-save" ng-if="!isSaving"></i>
+                    <i class="fas fa-spinner fa-spin" ng-if="isSaving"></i>
+                    {{isSaving ? 'Enregistrement...' : 'Modifier'}}
+                </button>
+                <button ng-if="modeEdition === 0" class="btn btn-primary" ng-click="saveAntecedentEtContinuer(objetAntecedent)" ng-disabled="isSaving">
+                    <i class="fas fa-plus-circle"></i> Ajouter et continuer
+                </button>
+                <button class="btn btn-secondary" ng-click="closeModalAntecedent()" ng-disabled="isSaving">
+                    <i class="fas fa-times"></i> Fermer
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+

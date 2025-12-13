@@ -17,12 +17,11 @@ import org.hibernate.annotations.GenericGenerator;
 
 /**
  *
- * @author Bouchara
+ * @author NANO TECH
  */
-
 @Entity
-@Table(name = "categorie_consultation", schema = "sante")
-public class CategorieConsultation extends AbstractAuditingEntity implements Serializable {
+@Table(name = "antecedent", schema = "sante")
+public class Antecedant extends AbstractAuditingEntity implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "system-uuid")
@@ -35,6 +34,8 @@ public class CategorieConsultation extends AbstractAuditingEntity implements Ser
     private String libelle;
     @Column(name = "description")
     private String description;
+    @Column(name = "type_antecedent")
+    private String typeAntecedent;
 
     public String getId() {
         return id;
@@ -44,14 +45,7 @@ public class CategorieConsultation extends AbstractAuditingEntity implements Ser
         this.id = id;
     }
 
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
+   
     public String getLibelle() {
         return libelle;
     }
@@ -68,12 +62,25 @@ public class CategorieConsultation extends AbstractAuditingEntity implements Ser
         this.description = description;
     }
 
-    
-    
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getTypeAntecedent() {
+        return typeAntecedent;
+    }
+
+    public void setTypeAntecedent(String typeAntecedent) {
+        this.typeAntecedent = typeAntecedent;
+    }
+
     @Override
     public String toString() {
-        return "CategorieConsultation{" + "id=" + id + ", code=" + code + ", libelle=" + libelle + ", description=" + description + '}';
+        return "Antecedant{" + "id=" + id + ", code=" + code + ", libelle=" + libelle + ", description=" + description + ", typeAntecedent=" + typeAntecedent + '}';
     }
-    
-    
+
 }

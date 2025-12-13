@@ -1,8 +1,14 @@
 'use strict';
 var App;
 
-App.controller('consultationController', ['$scope', '$http', '$location','$rootScope','PropagationService', function($scope, $http, $location,$rootScope,PropagationService) {
-    
+App.controller('consultationController', ['$scope', '$http', '$location','$rootScope','PropagationService','GenericService', function($scope, $http, $location,$rootScope,PropagationService,GenericService) {
+
+    // URLs de l'API
+    const urlBase = appUrl + "api/consultation";
+    const listTypesObservationURL = urlBase + "/listTypesObservation";
+    const listCategoriesAntecedentURL = urlBase + "/listCategoriesAntecedent";
+    const listTypesAntecedentByCategorieURL = urlBase + "/listTypesAntecedentByCategorie";
+
     // Initialisation des données
     $scope.consultation = {
       id: null,
@@ -18,19 +24,43 @@ App.controller('consultationController', ['$scope', '$http', '$location','$rootS
     // Patient sélectionné (à charger depuis l'API ou la session)
     $scope.patient = {
       id: null,
-      nom: "",
-      prenom: "",
+      firstName: "",
+      lastName: "",
+      username: "",
+      sexe: "",
+      sexeLibelle: "",
       groupeSanguin: "",
-      numeroCamet: "",
-      dateNaissance: null
+      groupeSanguinLibelle: "",
+      numeroCarnet: "",
+      dateNaissance: null,
+      email: "",
+      tel: ""
     };
-    
-    $scope.patient = PropagationService.getPatientSender();
-        jslog("------------+++++++++++++++++++++++-------COMPTE OBJ " + angular.toJson(PropagationService.getPatientSender()));
-    
+
+    // Récupérer le patient depuis le service de propagation
+    var patientFromService = PropagationService.getPatientSender();
+    if (patientFromService && patientFromService.id) {
+        $scope.patient = patientFromService;
+        console.log("✅ Patient récupéré depuis PropagationService:", $scope.patient);
+        console.log("   - Nom complet: " + $scope.patient.firstName + " " + $scope.patient.lastName);
+        console.log("   - N° Carnet: " + $scope.patient.numeroCarnet);
+        console.log("   - Groupe sanguin: " + $scope.patient.groupeSanguinLibelle);
+
+        // Définir l'ID du patient pour la consultation
+        $scope.consultation.patientId = $scope.patient.id;
+    } else {
+        console.warn("⚠️ Aucun patient trouvé dans PropagationService");
+        console.log("Données reçues:", patientFromService);
+    }
+
+    // Écouter les changements de patient
     $rootScope.$on("patientSender", function () {
-        $scope.patient = PropagationService.getPatientSender();
-        jslog("-------------------COMPTE OBJ " + angular.toJson($scope.patient));
+        var updatedPatient = PropagationService.getPatientSender();
+        if (updatedPatient && updatedPatient.id) {
+            $scope.patient = updatedPatient;
+            $scope.consultation.patientId = updatedPatient.id;
+            console.log("✅ Patient mis à jour:", $scope.patient);
+        }
     });
 
     // Listes pour les éléments multiples
@@ -42,14 +72,17 @@ App.controller('consultationController', ['$scope', '$http', '$location','$rootS
 
     // Formulaires temporaires pour ajout
     $scope.nouvelleObservation = {
-      type: '',
+      typeObservation: null,  // Objet TypeObservation complet
       valeur: '',
       unite: '',
+      valeurMin: '',
+      valeurMax: '',
       date: new Date()
     };
 
     $scope.nouvelAntecedent = {
-      type: '',
+      categorieAntecedent: null,  // Objet CategorieAntecedent complet
+      typeAntecedent: null,        // Objet TypeAntecedent complet
       description: '',
       dateDebut: null
     };
@@ -66,17 +99,12 @@ App.controller('consultationController', ['$scope', '$http', '$location','$rootS
       fichierJoint: ''
     };
 
-    // Types d'observations prédéfinis
-    $scope.typesObservation = [
-      'Tension artérielle',
-      'Température',
-      'Poids',
-      'Taille',
-      'Fréquence cardiaque',
-      'Saturation O2',
-      'Glycémie',
-      'IMC'
-    ];
+    // Types d'observations (chargés depuis la base de données)
+    $scope.listeTypesObservation = [];
+
+    // Catégories et types d'antécédents (chargés depuis la base de données)
+    $scope.listeCategoriesAntecedent = [];
+    $scope.listeTypesAntecedent = [];
 
     // Types d'examens prédéfinis
     $scope.typesExamen = [
@@ -92,17 +120,23 @@ App.controller('consultationController', ['$scope', '$http', '$location','$rootS
     ];
 
     // ==================== INITIALISATION ====================
-    
+
     // Fonction d'initialisation au chargement de la page
     $scope.init = function() {
+      // Charger les types d'observations
+     // $scope.chargerTypesObservation();
+
+      // Charger les catégories d'antécédents
+      $scope.chargerCategoriesAntecedent();
+
       // Récupérer l'ID du patient depuis l'URL ou la session
       var patientId = getParameterByName('patientId');
-      
+
       if (patientId) {
         $scope.consultation.patientId = patientId;
         $scope.chargerPatient(patientId);
       }
-      
+
       // Charger les antécédents existants du patient
       if (patientId) {
         $scope.chargerAntecedentsPatient(patientId);
@@ -121,6 +155,61 @@ App.controller('consultationController', ['$scope', '$http', '$location','$rootS
     }
 
     // ==================== CHARGEMENT DES DONNÉES ====================
+
+    // Charger les types d'observations depuis la base de données
+    $scope.chargerTypesObservation = function() {
+      GenericService.get(listTypesObservationURL)
+        .then(function(data) {
+          if (data && data.listTypesObservation) {
+            $scope.listeTypesObservation = data.listTypesObservation;
+            console.log('✅ Types d\'observations chargés:', $scope.listeTypesObservation);
+            console.log('   Nombre de types:', $scope.listeTypesObservation.length);
+          } else {
+            console.warn('⚠️ Aucun type d\'observation trouvé dans la réponse');
+          }
+        })
+        .catch(function(error) {
+          console.error('❌ Erreur lors du chargement des types d\'observations:', error);
+        });
+    };
+
+    // Charger les catégories d'antécédents depuis la base de données
+    $scope.chargerCategoriesAntecedent = function() {
+      GenericService.get(listCategoriesAntecedentURL)
+        .then(function(data) {
+          if (data && data.listCategoriesAntecedent) {
+            $scope.listeCategoriesAntecedent = data.listCategoriesAntecedent;
+            console.log('✅ Catégories d\'antécédents chargées:', $scope.listeCategoriesAntecedent);
+            console.log('   Nombre de catégories:', $scope.listeCategoriesAntecedent.length);
+          } else {
+            console.warn('⚠️ Aucune catégorie d\'antécédent trouvée dans la réponse');
+          }
+        })
+        .catch(function(error) {
+          console.error('❌ Erreur lors du chargement des catégories d\'antécédents:', error);
+        });
+    };
+
+    // Charger les types d'antécédents par catégorie
+    $scope.chargerTypesAntecedentByCategorie = function(idCategorie) {
+      var url = listTypesAntecedentByCategorieURL + '?idCategorie=' + idCategorie;
+
+      GenericService.get(url)
+        .then(function(data) {
+          if (data && data.listTypesAntecedent) {
+            $scope.listeTypesAntecedent = data.listTypesAntecedent;
+            console.log('✅ Types d\'antécédents chargés pour la catégorie:', $scope.listeTypesAntecedent);
+            console.log('   Nombre de types:', $scope.listeTypesAntecedent.length);
+          } else {
+            console.warn('⚠️ Aucun type d\'antécédent trouvé dans la réponse');
+            $scope.listeTypesAntecedent = [];
+          }
+        })
+        .catch(function(error) {
+          console.error('❌ Erreur lors du chargement des types d\'antécédents:', error);
+          $scope.listeTypesAntecedent = [];
+        });
+    };
 
     // Charger les informations du patient
     $scope.chargerPatient = function(patientId) {
@@ -148,26 +237,77 @@ App.controller('consultationController', ['$scope', '$http', '$location','$rootS
 
     // ==================== OBSERVATIONS ====================
 
+    // Fonction appelée quand on change le type d'observation
+    $scope.onTypeObservationChange = function() {
+      if ($scope.nouvelleObservation.typeObservation) {
+        var typeObs = $scope.nouvelleObservation.typeObservation;
+
+        // Auto-remplir l'unité
+        $scope.nouvelleObservation.unite = typeObs.unite || '';
+
+        // Stocker les valeurs min et max pour la validation
+        $scope.nouvelleObservation.valeurMin = typeObs.valeurMin || '';
+        $scope.nouvelleObservation.valeurMax = typeObs.valeurMax || '';
+
+        console.log('📊 Type d\'observation sélectionné:', typeObs.libelle);
+        console.log('   - Unité:', $scope.nouvelleObservation.unite);
+        console.log('   - Min:', $scope.nouvelleObservation.valeurMin);
+        console.log('   - Max:', $scope.nouvelleObservation.valeurMax);
+      } else {
+        // Réinitialiser si aucun type sélectionné
+        $scope.nouvelleObservation.unite = '';
+        $scope.nouvelleObservation.valeurMin = '';
+        $scope.nouvelleObservation.valeurMax = '';
+      }
+    };
+
     // Ajouter une observation
     $scope.ajouterObservation = function() {
-      if (!$scope.nouvelleObservation.type || !$scope.nouvelleObservation.valeur) {
+      // Validation des champs obligatoires
+      if (!$scope.nouvelleObservation.typeObservation || !$scope.nouvelleObservation.valeur) {
         alert('Veuillez remplir le type et la valeur de l\'observation');
         return;
       }
 
+      // Validation de la valeur (doit être entre min et max)
+      var valeur = parseFloat($scope.nouvelleObservation.valeur);
+      var valeurMin = parseFloat($scope.nouvelleObservation.valeurMin);
+      var valeurMax = parseFloat($scope.nouvelleObservation.valeurMax);
+
+      if (isNaN(valeur)) {
+        alert('La valeur doit être un nombre valide');
+        return;
+      }
+
+      if (!isNaN(valeurMin) && valeur < valeurMin) {
+        alert('La valeur doit être supérieure ou égale à ' + valeurMin + ' ' + $scope.nouvelleObservation.unite);
+        return;
+      }
+
+      if (!isNaN(valeurMax) && valeur > valeurMax) {
+        alert('La valeur doit être inférieure ou égale à ' + valeurMax + ' ' + $scope.nouvelleObservation.unite);
+        return;
+      }
+
+      // Ajouter l'observation à la liste
       $scope.observations.push({
         id: Date.now(),
-        type: $scope.nouvelleObservation.type,
+        typeObservation: $scope.nouvelleObservation.typeObservation,
+        type: $scope.nouvelleObservation.typeObservation.libelle,
         valeur: $scope.nouvelleObservation.valeur,
         unite: $scope.nouvelleObservation.unite,
         date: new Date()
       });
-      
+
+      console.log('✅ Observation ajoutée:', $scope.observations[$scope.observations.length - 1]);
+
       // Réinitialiser le formulaire
       $scope.nouvelleObservation = {
-        type: '',
+        typeObservation: null,
         valeur: '',
         unite: '',
+        valeurMin: '',
+        valeurMax: '',
         date: new Date()
       };
     };
@@ -188,27 +328,59 @@ App.controller('consultationController', ['$scope', '$http', '$location','$rootS
 
     // ==================== ANTÉCÉDENTS ====================
 
+    // Fonction appelée quand on change la catégorie d'antécédent
+    $scope.onCategorieAntecedentChange = function() {
+      if ($scope.nouvelAntecedent.categorieAntecedent) {
+        var categorie = $scope.nouvelAntecedent.categorieAntecedent;
+
+        console.log('📋 Catégorie d\'antécédent sélectionnée:', categorie.libelle);
+
+        // Charger les types d'antécédents pour cette catégorie
+        $scope.chargerTypesAntecedentByCategorie(categorie.id);
+
+        // Réinitialiser le type sélectionné
+        $scope.nouvelAntecedent.typeAntecedent = null;
+      } else {
+        // Réinitialiser si aucune catégorie sélectionnée
+        $scope.listeTypesAntecedent = [];
+        $scope.nouvelAntecedent.typeAntecedent = null;
+      }
+    };
+
     // Ajouter un antécédent
     $scope.ajouterAntecedent = function() {
-      if (!$scope.nouvelAntecedent.type || !$scope.nouvelAntecedent.description) {
-        alert('Veuillez remplir le type et la description de l\'antécédent');
+      // Validation des champs obligatoires
+      if (!$scope.nouvelAntecedent.categorieAntecedent ||
+          !$scope.nouvelAntecedent.typeAntecedent ||
+          !$scope.nouvelAntecedent.description) {
+        alert('Veuillez remplir la catégorie, le type et la description de l\'antécédent');
         return;
       }
 
+      // Ajouter l'antécédent à la liste
       $scope.antecedents.push({
         id: Date.now(),
-        type: $scope.nouvelAntecedent.type,
+        categorieAntecedent: $scope.nouvelAntecedent.categorieAntecedent,
+        typeAntecedent: $scope.nouvelAntecedent.typeAntecedent,
+        categorie: $scope.nouvelAntecedent.categorieAntecedent.libelle,
+        type: $scope.nouvelAntecedent.typeAntecedent.libelle,
         description: $scope.nouvelAntecedent.description,
         dateDebut: $scope.nouvelAntecedent.dateDebut || new Date(),
-        statut: 'string'
+        statut: 'Actif'
       });
-      
+
+      console.log('Antécédent ajouté:', $scope.antecedents[$scope.antecedents.length - 1]);
+
       // Réinitialiser le formulaire
       $scope.nouvelAntecedent = {
-        type: '',
+        categorieAntecedent: null,
+        typeAntecedent: null,
         description: '',
         dateDebut: null
       };
+
+      // Réinitialiser la liste des types
+      $scope.listeTypesAntecedent = [];
     };
 
     // Supprimer un antécédent
