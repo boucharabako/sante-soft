@@ -559,7 +559,8 @@ App.factory('PropagationService', ['$rootScope', function ($rootScope) {
                 patient.prenoms = patien.prenoms;
                 patient.numeroCarnet = patien.numeroCarnet;
                 patient.dateNaissance = patien.dateNaissance;
-                
+                                alert("AAAA");
+
                 $rootScope.$broadcast("patientSender");
             },
 

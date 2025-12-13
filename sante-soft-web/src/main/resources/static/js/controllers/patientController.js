@@ -252,8 +252,9 @@ App.controller("patientController", ['$scope', 'GenericService','PropagationServ
             $scope.titleModale = "Modification d'un patient";
             $scope.disable = true;
             $scope.disableCode = true;
-            console.log('ddddddddddddddddddddd:'+angular.toJson(patient));
+            
             PropagationService.setPatientSender(patient);
+            console.log('ddddddddddddddddddddd:'+angular.toJson(patient));
             window.location.href = 'consultation';
         };
 

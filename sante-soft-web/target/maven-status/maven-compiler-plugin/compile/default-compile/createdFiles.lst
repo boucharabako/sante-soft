@@ -2,6 +2,7 @@ com\base\frame\achat\fonctionnelle\ressources\PaymentController.class
 com\base\frame\achat\fonctionnelle\ressources\ProduitRessource.class
 com\base\frame\carnet\sante\ressources\PatientRessource.class
 com\base\frame\achat\fonctionnelle\controller\ConsultationController.class
+com\base\frame\carnet\sante\ressources\ProfessionnelSanteRessource.class
 com\base\frame\carnet\sante\controller\PatientController.class
 com\base\frame\carnet\sante\ressources\AffectationRessource.class
 com\base\frame\achat\fonctionnelle\ressources\CommandeRessource.class
