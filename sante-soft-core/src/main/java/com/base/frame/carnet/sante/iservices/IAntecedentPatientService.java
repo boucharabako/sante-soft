@@ -16,9 +16,11 @@ public interface IAntecedentPatientService {
     /**
      * Sauvegarder ou mettre à jour un antécédent patient
      * @param dto
+     * @param currentUserId ID de l'utilisateur connecté
+     * @param currentUsername Username de l'utilisateur connecté
      * @return
      */
-    AntecedentPatientDTO saveAntecedentPatient(AntecedentPatientDTO dto);
+    AntecedentPatientDTO saveAntecedentPatient(AntecedentPatientDTO dto, String currentUserId, String currentUsername);
 
     /**
      * Récupérer un antécédent patient par son ID
@@ -54,9 +56,19 @@ public interface IAntecedentPatientService {
     List<AntecedentPatientDTO> findAntecedentsByPatient(String idPatient);
 
     /**
+     * Récupérer tous les antécédents d'un patient (avec mot-clé optionnel)
+     * @param idPatient
+     * @param mc
+     * @return
+     */
+    List<AntecedentPatientDTO> getAllAntecedentsByPatient(String idPatient, String mc);
+
+    /**
      * Supprimer un antécédent patient
      * @param id
+     * @param currentUserId ID de l'utilisateur connecté
+     * @param currentUsername Username de l'utilisateur connecté
      */
-    void deleteAntecedentPatient(String id);
+    void deleteAntecedentPatient(String id, String currentUserId, String currentUsername);
 }
 

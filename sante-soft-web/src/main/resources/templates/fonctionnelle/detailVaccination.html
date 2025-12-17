@@ -1,0 +1,126 @@
+<!-- Modal Vaccination -->
+<div class="modal fade" id="detail-vaccination" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="background: linear-gradient(135deg, #00b894 0%, #00cec9 100%); color: white;">
+                <h5 class="modal-title mt-0">
+                    <i class="fas fa-syringe"></i> {{titleModale}}
+                </h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+                <div class="container-fluid">
+                    <!-- Informations de la vaccination -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="control-label font-weight-bold">
+                                Vaccin <span style="color: red;">*</span>
+                            </label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   ng-model="objetVaccination.vaccin"
+                                   ng-class="{'is-invalid': formErrors.vaccin}"
+                                   placeholder="Ex: BCG, DTP, Hépatite B...">
+                            <div class="invalid-feedback" ng-show="formErrors.vaccin" style="display: block;">
+                                {{formErrors.vaccin}}
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="control-label font-weight-bold">
+                                Date de vaccination <span style="color: red;">*</span>
+                            </label>
+                            <input type="date" 
+                                   class="form-control" 
+                                   ng-model="objetVaccination.dateVaccination"
+                                   ng-class="{'is-invalid': formErrors.dateVaccination}">
+                            <div class="invalid-feedback" ng-show="formErrors.dateVaccination" style="display: block;">
+                                {{formErrors.dateVaccination}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="control-label font-weight-bold">
+                                Numéro de lot
+                            </label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   ng-model="objetVaccination.lot"
+                                   placeholder="Numéro de lot du vaccin">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="control-label font-weight-bold">
+                                Prochain rappel
+                            </label>
+                            <input type="date" 
+                                   class="form-control" 
+                                   ng-model="objetVaccination.prochainRappel">
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="control-label font-weight-bold">
+                                Statut <span style="color: red;">*</span>
+                            </label>
+                            <select class="form-control" 
+                                    ng-model="objetVaccination.statut"
+                                    ng-class="{'is-invalid': formErrors.statut}">
+                                <option value="">-- Sélectionner --</option>
+                                <option value="À-jour">À jour</option>
+                                <option value="En-retard">En retard</option>
+                                <option value="Prévu">Prévu</option>
+                            </select>
+                            <div class="invalid-feedback" ng-show="formErrors.statut" style="display: block;">
+                                {{formErrors.statut}}
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="control-label font-weight-bold">
+                                Professionnel de santé
+                            </label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   ng-model="objetVaccination.professionnelSante"
+                                   placeholder="Nom du professionnel">
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label class="control-label font-weight-bold">
+                                Observations
+                            </label>
+                            <textarea class="form-control" 
+                                      ng-model="objetVaccination.observations" 
+                                      rows="3"
+                                      placeholder="Observations, réactions, notes..."></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer bg-light">
+                <button ng-if="modeEdition === 0" class="btn btn-success" ng-click="saveVaccination(objetVaccination)" ng-disabled="isSaving">
+                    <i class="fas fa-save" ng-if="!isSaving"></i>
+                    <i class="fas fa-spinner fa-spin" ng-if="isSaving"></i>
+                    {{isSaving ? 'Enregistrement...' : 'Ajouter'}}
+                </button>
+                <button ng-if="modeEdition === 3" class="btn btn-success" ng-click="saveVaccination(objetVaccination)" ng-disabled="isSaving">
+                    <i class="fas fa-save" ng-if="!isSaving"></i>
+                    <i class="fas fa-spinner fa-spin" ng-if="isSaving"></i>
+                    {{isSaving ? 'Enregistrement...' : 'Modifier'}}
+                </button>
+                <button class="btn btn-secondary" data-dismiss="modal">
+                    <i class="fas fa-times"></i> Annuler
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+

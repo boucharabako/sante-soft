@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <!-- Ajout de la colonne deleted pour la suppression logique -->
+    <changeSet author="Bouchara" id="14-12-2025-add-deleted-column">
+        <addColumn schemaName="${sante_schema_name}" tableName="antecedent_patient">
+            <column name="deleted" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        
+        <comment>Ajout de la colonne deleted pour gérer la suppression logique des antécédents patients</comment>
+    </changeSet>
+    
+    <!-- Mise à jour des enregistrements existants pour définir deleted à false -->
+    <changeSet author="Bouchara" id="14-12-2025-update-existing-deleted">
+        <sql>
+            UPDATE ${sante_schema_name}.antecedent_patient 
+            SET deleted = false 
+            WHERE deleted IS NULL;
+        </sql>
+        
+        <comment>Mise à jour des enregistrements existants pour définir deleted à false</comment>
+    </changeSet>
+
+</databaseChangeLog>
+

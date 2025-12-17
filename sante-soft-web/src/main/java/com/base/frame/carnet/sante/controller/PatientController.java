@@ -18,10 +18,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class PatientController {
 
     public static final String PAGE_LIST_FILE_PATH = "fonctionnelle/gestion_patient";
+    public static final String PAGE_DETAIL_FILE_PATH = "fonctionnelle/detail_consultation_patient";
 
     @RequestMapping()
     public String homeList(Model model) {
         return PAGE_LIST_FILE_PATH;
+    }
+
+    @RequestMapping("/detail")
+    public String detailPatient(Model model) {
+        return PAGE_DETAIL_FILE_PATH;
     }
 }
 

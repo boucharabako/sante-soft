@@ -40,6 +40,9 @@ public class AntecedentPatientDAO extends GenericDAO<AntecedentPatient, String> 
 
         String queryChain = "SELECT DISTINCT a FROM AntecedentPatient a WHERE 1 = 1 ";
 
+        // Filtrer les antécédents supprimés
+        queryChain += " AND (a.deleted = false OR a.deleted IS NULL) ";
+
         if (idPatient != null && !idPatient.isEmpty() && !"undefined".equals(idPatient)) {
             queryChain += " AND a.idPatient = :idPatient ";
         }
@@ -58,7 +61,7 @@ public class AntecedentPatientDAO extends GenericDAO<AntecedentPatient, String> 
                     + " OR UPPER(a.traitementSuivi) LIKE CONCAT('%',:motCle,'%')) ";
         }
 
-        queryChain += " ORDER BY a.dateDebut DESC";
+        queryChain += " ORDER BY a.createdDate DESC";
 
         System.out.println("queryChain AntecedentPatient: " + queryChain);
         Query query = em.createQuery(queryChain);
@@ -90,7 +93,9 @@ public class AntecedentPatientDAO extends GenericDAO<AntecedentPatient, String> 
      * @return
      */
     public List<AntecedentPatient> findListeAntecedentPatient(String idPatient) {
-        String queryChain = "SELECT DISTINCT a FROM AntecedentPatient a WHERE a.idPatient = :idPatient ORDER BY a.dateDebut DESC";
+        String queryChain = "SELECT DISTINCT a FROM AntecedentPatient a WHERE a.idPatient = :idPatient "
+                + "AND (a.deleted = false OR a.deleted IS NULL) "
+                + "ORDER BY a.createdDate DESC";
 
         System.out.println("queryChain Liste AntecedentPatient: " + queryChain);
         Query query = em.createQuery(queryChain);

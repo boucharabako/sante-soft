@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorator="template">
+    <head>
+        <title>Détail Patient - Carnet de Santé</title>
+        <link th:href="@{/plugins/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
+        <link th:href="@{/plugins/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet"/>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+        <script th:src="@{/js/controllers/detailPatientController.js}"></script>
+        
+        <style>
+            body {
+                background: #f5f7fa;
+                min-height: 100vh;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            }
+            
+            .main-container {
+                padding: 30px;
+                max-width: 1400px;
+                margin: 0 auto;
+            }
+            
+            .page-header {
+                background: white;
+                border-radius: 15px;
+                padding: 25px;
+                margin-bottom: 30px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            }
+            
+            .patient-avatar-large {
+                width: 100px;
+                height: 100px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-size: 40px;
+                margin-right: 25px;
+            }
+            
+            .info-card {
+                background: white;
+                border-radius: 15px;
+                padding: 25px;
+                margin-bottom: 25px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+            
+            .info-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            }
+            
+            .card-header-custom {
+                border-bottom: 3px solid #667eea;
+                padding-bottom: 15px;
+                margin-bottom: 20px;
+            }
+            
+            .card-title {
+                font-size: 20px;
+                font-weight: 700;
+                color: #2d3436;
+                margin: 0;
+            }
+            
+            .info-item {
+                display: flex;
+                align-items: center;
+                padding: 12px 0;
+                border-bottom: 1px solid #f1f3f5;
+            }
+            
+            .info-item:last-child {
+                border-bottom: none;
+            }
+            
+            .info-label {
+                font-weight: 600;
+                color: #636e72;
+                min-width: 150px;
+            }
+            
+            .info-value {
+                color: #2d3436;
+                font-weight: 500;
+            }
+            
+            .btn-action {
+                padding: 10px 20px;
+                border-radius: 8px;
+                font-weight: 600;
+                transition: all 0.3s ease;
+            }
+            
+            .btn-primary-custom {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                border: none;
+                color: white;
+            }
+            
+            .btn-primary-custom:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            }
+            
+            .consultation-item {
+                background: #f8f9fa;
+                border-left: 4px solid #667eea;
+                padding: 15px;
+                margin-bottom: 15px;
+                border-radius: 8px;
+                transition: all 0.3s ease;
+            }
+            
+            .consultation-item:hover {
+                background: #e9ecef;
+                transform: translateX(5px);
+            }
+            
+            .badge-custom {
+                padding: 6px 12px;
+                border-radius: 6px;
+                font-weight: 600;
+                font-size: 12px;
+            }
+            
+            .empty-state {
+                text-align: center;
+                padding: 60px 20px;
+                color: #95a5a6;
+            }
+            
+            .empty-state i {
+                font-size: 64px;
+                margin-bottom: 20px;
+                opacity: 0.5;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div layout:fragment="content" id="detailPatient" data-ng-cloak="">
+            <div class="row" ng-controller="detailPatientController" data-ng-cloak="">
+
+        <div class="col-12"><div class="main-container">
+            <!-- En-tête Patient -->
+            <div class="page-header">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center">
+                        <div class="patient-avatar-large">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div>
+                            <h2 style="margin: 0; color: #2d3436; font-weight: 700;">
+                                {{patient.firstName}} {{patient.lastName}}
+                            </h2>
+                            <p style="margin: 5px 0 0 0; color: #636e72; font-size: 16px;">
+                                <i class="fas fa-id-card"></i> N° Carnet: <strong>{{patient.numeroCarnet}}</strong>
+                            </p>
+                        </div>
+                    </div>
+                    <div>
+                        <button class="btn btn-action btn-primary-custom mr-2" ng-click="nouvelleConsultation()">
+                            <i class="fas fa-stethoscope"></i> Consultation
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Colonne gauche : Informations personnelles -->
+                <div class="col-md-4">
+                    <!-- Informations personnelles -->
+                    <div class="info-card">
+                        <div class="card-header-custom">
+                            <h5 class="card-title">
+                                <i class="fas fa-user-circle" style="color: #667eea;"></i>
+                                Informations Personnelles
+                            </h5>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label"><i class="fas fa-venus-mars" style="color: #e91e63;"></i> Sexe:</span>
+                            <span class="info-value">{{patient.sexeLibelle || 'Non renseigné'}}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label"><i class="fas fa-birthday-cake" style="color: #ff9800;"></i> Date de naissance:</span>
+                            <span class="info-value">{{patient.dateNaissance | date:'dd/MM/yyyy' || 'Non renseigné'}}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label"><i class="fas fa-tint" style="color: #f44336;"></i> Groupe sanguin:</span>
+                            <span class="info-value badge badge-danger">{{patient.groupeSanguinLibelle || 'Non renseigné'}}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label"><i class="fas fa-envelope" style="color: #2196f3;"></i> Email:</span>
+                            <span class="info-value">{{patient.email || 'Non renseigné'}}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label"><i class="fas fa-phone" style="color: #4caf50;"></i> Téléphone:</span>
+                            <span class="info-value">{{patient.tel || 'Non renseigné'}}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label"><i class="fas fa-calendar-plus" style="color: #9c27b0;"></i> Enregistré le:</span>
+                            <span class="info-value">{{patient.dateEnregistrement | date:'dd/MM/yyyy HH:mm'}}</span>
+                        </div>
+                    </div>
+
+                    <!-- Antécédents médicaux -->
+                    <div class="info-card">
+                        <div class="card-header-custom">
+                            <h5 class="card-title">
+                                <i class="fas fa-history" style="color: #e74c3c;"></i>
+                                Antécédents Médicaux
+                            </h5>
+                        </div>
+                        <div ng-if="antecedents && antecedents.length > 0">
+                            <div ng-repeat="ant in antecedents" class="info-item">
+                                <div style="width: 100%;">
+                                    <span class="badge badge-{{ant.categorieAntecedentCode}}" style="font-size: 10px;">
+                                        {{ant.categorieAntecedentLibelle}}
+                                    </span>
+                                    <div style="margin-top: 5px; font-weight: 600; color: #2d3436;">
+                                        {{ant.antecedentLibelle}}
+                                    </div>
+                                    <small style="color: #636e72;">{{ant.description}}</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div ng-if="!antecedents || antecedents.length === 0" class="empty-state" style="padding: 30px 10px;">
+                            <i class="fas fa-folder-open"></i>
+                            <p>Aucun antécédent</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Colonne droite : Historique consultations -->
+                <div class="col-md-8">
+                    <div class="info-card">
+                        <div class="card-header-custom">
+                            <h5 class="card-title">
+                                <i class="fas fa-stethoscope" style="color: #00b894;"></i>
+                                Historique des Consultations
+                            </h5>
+                        </div>
+
+                        <div ng-if="consultations && consultations.length > 0">
+                            <div ng-repeat="consult in consultations | orderBy:'-dateConsultation'" class="consultation-item">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div style="flex: 1;">
+                                        <div class="d-flex align-items-center mb-2">
+                                            <span class="badge badge-primary badge-custom mr-2">
+                                                {{consult.typeConsultationLibelle}}
+                                            </span>
+                                            <span style="color: #636e72; font-size: 13px;">
+                                                <i class="far fa-calendar-alt"></i>
+                                                {{consult.dateConsultation | date:'dd/MM/yyyy à HH:mm'}}
+                                            </span>
+                                        </div>
+                                        <div style="margin-bottom: 8px;">
+                                            <strong style="color: #2d3436;">Motif:</strong>
+                                            <span style="color: #636e72;">{{consult.motif}}</span>
+                                        </div>
+                                        <div style="margin-bottom: 8px;">
+                                            <strong style="color: #2d3436;">Diagnostic:</strong>
+                                            <span style="color: #636e72;">{{consult.diagnostic}}</span>
+                                        </div>
+                                        <div ng-if="consult.traitement">
+                                            <strong style="color: #2d3436;">Traitement:</strong>
+                                            <span style="color: #636e72;">{{consult.traitement}}</span>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-sm btn-outline-primary" ng-click="voirDetailConsultation(consult.id)">
+                                        <i class="fas fa-eye"></i> Détails
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div ng-if="!consultations || consultations.length === 0" class="empty-state">
+                            <i class="fas fa-notes-medical"></i>
+                            <h5>Aucune consultation enregistrée</h5>
+                            <p>Cliquez sur "Nouvelle Consultation" pour commencer</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <style>
+            /* Badges pour les catégories d'antécédents */
+            .badge-AME { background: #e3f2fd; color: #1976d2; border: 1px solid #90caf9; }
+            .badge-ACH { background: #f3e5f5; color: #7b1fa2; border: 1px solid #ce93d8; }
+            .badge-AFA { background: #e8f5e9; color: #388e3c; border: 1px solid #81c784; }
+            .badge-AAL { background: #ffebee; color: #c62828; border: 2px solid #d32f2f; font-weight: 700; }
+            .badge-AOG { background: #fce4ec; color: #c2185b; border: 1px solid #f48fb1; }
+            .badge-ATR { background: #ffebee; color: #d32f2f; border: 1px solid #ef5350; }
+            .badge-AMD { background: #e0f2f1; color: #00796b; border: 1px solid #4db6ac; }
+            .badge-ASO { background: #f1f8e9; color: #689f38; border: 1px solid #aed581; }
+        </style>
+
+        <!-- Modal Détail Consultation -->
+        <div class="modal fade" id="modalDetailConsultation" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-xl" role="document">
+                <div class="modal-content" style="border-radius: 15px; border: none;">
+                    <div class="modal-header" style="background: #2bb605; color: white; border-radius: 15px 15px 0 0;">
+                        <h4 class="modal-title">
+                            <i class="fas fa-stethoscope"></i> Détail de la Consultation
+                        </h4>
+                        <button type="button" class="close" data-dismiss="modal" style="color: white; opacity: 1;">
+                            <span>&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" style="padding: 30px;">
+                        <!-- Informations générales -->
+                        <div class="row mb-4">
+                            <div class="col-md-12">
+                                <h5 style="border-bottom: 2px solid #667eea; padding-bottom: 10px; color: #2d3436;">
+                                    <i class="fas fa-info-circle" style="color: #667eea;"></i> Informations Générales
+                                </h5>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                                    <strong style="color: #636e72;"><i class="far fa-calendar-alt" style="color: #3498db;"></i> Date:</strong>
+                                    <div style="color: #2d3436; font-size: 16px; margin-top: 5px;">
+                                        {{consultationDetail.dateConsultation | date:'dd/MM/yyyy à HH:mm'}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                                    <strong style="color: #636e72;"><i class="fas fa-user-md" style="color: #9b59b6;"></i> Type:</strong>
+                                    <div style="color: #2d3436; font-size: 16px; margin-top: 5px;">
+                                        <span class="badge badge-primary" style="font-size: 14px; padding: 8px 12px;">
+                                            {{consultationDetail.typeConsultationLibelle}}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <div style="background: #fff3cd; padding: 15px; border-left: 4px solid #ffc107; border-radius: 8px; margin-bottom: 15px;">
+                                    <strong style="color: #856404;"><i class="fas fa-comment-medical" style="color: #ffc107;"></i> Motif:</strong>
+                                    <div style="color: #2d3436; font-size: 15px; margin-top: 5px;">
+                                        {{consultationDetail.motif}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <div style="background: #d1ecf1; padding: 15px; border-left: 4px solid #17a2b8; border-radius: 8px; margin-bottom: 15px;">
+                                    <strong style="color: #0c5460;"><i class="fas fa-diagnoses" style="color: #17a2b8;"></i> Diagnostic:</strong>
+                                    <div style="color: #2d3436; font-size: 15px; margin-top: 5px;">
+                                        {{consultationDetail.diagnostic}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-4" ng-if="consultationDetail.traitement">
+                            <div class="col-md-12">
+                                <div style="background: #d4edda; padding: 15px; border-left: 4px solid #28a745; border-radius: 8px;">
+                                    <strong style="color: #155724;"><i class="fas fa-pills" style="color: #28a745;"></i> Traitement:</strong>
+                                    <div style="color: #2d3436; font-size: 15px; margin-top: 5px;">
+                                        {{consultationDetail.traitement}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Prescriptions -->
+                        <div class="row mb-4" ng-if="consultationDetail.prescriptions && consultationDetail.prescriptions.length > 0">
+                            <div class="col-md-12">
+                                <h5 style="border-bottom: 2px solid #28a745; padding-bottom: 10px; color: #2d3436;">
+                                    <i class="fas fa-prescription-bottle-alt" style="color: #28a745;"></i> Prescriptions
+                                </h5>
+                                <div class="table-responsive mt-3">
+                                    <table class="table table-bordered">
+                                        <thead style="background: #28a745; color: white;">
+                                            <tr>
+                                                <th>Médicament</th>
+                                                <th>Posologie</th>
+                                                <th>Durée</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="presc in consultationDetail.prescriptions">
+                                                <td><strong>{{presc.medicament}}</strong></td>
+                                                <td>{{presc.posologie}}</td>
+                                                <td>{{presc.duree}} jours</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Examens -->
+                        <div class="row mb-4" ng-if="consultationDetail.examens && consultationDetail.examens.length > 0">
+                            <div class="col-md-12">
+                                <h5 style="border-bottom: 2px solid #ff9800; padding-bottom: 10px; color: #2d3436;">
+                                    <i class="fas fa-vial" style="color: #ff9800;"></i> Examens Complémentaires
+                                </h5>
+                                <div class="table-responsive mt-3">
+                                    <table class="table table-bordered">
+                                        <thead style="background: #ff9800; color: white;">
+                                            <tr>
+                                                <th>Type d'examen</th>
+                                                <th>Résultat</th>
+                                                <th>Fichier</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="exam in consultationDetail.examens">
+                                                <td><strong>{{exam.typeExamen}}</strong></td>
+                                                <td>{{exam.resultat || 'En attente'}}</td>
+                                                <td>
+                                                    <span ng-if="exam.fichierJoint" class="badge badge-success">
+                                                        <i class="fas fa-paperclip"></i> Fichier joint
+                                                    </span>
+                                                    <span ng-if="!exam.fichierJoint" class="text-muted">Aucun fichier</span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Observations -->
+                        <div class="row" ng-if="consultationDetail.observations && consultationDetail.observations.length > 0">
+                            <div class="col-md-12">
+                                <h5 style="border-bottom: 2px solid #e91e63; padding-bottom: 10px; color: #2d3436;">
+                                    <i class="fas fa-heartbeat" style="color: #e91e63;"></i> Observations Médicales
+                                </h5>
+                                <div class="table-responsive mt-3">
+                                    <table class="table table-bordered">
+                                        <thead style="background: #e91e63; color: white;">
+                                            <tr>
+                                                <th>Type</th>
+                                                <th>Valeur</th>
+                                                <th>Commentaire</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="obs in consultationDetail.observations">
+                                                <td><strong>{{obs.typeObservation}}</strong></td>
+                                                <td>{{obs.valeur}}</td>
+                                                <td>{{obs.commentaire || '-'}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="border-top: 2px solid #e9ecef;">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            <i class="fas fa-times"></i> Fermer
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        </div></div></div>
+    </body>
+</html>
+

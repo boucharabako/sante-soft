@@ -8,11 +8,13 @@ package com.base.frame.carnet.sante.ressources;
 import com.base.frame.account.dto.UtilisateurDTO;
 import com.base.frame.account.iservice.IUtilisateurService;
 import com.base.frame.carnet.sante.dtos.AntecedentPatientDTO;
+import com.base.frame.carnet.sante.dtos.HistoriqueAntecedentDTO;
 import com.base.frame.carnet.sante.entities.Antecedant;
 import com.base.frame.carnet.sante.entities.AntecedentPatient;
 import com.base.frame.carnet.sante.entities.CategorieAntecedent;
 import com.base.frame.carnet.sante.entities.TypeAntecedant;
 import com.base.frame.carnet.sante.iservices.IAntecedentPatientService;
+import com.base.frame.carnet.sante.iservices.IHistoriqueAntecedentService;
 import com.base.frame.carnet.sante.repositories.AntecedantRepository;
 import com.base.frame.carnet.sante.repositories.AntecedentPatientRepository;
 import com.base.frame.carnet.sante.repositories.CategorieAntecedentRepository;
@@ -28,6 +30,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -56,6 +59,9 @@ public class AntecedentRessource {
 
     @Autowired
     private IAntecedentPatientService antecedentPatientService;
+
+    @Autowired
+    private IHistoriqueAntecedentService historiqueAntecedentService;
 
     @Autowired
     private ISecurityUtils securityUtils;
@@ -145,60 +151,27 @@ public class AntecedentRessource {
     }
 
     /**
-     * Récupère tous les antécédents d'un patient
+     * Récupère tous les antécédents d'un patient (liste complète, triée par date DESC)
      * @param idPatient ID du patient
      * @return Liste des antécédents du patient
      */
-    @RequestMapping(value = "/listAntecedentsPatient", method = RequestMethod.GET)
-    public ResponseEntity<List<HashMap<String, Object>>> listAntecedentsPatient(
-            @RequestParam(value = "idPatient", required = true) String idPatient) {
+    @RequestMapping(value = "/listAllAntecedentsPatient", method = RequestMethod.GET)
+    public ResponseEntity<HashMap<String, Object>> listAllAntecedentsPatient(
+            @RequestParam(value = "idPatient", required = true) String idPatient,
+            @RequestParam(value = "mc", required = false) String mc) {
 
-        List<HashMap<String, Object>> antecedents = new ArrayList<>();
+        HashMap<String, Object> model = new HashMap<>();
 
-        List<AntecedentPatient> listAntecedentsPatient = antecedentPatientRepository.findByIdPatient(idPatient);
+        List<AntecedentPatientDTO> listAntecedents = this.antecedentPatientService.getAllAntecedentsByPatient(idPatient, mc);
 
-        for (AntecedentPatient ap : listAntecedentsPatient) {
-            HashMap<String, Object> antecedent = new HashMap<>();
-            antecedent.put("id", ap.getId());
-            antecedent.put("description", ap.getDescription());
-            antecedent.put("dateDebut", ap.getDateDebut());
-            antecedent.put("dateFin", ap.getDateFin());
-            antecedent.put("traitementSuivi", ap.getTraitementSuivi());
-            antecedent.put("statut", ap.getStatut());
-
-            // Charger l'objet Antecedent complet
-            if (ap.getAntecedent() != null && !ap.getAntecedent().isEmpty()) {
-                Antecedant antecedantObj = antecedantRepository.findById(ap.getAntecedent()).orElse(null);
-                antecedent.put("antecedent", antecedantObj);
-            } else {
-                antecedent.put("antecedent", null);
-            }
-
-            // Charger l'objet TypeAntecedent complet
-            if (ap.getTypeAntecedent() != null && !ap.getTypeAntecedent().isEmpty()) {
-                TypeAntecedant typeAntecedantObj = typeAntecedentRepository.findById(ap.getTypeAntecedent()).orElse(null);
-                antecedent.put("typeAntecedent", typeAntecedantObj);
-            } else {
-                antecedent.put("typeAntecedent", null);
-            }
-
-            // Charger l'objet CategorieAntecedent complet
-            if (ap.getCategorieAntecedent() != null && !ap.getCategorieAntecedent().isEmpty()) {
-                CategorieAntecedent categorieAntecedentObj = categorieAntecedentRepository.findById(ap.getCategorieAntecedent()).orElse(null);
-                antecedent.put("categorieAntecedent", categorieAntecedentObj);
-            } else {
-                antecedent.put("categorieAntecedent", null);
-            }
-
-            antecedents.add(antecedent);
-        }
+        model.put("listAntecedents", listAntecedents);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add(Constants.PROPRIETE_HEADERS_RESPONDED, Constants.PROPRIETE_HEADERS_TIMEZONESCONTROLLER);
 
-        System.out.println("======================== listAntecedentsPatient pour patient " + idPatient + " : " + antecedents.size());
+        System.out.println("======================== listAllAntecedentsPatient pour patient " + idPatient + " : " + listAntecedents.size());
 
-        return ResponseEntity.accepted().headers(headers).body(antecedents);
+        return ResponseEntity.accepted().headers(headers).body(model);
     }
 
     /**
@@ -276,37 +249,30 @@ public class AntecedentRessource {
      * @param antecedentDTO Données de l'antécédent
      * @return Résultat de la sauvegarde
      */
-    @RequestMapping(value = "/saveAntecedent", method = RequestMethod.POST)
-    public ResponseEntity<HashMap<String, Object>> saveAntecedent(
-            @RequestBody AntecedentPatientDTO antecedentDTO) {
+    @RequestMapping(value = "/saveOrUpdateAntecedent", method = RequestMethod.POST)
+    public ResponseEntity<HashMap<String, Object>> saveOrUpdateAntecedent(
+            @RequestBody AntecedentPatientDTO antecedentDTO) throws CloneNotSupportedException {
 
-        HashMap<String, Object> model = new HashMap<>();
+        HashMap<String, Object> modeHashMap = new HashMap<>();
         HttpHeaders headers = new HttpHeaders();
         headers.add(Constants.PROPRIETE_HEADERS_RESPONDED, Constants.PROPRIETE_HEADERS_TIMEZONESCONTROLLER);
 
-        try {
-            // Utiliser le service pour sauvegarder
-            AntecedentPatientDTO result = this.antecedentPatientService.saveAntecedentPatient(antecedentDTO);
+        // Récupérer l'utilisateur connecté
+        String currentUserId = null;
+        String currentUsername = null;
 
-            model.put("success", true);
-            model.put("antecedent", result);
-
-            headers.add("X-nframe-alert", this.messageSource.getMessage(Constants.OP_SUCCESS_MSG_CODE, new String[]{}));
-
-            return ResponseEntity.accepted().headers(headers).body(model);
-        } catch (Exception e) {
-            System.err.println("======================== Erreur saveAntecedent: " + e.getMessage());
-            e.printStackTrace();
-
-            model.put("success", false);
-            model.put("error", e.getMessage());
-
-            headers = new HttpHeaders();
-            headers.add(Constants.PROPRIETE_HEADERS_RESPONDED, Constants.PROPRIETE_HEADERS_TIMEZONESCONTROLLER);
-            headers.add("X-nframe-alert", "Erreur lors de l'enregistrement de l'antécédent");
-
-            return ResponseEntity.badRequest().headers(headers).body(model);
+        Optional<String> username = securityUtils.getCurrentUserLogin();
+        if (username.isPresent() && utilisateurService.findUtilisateurUsername(username.get()).isPresent()) {
+            currentUserId = utilisateurService.findUtilisateurUsername(username.get()).get().getId();
+            currentUsername = username.get();
+            System.out.println("======================== Utilisateur connecté: " + currentUsername + " (ID: " + currentUserId + ")");
         }
+
+        AntecedentPatientDTO result = this.antecedentPatientService.saveAntecedentPatient(antecedentDTO, currentUserId, currentUsername);
+
+        headers.add("X-nframe-alert", this.messageSource.getMessage(Constants.OP_SUCCESS_MSG_CODE, new String[]{}));
+
+        return ResponseEntity.accepted().headers(headers).body(modeHashMap);
     }
 
     /**
@@ -314,35 +280,90 @@ public class AntecedentRessource {
      * @param id ID de l'antécédent à supprimer
      * @return Résultat de la suppression
      */
-    @RequestMapping(value = "/deleteAntecedent", method = RequestMethod.DELETE)
-    public ResponseEntity<HashMap<String, Object>> deleteAntecedent(
-            @RequestParam(value = "id", required = true) String id) {
+    @RequestMapping(value = "/deleteAntecedent/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<HashMap<String, Object>> deleteAntecedent(@PathVariable("id") String id) {
+        try {
+            HashMap<String, Object> modeHashMap = new HashMap<>();
+
+            // Récupérer l'utilisateur connecté
+            String currentUserId = null;
+            String currentUsername = null;
+
+            Optional<String> username = securityUtils.getCurrentUserLogin();
+            if (username.isPresent() && utilisateurService.findUtilisateurUsername(username.get()).isPresent()) {
+                currentUserId = utilisateurService.findUtilisateurUsername(username.get()).get().getId();
+                currentUsername = username.get();
+                System.out.println("======================== Utilisateur connecté (suppression): " + currentUsername + " (ID: " + currentUserId + ")");
+            }
+
+            this.antecedentPatientService.deleteAntecedentPatient(id, currentUserId, currentUsername);
+
+            return ResponseEntity.accepted().body(modeHashMap);
+        } catch (Exception e) {
+            throw new Error("Impossible de supprimer l'antécédent");
+        }
+    }
+
+    /**
+     * Récupère les informations d'un antécédent
+     * @param id ID de l'antécédent
+     * @return Antécédent
+     */
+    @RequestMapping(value = "/getAntecedent/{id}", method = RequestMethod.GET)
+    public ResponseEntity<HashMap<String, Object>> getAntecedent(@PathVariable("id") String id) {
+        HashMap<String, Object> modeHashMap = new HashMap<>();
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(Constants.PROPRIETE_HEADERS_RESPONDED, Constants.PROPRIETE_HEADERS_TIMEZONESCONTROLLER);
+
+        if (id != null && this.antecedentPatientService.getAntecedentPatient(id) != null) {
+            modeHashMap.put("antecedentDTO", this.antecedentPatientService.getAntecedentPatient(id));
+        }
+
+        return ResponseEntity.accepted().headers(headers).body(modeHashMap);
+    }
+
+    /**
+     * Récupère l'historique de tous les antécédents d'un patient
+     * @param idPatient ID du patient
+     * @return Historique des antécédents
+     */
+    @RequestMapping(value = "/historiqueAntecedentsPatient", method = RequestMethod.GET)
+    public ResponseEntity<HashMap<String, Object>> getHistoriqueAntecedentsPatient(
+            @RequestParam(value = "idPatient", required = true) String idPatient) {
 
         HashMap<String, Object> model = new HashMap<>();
         HttpHeaders headers = new HttpHeaders();
         headers.add(Constants.PROPRIETE_HEADERS_RESPONDED, Constants.PROPRIETE_HEADERS_TIMEZONESCONTROLLER);
 
-        try {
-            // Utiliser le service pour supprimer
-            this.antecedentPatientService.deleteAntecedentPatient(id);
+        List<HistoriqueAntecedentDTO> historique = this.historiqueAntecedentService.getHistoriqueByPatient(idPatient);
 
-            model.put("success", true);
-            headers.add("X-nframe-alert", this.messageSource.getMessage(Constants.OP_SUCCESS_MSG_CODE, new String[]{}));
+        model.put("historique", historique);
 
-            return ResponseEntity.accepted().headers(headers).body(model);
-        } catch (Exception e) {
-            System.err.println("======================== Erreur deleteAntecedent: " + e.getMessage());
-            e.printStackTrace();
+        System.out.println("======================== Historique récupéré pour patient " + idPatient + " : " + historique.size() + " entrées");
 
-            model.put("success", false);
-            model.put("error", e.getMessage());
+        return ResponseEntity.accepted().headers(headers).body(model);
+    }
 
-            headers = new HttpHeaders();
-            headers.add(Constants.PROPRIETE_HEADERS_RESPONDED, Constants.PROPRIETE_HEADERS_TIMEZONESCONTROLLER);
-            headers.add("X-nframe-alert", "Erreur lors de la suppression de l'antécédent");
+    /**
+     * Récupère l'historique d'un antécédent spécifique
+     * @param idAntecedent ID de l'antécédent
+     * @return Historique de l'antécédent
+     */
+    @RequestMapping(value = "/historiqueAntecedent", method = RequestMethod.GET)
+    public ResponseEntity<HashMap<String, Object>> getHistoriqueAntecedent(
+            @RequestParam(value = "idAntecedent", required = true) String idAntecedent) {
 
-            return ResponseEntity.badRequest().headers(headers).body(model);
-        }
+        HashMap<String, Object> model = new HashMap<>();
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(Constants.PROPRIETE_HEADERS_RESPONDED, Constants.PROPRIETE_HEADERS_TIMEZONESCONTROLLER);
+
+        List<HistoriqueAntecedentDTO> historique = this.historiqueAntecedentService.getHistoriqueByAntecedent(idAntecedent);
+
+        model.put("historique", historique);
+
+        System.out.println("======================== Historique récupéré pour antécédent " + idAntecedent + " : " + historique.size() + " entrées");
+
+        return ResponseEntity.accepted().headers(headers).body(model);
     }
 }
 

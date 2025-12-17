@@ -11,6 +11,7 @@ public class AntecedentPatientDTO {
     private String id;
     private String idPatient;
     private String categorieAntecedent;
+    private String categorieAntecedentCode;
     private String categorieAntecedentLibelle;
     private String typeAntecedent;
     private String typeAntecedentLibelle;
@@ -22,6 +23,7 @@ public class AntecedentPatientDTO {
     private String statut;
     private String traitementSuivi;
     private String actionEffectuee;
+    private Boolean deleted;
 
     // Getters et Setters
     public String getId() {
@@ -137,5 +139,23 @@ public class AntecedentPatientDTO {
     public void setTraitementSuivi(String traitementSuivi) {
         this.traitementSuivi = traitementSuivi;
     }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public String getCategorieAntecedentCode() {
+        return categorieAntecedentCode;
+    }
+
+    public void setCategorieAntecedentCode(String categorieAntecedentCode) {
+        this.categorieAntecedentCode = categorieAntecedentCode;
+    }
+    
+    
 }
 

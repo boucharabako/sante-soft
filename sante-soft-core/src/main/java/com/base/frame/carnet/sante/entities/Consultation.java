@@ -31,6 +31,8 @@ public class Consultation extends AbstractAuditingEntity implements Serializable
     private String id;
     @Column(name = "id_patient")
     private String idPatient;
+    @Column(name = "categorie_consultation")
+    private String categorieConsultation;
     @Column(name = "type_consultation")
     private String typeConsultation;
     @Column(name = "id_professionnel_sante")
@@ -107,6 +109,16 @@ public class Consultation extends AbstractAuditingEntity implements Serializable
     public void setTypeConsultation(String typeConsultation) {
         this.typeConsultation = typeConsultation;
     }
+
+    public String getCategorieConsultation() {
+        return categorieConsultation;
+    }
+
+    public void setCategorieConsultation(String categorieConsultation) {
+        this.categorieConsultation = categorieConsultation;
+    }
+    
+    
 
     @Override
     public String toString() {

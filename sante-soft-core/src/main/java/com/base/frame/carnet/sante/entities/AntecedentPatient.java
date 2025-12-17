@@ -48,6 +48,8 @@ public class AntecedentPatient extends AbstractAuditingEntity implements Seriali
     private String categorieAntecedent;
     @Column(name = "action_effectuee")
     private String actionEfectuee;
+    @Column(name = "deleted")
+    private Boolean deleted = false;
 
     public String getId() {
         return id;
@@ -138,11 +140,18 @@ public class AntecedentPatient extends AbstractAuditingEntity implements Seriali
     public void setCategorieAntecedent(String categorieAntecedent) {
         this.categorieAntecedent = categorieAntecedent;
     }
-    
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
 
     @Override
     public String toString() {
-        return "AntecedentMedical{" + "id=" + id + ", idPatient=" + idPatient + ", description=" + description + ", dateDebut=" + dateDebut + ", dateFin=" + dateFin + ", traitementSuivi=" + traitementSuivi + ", statut=" + statut + ", typeAntecedent=" + typeAntecedent + '}';
+        return "AntecedentMedical{" + "id=" + id + ", idPatient=" + idPatient + ", description=" + description + ", dateDebut=" + dateDebut + ", dateFin=" + dateFin + ", traitementSuivi=" + traitementSuivi + ", statut=" + statut + ", typeAntecedent=" + typeAntecedent + ", deleted=" + deleted + '}';
     }
     
      

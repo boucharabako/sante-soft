@@ -5,7 +5,8 @@
  */
 package com.base.frame.carnet.sante.entities;
 
-
+import com.base.frame.socle.utils.audit.AbstractAuditingEntity;
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,28 +15,25 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 
-
 /**
  *
  * @author Bouchara
  */
 @Entity
-@Table(name = "vaccin", schema = "sante")
-public class Vaccin {
-
+@Table(name = "consultation_type_examen_autorise", schema = "sante")
+public class ConsultationTypeExamenAutorise extends AbstractAuditingEntity implements Serializable {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
     @Column(name = "id")
     private String id;
+    @Column(name = "type_consultation")
+    private String typeConsultation;
     @Column(name = "code")
     private String code;
     @Column(name = "libelle")
     private String libelle;
-    @Column(name = "maladie_cible")
-    private String maladieCible;
-    @Column(name = "obligatoire")
-    private boolean obligatoire;
     @Column(name = "description")
     private String description;
 
@@ -45,6 +43,14 @@ public class Vaccin {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getTypeConsultation() {
+        return typeConsultation;
+    }
+
+    public void setTypeConsultation(String typeConsultation) {
+        this.typeConsultation = typeConsultation;
     }
 
     public String getCode() {
@@ -71,31 +77,11 @@ public class Vaccin {
         this.description = description;
     }
 
-    public String getMaladieCible() {
-        return maladieCible;
-    }
-
-    public void setMaladieCible(String maladieCible) {
-        this.maladieCible = maladieCible;
-    }
-
-    public boolean isObligatoire() {
-        return obligatoire;
-    }
-
-    public void setObligatoire(boolean obligatoire) {
-        this.obligatoire = obligatoire;
-    }
-
     @Override
     public String toString() {
-        return "Vaccin{" + "id=" + id + ", code=" + code + ", libelle=" + libelle + ", maladieCible=" + maladieCible + ", obligatoire=" + obligatoire + ", description=" + description + '}';
+        return "ConsultationTypeExamenAutorise{" + "id=" + id + ", typeConsultation=" + typeConsultation + ", code=" + code + ", libelle=" + libelle + ", description=" + description + '}';
     }
     
     
-    public Vaccin() {
-    }
     
-    
-
 }

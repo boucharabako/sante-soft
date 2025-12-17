@@ -161,6 +161,16 @@
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
         }
 
+        .patient-btn-success {
+            background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+            color: white;
+        }
+
+        .patient-btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 184, 148, 0.4);
+        }
+
         .patient-btn-delete {
             background: linear-gradient(135deg, #EF5350 0%, #E53935 100%);
             color: white;
@@ -334,14 +344,18 @@
                                     <p class="patient-username">@{{p.username}}</p>
                                 </div>
                             </div>
-                            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                                <button type="button" class="patient-btn patient-btn-edit" ng-click="consulterPatient(p)" style="flex: 1;">
+                            <div style="display: flex; gap: 8px; margin-bottom: 15px;">
+                                <button type="button" class="patient-btn patient-btn-edit" ng-click="consulterPatient(p)" style="flex: 1; padding: 8px 10px; font-size: 12px;">
                                     <i class="fas fa-stethoscope"></i>
                                     Consultation
                                 </button>
-                                <button type="button" class="patient-btn patient-btn-info" ng-click="voirAntecedents(p)" style="flex: 1;">
+                                <button type="button" class="patient-btn patient-btn-info" ng-click="voirAntecedents(p)" style="flex: 1; padding: 8px 10px; font-size: 12px;">
                                     <i class="fas fa-notes-medical"></i>
                                     Antécédents
+                                </button>
+                                <button type="button" class="patient-btn patient-btn-success" ng-click="voirVaccinations(p)" style="flex: 1; padding: 8px 10px; font-size: 12px;">
+                                    <i class="fas fa-syringe"></i>
+                                    Vaccinations
                                 </button>
                             </div>
 

@@ -2,12 +2,20 @@ package com.base.frame.carnet.sante.services;
 
 import com.base.frame.carnet.sante.daos.AntecedentPatientDAO;
 import com.base.frame.carnet.sante.dtos.AntecedentPatientDTO;
+import com.base.frame.carnet.sante.entities.Antecedant;
 import com.base.frame.carnet.sante.entities.AntecedentPatient;
+import com.base.frame.carnet.sante.entities.CategorieAntecedent;
+import com.base.frame.carnet.sante.entities.TypeAntecedant;
 import com.base.frame.carnet.sante.iservices.IAntecedentPatientService;
+import com.base.frame.carnet.sante.iservices.IHistoriqueAntecedentService;
+import com.base.frame.carnet.sante.repositories.AntecedantRepository;
 import com.base.frame.carnet.sante.repositories.AntecedentPatientRepository;
+import com.base.frame.carnet.sante.repositories.CategorieAntecedentRepository;
 import com.base.frame.carnet.sante.repositories.ParamListDTORepository;
+import com.base.frame.carnet.sante.repositories.TypeAntecedentRepository;
 import com.base.frame.socle.core.entity.ParamList;
 import com.base.frame.socle.core.service.CodificationService;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +36,10 @@ public class AntecedentPatientService implements IAntecedentPatientService {
 
     @Autowired
     private AntecedentPatientRepository antecedentPatientRepository;
+    
+    
+    @Autowired
+    private CategorieAntecedentRepository categorieAntecedentRepository;
 
     @Autowired
     private AntecedentPatientDAO antecedentPatientDAO;
@@ -38,30 +50,54 @@ public class AntecedentPatientService implements IAntecedentPatientService {
     @Autowired
     private ParamListDTORepository paramListDTORepository;
 
+    @Autowired
+    private IHistoriqueAntecedentService historiqueAntecedentService;
+    
+    @Autowired
+    private TypeAntecedentRepository typeAntecedentRepository;
+    
+    @Autowired
+    private AntecedantRepository antecedentRepository;
+
+
     @Override
-    public AntecedentPatientDTO saveAntecedentPatient(AntecedentPatientDTO dto) {
+    public AntecedentPatientDTO saveAntecedentPatient(AntecedentPatientDTO dto, String currentUserId, String currentUsername) {
         // Validation
         this.controleValidationObjetAntecedentPatient(dto);
 
         AntecedentPatient entity;
+        boolean isNew = false;
+        String action = "";
 
         if (dto.getId() != null && !dto.getId().isEmpty() && this.antecedentPatientRepository.existsById(dto.getId())) {
             // Modification
             entity = this.antecedentPatientRepository.findById(dto.getId()).get();
+            action = "MODIFICATION";
             System.out.println("======================== Modification de l'antecedent ID: " + dto.getId());
         } else {
             // Création
             entity = new AntecedentPatient();
+            isNew = true;
+            action = "AJOUT";
             System.out.println("======================== Création d'un nouvel antecedent");
         }
 
         // Mapper DTO vers Entity
         entity = this.mapDTOIntoEntity(dto, entity);
 
+        // Définir createdDate pour les nouveaux antécédents
+        if (isNew) {
+            entity.setCreatedDate(Instant.now());
+            System.out.println("======================== createdDate défini: " + entity.getCreatedDate());
+        }
+
         // Sauvegarder
         AntecedentPatient saved = this.antecedentPatientRepository.save(entity);
 
         System.out.println("======================== Antecedent sauvegarde avec succes: " + saved.getId());
+
+        // Enregistrer l'action dans l'historique
+        this.historiqueAntecedentService.enregistrerAction(saved.getId(), currentUserId, action);
 
         // Retourner le DTO
         return this.mapEntityIntoDTO(saved);
@@ -94,7 +130,8 @@ public class AntecedentPatientService implements IAntecedentPatientService {
 
     @Override
     public List<AntecedentPatientDTO> findAntecedentsByPatient(String idPatient) {
-        List<AntecedentPatient> entities = this.antecedentPatientRepository.findByIdPatient(idPatient);
+        // Utiliser la méthode qui filtre les antécédents supprimés
+        List<AntecedentPatient> entities = this.antecedentPatientRepository.findActiveByIdPatient(idPatient);
         List<AntecedentPatientDTO> dtos = new ArrayList<>();
 
         for (AntecedentPatient entity : entities) {
@@ -105,10 +142,38 @@ public class AntecedentPatientService implements IAntecedentPatientService {
     }
 
     @Override
-    public void deleteAntecedentPatient(String id) {
+    public List<AntecedentPatientDTO> getAllAntecedentsByPatient(String idPatient, String mc) {
+        // Utiliser le DAO pour récupérer la liste triée par date DESC
+        List<AntecedentPatient> entities = this.antecedentPatientDAO.findListeAntecedentPatient(idPatient);
+        List<AntecedentPatientDTO> dtos = new ArrayList<>();
+
+        for (AntecedentPatient entity : entities) {
+            dtos.add(this.mapEntityIntoDTO(entity));
+        }
+
+        System.out.println("======================== getAllAntecedentsByPatient pour patient " + idPatient + " : " + dtos.size() + " antécédents");
+
+        return dtos;
+    }
+
+    @Override
+    public void deleteAntecedentPatient(String id, String currentUserId, String currentUsername) {
         if (this.antecedentPatientRepository.existsById(id)) {
-            this.antecedentPatientRepository.deleteById(id);
-            System.out.println("======================== Antecedent supprime: " + id);
+            System.out.println("======================== Suppression logique de l'antecedent ID: " + id);
+
+            // Récupérer l'antécédent
+            AntecedentPatient entity = this.antecedentPatientRepository.findById(id).get();
+
+            // Marquer comme supprimé (suppression logique)
+            entity.setDeleted(true);
+
+            // Sauvegarder la modification
+            this.antecedentPatientRepository.save(entity);
+
+            // Enregistrer l'action dans l'historique APRÈS la suppression logique
+            this.historiqueAntecedentService.enregistrerAction(id, currentUserId, "SUPPRESSION");
+
+            System.out.println("======================== Antecedent marque comme supprime avec succes");
         }
     }
 
@@ -148,6 +213,7 @@ public class AntecedentPatientService implements IAntecedentPatientService {
         dto.setId(entity.getId());
         dto.setIdPatient(entity.getIdPatient());
         dto.setCategorieAntecedent(entity.getCategorieAntecedent());
+        //dto.setCategorieAntecedentLibelle(this.categorieAntecedentRepository.findById(entity.getCategorieAntecedent()).get().getLibelle());
         dto.setTypeAntecedent(entity.getTypeAntecedent());
         dto.setAntecedent(entity.getAntecedent());
         dto.setDescription(entity.getDescription());
@@ -155,24 +221,38 @@ public class AntecedentPatientService implements IAntecedentPatientService {
         dto.setDateFin(entity.getDateFin());
         dto.setStatut(entity.getStatut());
         dto.setTraitementSuivi(entity.getTraitementSuivi());
+        dto.setDeleted(entity.getDeleted());
 
         // Récupérer les libellés depuis ParamList
         if (entity.getCategorieAntecedent() != null) {
-            Optional<ParamList> categorie = paramListDTORepository.findById(entity.getCategorieAntecedent());
+//            Optional<ParamList> categorie = paramListDTORepository.findById(entity.getCategorieAntecedent());
+//            if (categorie.isPresent()) {
+//                dto.setCategorieAntecedentLibelle(categorie.get().getLibelle());
+//            }
+            Optional<CategorieAntecedent> categorie = categorieAntecedentRepository.findById(entity.getCategorieAntecedent());
             if (categorie.isPresent()) {
                 dto.setCategorieAntecedentLibelle(categorie.get().getLibelle());
+                dto.setCategorieAntecedentCode(categorie.get().getCode());
             }
         }
 
         if (entity.getTypeAntecedent() != null) {
-            Optional<ParamList> type = paramListDTORepository.findById(entity.getTypeAntecedent());
-            if (type.isPresent()) {
-                dto.setTypeAntecedentLibelle(type.get().getLibelle());
+//            Optional<ParamList> type = paramListDTORepository.findById(entity.getTypeAntecedent());
+//            if (type.isPresent()) {
+//                dto.setTypeAntecedentLibelle(type.get().getLibelle());
+//            }
+            Optional<TypeAntecedant> typeAntecedent = typeAntecedentRepository.findById(entity.getCategorieAntecedent());
+            if (typeAntecedent.isPresent()) {
+                dto.setTypeAntecedentLibelle(typeAntecedent.get().getLibelle());
             }
         }
 
         if (entity.getAntecedent() != null) {
-            Optional<ParamList> antecedent = paramListDTORepository.findById(entity.getAntecedent());
+//            Optional<ParamList> antecedent = paramListDTORepository.findById(entity.getAntecedent());
+//            if (antecedent.isPresent()) {
+//                dto.setAntecedentLibelle(antecedent.get().getLibelle());
+//            }
+            Optional<Antecedant> antecedent = antecedentRepository.findById(entity.getAntecedent());
             if (antecedent.isPresent()) {
                 dto.setAntecedentLibelle(antecedent.get().getLibelle());
             }
@@ -197,6 +277,9 @@ public class AntecedentPatientService implements IAntecedentPatientService {
         entity.setDateFin(dto.getDateFin());
         entity.setStatut(dto.getStatut());
         entity.setTraitementSuivi(dto.getTraitementSuivi());
+
+        // Ne pas mapper le champ deleted depuis le DTO (géré uniquement par la méthode de suppression)
+        // entity.setDeleted(dto.getDeleted());
 
         return entity;
     }

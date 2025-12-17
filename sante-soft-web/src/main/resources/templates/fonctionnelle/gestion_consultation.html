@@ -7,6 +7,8 @@
         <link th:href="@{/plugins/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
         <link th:href="@{/plugins/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet"/>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
         <script th:src="@{/js/controllers/consultationController.js}"></script>
         <script src="app.js"></script>
         <style type="text/css">
@@ -120,6 +122,34 @@
                 font-size: 12px;
                 font-weight: 600;
             }
+
+            /* Badges pour les catégories d'antécédents */
+            .badge-AME { background: #e3f2fd; color: #1976d2; border: 1px solid #90caf9; }
+            .badge-ACH { background: #f3e5f5; color: #7b1fa2; border: 1px solid #ce93d8; }
+            .badge-AFA { background: #e8f5e9; color: #388e3c; border: 1px solid #81c784; }
+            .badge-AAL { background: #ffebee; color: #c62828; border: 2px solid #d32f2f; font-weight: 700; }
+            .badge-AOG { background: #fce4ec; color: #c2185b; border: 1px solid #f48fb1; }
+            .badge-ATR { background: #ffebee; color: #d32f2f; border: 1px solid #ef5350; }
+            .badge-AMD { background: #e0f2f1; color: #00796b; border: 1px solid #4db6ac; }
+            .badge-ASO { background: #f1f8e9; color: #689f38; border: 1px solid #aed581; }
+
+            /* Badges pour les statuts */
+            .status-Actif { background: #c8e6c9; color: #2e7d32; }
+            .status-Résolu { background: #b3e5fc; color: #01579b; }
+            .status-Surveillance { background: #fff9c4; color: #f57f17; }
+            .status-Chronique { background: #ffccbc; color: #d84315; }
+
+            /* Animation pulse pour l'icône vide */
+            @keyframes pulse {
+                0%, 100% { transform: scale(1); opacity: 0.8; }
+                50% { transform: scale(1.05); opacity: 1; }
+            }
+
+            /* Effet hover sur les lignes du tableau */
+            .table-hover tbody tr:hover {
+                box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+                transform: translateY(-2px);
+            }
         </style>
     </head>
     <body>
@@ -136,8 +166,50 @@
                                     <p class="mb-0">Enregistrement d'une consultation médicale</p>
                                 </div>
                                 <div class="col-md-4 text-right">
-                                    <label class="text-white mr-2">Date de consultation:</label>
-                                    <input type="date" class="form-control d-inline-block" style="width: auto;" ng-model="consultation.dateConsultation">
+                                    <div class="row">
+                                        <div class="col-md-12 mb-2">
+                                            <label class="text-white mr-2">Date de consultation:</label>
+                                            <input type="date" class="form-control d-inline-block" style="width: auto;" ng-model="consultation.dateConsultation">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Type de Consultation -->
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="section-header">
+                                <i class="fas fa-clipboard-list text-info"></i>
+                                Type de Consultation
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="control-label font-weight-bold">
+                                        Catégorie de consultation <span style="color: red;">*</span>
+                                    </label>
+                                    <select class="form-control mySelecDoc"
+                                            ng-model="consultation.categorieConsultation"
+                                            id="selectCategorieConsultation">
+                                        <option value="">-- Sélectionner une catégorie --</option>
+                                        <option data-ng-repeat="cat in listeCategoriesConsultation" value="{{cat.id}}">{{cat.libelle}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="control-label font-weight-bold">
+                                        Type de consultation <span style="color: red;">*</span>
+                                    </label>
+                                    <select class="form-control mySelecDoc"
+                                            ng-model="consultation.typeConsultation"
+                                            id="selectTypeConsultation"
+                                            ng-disabled="!consultation.categorieConsultation">
+                                        <option value="">-- Sélectionner un type --</option>
+                                        <option data-ng-repeat="type in listeTypesConsultation" value="{{type.id}}">{{type.libelle}}</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -286,65 +358,133 @@
                     </div>
                 </div>
 
-                <!-- Antécédents Médicaux -->
+                <!-- Antécédents Médicaux du Patient -->
                 <div class="col-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="section-header">
-                                <i class="fas fa-history text-info"></i>
-                                Antécédents Médicaux
-                            </div>
-
-                            <div class="row mb-3">
-                                <div class="col-md-3">
-                                    <label class="form-label">Catégorie</label>
-                                    <select class="form-control"
-                                            ng-model="nouvelAntecedent.categorieAntecedent"
-                                            ng-change="onCategorieAntecedentChange()"
-                                            ng-options="cat as cat.libelle for cat in listeCategoriesAntecedent track by cat.id">
-                                        <option value="">-- Sélectionner une catégorie --</option>
-                                    </select>
+                    <div class="card shadow-sm" style="border: none; border-radius: 12px;">
+                        <div class="card-body" style="padding: 25px;">
+                            <div class="d-flex align-items-center mb-4" style="border-bottom: 2px solid #e9ecef; padding-bottom: 15px;">
+                                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                                            width: 45px; height: 45px; border-radius: 10px;
+                                            display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                                    <i class="fas fa-history" style="color: white; font-size: 20px;"></i>
                                 </div>
-                                <div class="col-md-3">
-                                    <label class="form-label">Type</label>
-                                    <select class="form-control"
-                                            ng-model="nouvelAntecedent.typeAntecedent"
-                                            ng-options="type as type.libelle for type in listeTypesAntecedent track by type.id"
-                                            ng-disabled="!nouvelAntecedent.categorieAntecedent">
-                                        <option value="">-- Sélectionner un type --</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">Description</label>
-                                    <input type="text"
-                                           class="form-control"
-                                           ng-model="nouvelAntecedent.description"
-                                           placeholder="Description de l'antécédent"
-                                           ng-disabled="!nouvelAntecedent.typeAntecedent">
-                                </div>
-                                <div class="col-md-2">
-                                    <label class="form-label">&nbsp;</label>
-                                    <button class="btn btn-add btn-block" ng-click="ajouterAntecedent()">
-                                        <i class="fas fa-plus"></i> Ajouter
-                                    </button>
+                                <div>
+                                    <h5 class="mb-0" style="font-weight: 700; color: #2d3436;">Antécédents Médicaux du Patient</h5>
+                                    <small style="color: #636e72;">Historique médical complet</small>
                                 </div>
                             </div>
 
-                            <div ng-show="antecedents.length > 0">
-                                <div class="antecedent-item" ng-repeat="ant in antecedents">
-                                    <div>
-                                        <span class="badge badge-primary badge-custom">{{ant.categorie}}</span>
-                                        <span class="badge badge-info badge-custom ml-1">{{ant.type}}</span>
-                                        <strong class="ml-2">{{ant.description}}</strong>
-                                        <small class="text-muted ml-2" ng-show="ant.dateDebut">Depuis: {{ant.dateDebut | date:'dd/MM/yyyy'}}</small>
+                            <div ng-show="antecedentsPatient && antecedentsPatient.length > 0">
+                                <div class="table-responsive">
+                                    <table class="table table-hover" style="margin-bottom: 0;">
+                                        <thead style="background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);">
+                                            <tr>
+                                                <th style="border: none; padding: 15px; font-weight: 700; color: #2d3436; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">
+                                                    Catégorie
+                                                </th>
+                                                <th style="border: none; padding: 15px; font-weight: 700; color: #2d3436; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">
+                                                    Type
+                                                </th>
+                                                <th style="border: none; padding: 15px; font-weight: 700; color: #2d3436; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">
+                                                    Antécédent
+                                                </th>
+                                                <th style="border: none; padding: 15px; font-weight: 700; color: #2d3436; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">
+                                                    Statut
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="ant in antecedentsPatient"
+                                                style="border-bottom: 1px solid #f1f3f5; transition: all 0.3s ease;"
+                                                onmouseover="this.style.backgroundColor='#f8f9fa'"
+                                                onmouseout="this.style.backgroundColor='white'">
+                                                <td style="padding: 18px 15px; vertical-align: middle;">
+                                                    <span class="badge badge-{{ant.categorieAntecedentCode}}"
+                                                          style="font-size: 12px; padding: 8px 14px; border-radius: 6px; font-weight: 600; display: inline-block;">
+                                                        {{ant.categorieAntecedentLibelle}}
+                                                    </span>
+                                                </td>
+                                                <td style="padding: 18px 15px; vertical-align: middle;">
+                                                    <div style="display: flex; align-items: center;">
+                                                        <i class="fas fa-tag" style="color: #74b9ff; margin-right: 8px; font-size: 14px;"></i>
+                                                        <span style="font-weight: 600; color: #2d3436; font-size: 14px;">
+                                                            {{ant.typeAntecedentLibelle}}
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                                <td style="padding: 18px 15px; vertical-align: middle;">
+                                                    <div>
+                                                        <div style="font-weight: 700; color: #0984e3; font-size: 15px; margin-bottom: 4px;">
+                                                            {{ant.antecedentLibelle}}
+                                                        </div>
+                                                        <div style="color: #636e72; font-size: 12px; font-style: italic;" ng-if="ant.description">
+                                                            <i class="fas fa-info-circle" style="margin-right: 5px; color: #95a5a6;"></i>
+                                                            {{ant.description}}
+                                                        </div>
+                                                        <div style="color: #b2bec3; font-size: 11px; margin-top: 4px;" ng-if="ant.dateDebut">
+                                                            <i class="far fa-calendar-alt" style="margin-right: 5px;"></i>
+                                                            Depuis le {{ant.dateDebut | date:'dd/MM/yyyy'}}
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td style="padding: 18px 15px; vertical-align: middle;">
+                                                    <span class="badge status-{{ant.statut}}"
+                                                          style="font-size: 11px; padding: 7px 12px; border-radius: 5px; font-weight: 600;
+                                                                 box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: inline-block;">
+                                                        <i class="fas fa-circle" style="font-size: 6px; margin-right: 6px;"></i>
+                                                        {{ant.statut}}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- Résumé statistique -->
+                                <div class="mt-3 p-3" style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+                                                              border-radius: 8px; border-left: 4px solid #2196f3;">
+                                    <div class="row text-center">
+                                        <div class="col-md-4">
+                                            <div style="font-size: 24px; font-weight: 700; color: #1976d2;">
+                                                {{antecedentsPatient.length}}
+                                            </div>
+                                            <div style="font-size: 12px; color: #546e7a; text-transform: uppercase; letter-spacing: 0.5px;">
+                                                Total antécédents
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div style="font-size: 24px; font-weight: 700; color: #43a047;">
+                                                {{(antecedentsPatient | filter:{statut:'Actif'}).length}}
+                                            </div>
+                                            <div style="font-size: 12px; color: #546e7a; text-transform: uppercase; letter-spacing: 0.5px;">
+                                                Actifs
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div style="font-size: 24px; font-weight: 700; color: #e53935;">
+                                                {{(antecedentsPatient | filter:{categorieAntecedentCode:'AAL'}).length}}
+                                            </div>
+                                            <div style="font-size: 12px; color: #546e7a; text-transform: uppercase; letter-spacing: 0.5px;">
+                                                Allergies
+                                            </div>
+                                        </div>
                                     </div>
-                                    <button class="btn-remove" ng-click="supprimerAntecedent($index)">
-                                        <i class="fas fa-times"></i>
-                                    </button>
                                 </div>
                             </div>
-                            <div ng-show="antecedents.length === 0" class="text-muted text-center py-3">
-                                Aucun antécédent enregistré
+
+                            <div ng-show="!antecedentsPatient || antecedentsPatient.length === 0"
+                                 class="text-center py-5"
+                                 style="background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+                                        border-radius: 12px; border: 2px dashed #b2bec3;">
+                                <div style="animation: pulse 2s infinite;">
+                                    <i class="fas fa-folder-open" style="font-size: 64px; color: #95a5a6; margin-bottom: 20px;"></i>
+                                </div>
+                                <h6 style="color: #2d3436; font-weight: 600; margin-bottom: 8px;">
+                                    Aucun antécédent médical
+                                </h6>
+                                <p class="mb-0" style="color: #636e72; font-size: 14px;">
+                                    Ce patient n'a pas d'antécédents médicaux enregistrés dans le système
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -437,19 +577,48 @@
                             </div>
 
                             <div class="row mb-3">
-                                <div class="col-md-3">
-                                    <select class="form-control" ng-model="nouvelExamen.typeExamen">
-                                        <option value="">Type d'examen</option>
-                                        <option ng-repeat="type in typesExamen" value="{{type}}">{{type}}</option>
+                                <div class="col-md-4">
+                                    <label class="control-label font-weight-bold">Type d'examen</label>
+                                    <select class="form-control mySelecDoc"
+                                            ng-model="nouvelExamen.typeExamen"
+                                            id="selectTypeExamen"
+                                            ng-disabled="!consultation.typeConsultation || consultation.typeConsultation === ''">
+                                        <option value="">-- Sélectionner un type d'examen --</option>
+                                        <option ng-repeat="type in listeTypesExamen" value="{{type.id}}">{{type.libelle}}</option>
                                     </select>
+                                    <small class="text-muted" ng-if="!consultation.typeConsultation">
+                                        <i class="fas fa-info-circle"></i> Veuillez d'abord sélectionner un type de consultation
+                                    </small>
                                 </div>
-                                <div class="col-md-6">
-                                    <input type="text" class="form-control" ng-model="nouvelExamen.resultat" 
-                                           placeholder="Résultat de l'examen">
+                                <div class="col-md-4">
+                                    <label class="control-label font-weight-bold">Résultat</label>
+                                    <textarea class="form-control"
+                                              ng-model="nouvelExamen.resultat"
+                                              placeholder="Résultat de l'examen"
+                                              rows="1"
+                                              ng-disabled="!nouvelExamen.typeExamen"></textarea>
                                 </div>
-                                <div class="col-md-3">
-                                    <button class="btn btn-add btn-block" ng-click="ajouterExamen()">
-                                        <i class="fas fa-plus"></i> Ajouter
+                                <div class="col-md-4">
+                                    <label class="control-label font-weight-bold">
+                                        Fichier résultat <i class="fas fa-paperclip"></i>
+                                    </label>
+                                    <div class="input-group">
+                                        <input type="file"
+                                               class="form-control"
+                                               id="fichierExamen"
+                                               accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                                               ng-disabled="!nouvelExamen.typeExamen"
+                                               onchange="angular.element(this).scope().handleFileSelect(this.files)"
+                                               style="padding: 3px;">
+                                    </div>
+                                    <small class="text-muted">PDF, Image, Word (Max 5MB)</small>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-12 text-right">
+                                    <button class="btn btn-add" ng-click="ajouterExamen()"
+                                            ng-disabled="!nouvelExamen.typeExamen">
+                                        <i class="fas fa-plus"></i> Ajouter l'examen
                                     </button>
                                 </div>
                             </div>
@@ -459,6 +628,10 @@
                                     <div>
                                         <strong>{{exam.typeExamen}}</strong>
                                         <span ng-show="exam.resultat"> - {{exam.resultat}}</span>
+                                        <span ng-show="exam.fichierJoint" class="ml-2">
+                                            <i class="fas fa-paperclip text-success"></i>
+                                            <small class="text-success">Fichier joint</small>
+                                        </span>
                                     </div>
                                     <button class="btn-remove" ng-click="supprimerExamen($index)">
                                         <i class="fas fa-times"></i>

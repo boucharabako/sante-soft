@@ -332,7 +332,7 @@ and open the template in the editor.
     </changeSet>
    
     
-    <changeSet author="Bouchara (generated)" id="16-11-2025-1-32">
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-320">
         <createTable schemaName="${sante_schema_name}" tableName="consultation">
             <column name="id" type="VARCHAR(50)">
                 <constraints nullable="false"/>
@@ -358,7 +358,7 @@ and open the template in the editor.
 
             <column name="diagnostic" type="TEXT"/>
 
-            <column name="traitement" type="VARCHAR(255)"/>
+            <column name="traitement" type="TEXT"/>
             <column name="date_consultation" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
       
         </createTable>
@@ -560,7 +560,7 @@ and open the template in the editor.
     </changeSet>
     
     
-    <changeSet author="Bouchara (generated)" id="16-11-2025-1-45">
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-450">
         <createTable schemaName="${sante_schema_name}" tableName="prescription">
             <column name="id" type="VARCHAR(50)">
                 <constraints nullable="false"/>
@@ -578,15 +578,11 @@ and open the template in the editor.
             <column name="last_modified_user_agent_info" type="VARCHAR(255)"/>
             <column name="last_modified_user_device" type="VARCHAR(255)"/>
             <column name="last_modified_user_zone" type="VARCHAR(255)"/>
-            
-            <column name="vaccin" type="VARCHAR(255)"/>
-            <column name="lieu" type="VARCHAR(255)"/>
-            <column name="unite" type="VARCHAR(50)"/>
+            <column name="medicament" type="VARCHAR(255)"/>
+            <column name="posologie" type="VARCHAR(255)"/>
             <column name="id_consultation" type="VARCHAR(50)"/>
 
-            <column name="date_vaccination" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
-            <column name="date_rappel" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
-
+            <column name="duree" type="INT"/>
       
         </createTable>
     </changeSet>
@@ -680,7 +676,7 @@ and open the template in the editor.
             <column name="type_fichier" type="VARCHAR(50)"/>
         </addColumn>    
     </changeSet>-->
-        <changeSet author="Bouchara (generated)" id="16-11-2025-1-55">
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-55">
         <createTable schemaName="${sante_schema_name}" tableName="antecedent">
             <column name="id" type="VARCHAR(50)">
                 <constraints nullable="false"/>
@@ -719,7 +715,7 @@ and open the template in the editor.
         </addColumn>    
     </changeSet>
     
-     <changeSet author="Bouchara (generated)" id="16-11-2025-1-59">
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-59">
         <addColumn tableName="antecedant_patient" schemaName="${sante_schema_name}">
             <column name="categorie_antecedent" type="VARCHAR(50)"/>
         </addColumn>    
@@ -737,5 +733,85 @@ and open the template in the editor.
             <column name="action_effectuee" type="VARCHAR(50)"/>
         </addColumn>    
     </changeSet>
+    <changeSet id="16-11-2025-1-63" author="Bouchara (generated)">
+        <renameTable
+            oldTableName="antecedant_patient"
+            newTableName="antecedent_patient"
+            schemaName="${sante_schema_name}"/>
+    </changeSet>
+    
+ 
+    
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-640">
+        <addColumn tableName="consultation" schemaName="${sante_schema_name}">
+            <column name="categorie_consultation" type="VARCHAR(50)"/>
+        </addColumn>    
+    </changeSet>
+    
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-650">
+        <addForeignKeyConstraint baseTableSchemaName="${sante_schema_name}" baseColumnNames="categorie_consultation" baseTableName="consultation" constraintName="cat_cons_on_consultaiont_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="categorie_consultation" referencedTableSchemaName="${sante_schema_name}"/>
+    </changeSet>
+    
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-66">
+        <dropForeignKeyConstraint
+            baseTableSchemaName="${sante_schema_name}"
+            baseTableName="prescription"
+            constraintName="consultation_on_precription_fk"/>
+    </changeSet>
+
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-67">
+        <addForeignKeyConstraint baseTableSchemaName="${sante_schema_name}" baseColumnNames="id_consultation" baseTableName="prescription" constraintName="consultation_on_precription_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="consultation" referencedTableSchemaName="${sante_schema_name}"/>
+    </changeSet>
+    
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-680">
+        <createTable schemaName="${sante_schema_name}" tableName="consultation_type_examen_autorise">
+            <column name="id" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <!-- Colonnes d'audit -->
+            <column name="created_by" type="VARCHAR(50)"/>
+            <column name="created_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="created_user_ip_adresse" type="VARCHAR(255)"/>
+            <column name="created_user_agent_info" type="VARCHAR(255)"/>
+            <column name="created_user_device" type="VARCHAR(255)"/>
+            <column name="created_user_zone" type="VARCHAR(255)"/>
+            <column name="last_modified_by" type="VARCHAR(50)"/>
+            <column name="last_modified_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="last_modified_user_ip_adresse" type="VARCHAR(255)"/>
+            <column name="last_modified_user_agent_info" type="VARCHAR(255)"/>
+            <column name="last_modified_user_device" type="VARCHAR(255)"/>
+            <column name="last_modified_user_zone" type="VARCHAR(255)"/>
+            
+            <column name="type_consultation" type="VARCHAR(50)"/>
+            <column name="code" type="VARCHAR(50)"/>
+            <column name="libelle" type="VARCHAR(255)"/>
+            <column name="description" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-69">
+        <addPrimaryKey schemaName="${sante_schema_name}" columnNames="id" constraintName="cons_type_exam_pkey" tableName="consultation_type_examen_autorise"/>
+    </changeSet>
+    
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-70">
+        <addForeignKeyConstraint baseTableSchemaName="${sante_schema_name}" baseColumnNames="type_consultation" baseTableName="consultation_type_examen_autorise" constraintName="typcons_on_type_examen_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="type_consultation" referencedTableSchemaName="${sante_schema_name}"/>
+    </changeSet>
+   
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-71">
+        <addForeignKeyConstraint baseTableSchemaName="${sante_schema_name}" baseColumnNames="type_examen" baseTableName="examen" constraintName="type_exam_on_examen_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="consultation_type_examen_autorise" referencedTableSchemaName="${sante_schema_name}"/>
+    </changeSet>
+    
+
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-72">
+        <addColumn tableName="vaccin" schemaName="${sante_schema_name}">
+            <column name="maladie_cible" type="VARCHAR(50)"/>
+        </addColumn>    
+    </changeSet>
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-73">
+        <addColumn tableName="vaccin" schemaName="${sante_schema_name}">
+            <column name="obligatoire" type="BOOLEAN"/>
+        </addColumn>    
+    </changeSet>
+
     
 </databaseChangeLog>
