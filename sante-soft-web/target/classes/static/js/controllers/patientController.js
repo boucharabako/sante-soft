@@ -248,14 +248,84 @@ App.controller("patientController", ['$scope', 'GenericService','PropagationServ
         };
         
         $scope.consulterPatient = function (patient) {
-            $scope.modeEdition = 3;
-            $scope.titleModale = "Modification d'un patient";
-            $scope.disable = true;
-            $scope.disableCode = true;
-            
-            PropagationService.setPatientSender(patient);
-            console.log('ddddddddddddddddddddd:'+angular.toJson(patient));
-            window.location.href = 'consultation';
+            console.log('🏥 Ouverture de la consultation pour le patient:', patient);
+
+            // Charger les détails complets du patient avant de naviguer
+            GenericService.get(detailPatientURL + "?id=" + patient.id)
+                .then(
+                    function (data) {
+                        if (data && data.patient) {
+                            var patientComplet = data.patient;
+
+                            // Convertir les dates en objets Date pour l'affichage
+                            if (patientComplet.dateEnregistrement) {
+                                patientComplet.dateEnregistrement = new Date(patientComplet.dateEnregistrement);
+                            }
+                            if (patientComplet.dateNaissance) {
+                                patientComplet.dateNaissance = new Date(patientComplet.dateNaissance);
+                            }
+
+                            console.log('✅ Détails complets du patient chargés:', patientComplet);
+                            console.log('   - ID:', patientComplet.id);
+                            console.log('   - Nom:', patientComplet.firstName, patientComplet.lastName);
+                            console.log('   - N° Carnet:', patientComplet.numeroCarnet);
+                            console.log('   - Groupe sanguin:', patientComplet.groupeSanguinLibelle);
+
+                            // Enregistrer le patient dans le service de propagation
+                            PropagationService.setPatientSender(patientComplet);
+
+                            // Naviguer vers la page de consultation
+                            window.location.href = 'consultation';
+                        } else {
+                            console.error('❌ Erreur: Données patient non trouvées');
+                            alert('Erreur lors du chargement des informations du patient');
+                        }
+                    },
+                    function (error) {
+                        console.error('❌ Erreur lors du chargement du patient:', error);
+                        alert('Erreur lors du chargement des informations du patient');
+                    }
+                );
+        };
+
+        $scope.voirAntecedents = function (patient) {
+            console.log('📋 Ouverture des antécédents pour le patient:', patient);
+
+            // Charger les détails complets du patient avant de naviguer
+            GenericService.get(detailPatientURL + "?id=" + patient.id)
+                .then(
+                    function (data) {
+                        if (data && data.patient) {
+                            var patientComplet = data.patient;
+
+                            // Convertir les dates en objets Date pour l'affichage
+                            if (patientComplet.dateEnregistrement) {
+                                patientComplet.dateEnregistrement = new Date(patientComplet.dateEnregistrement);
+                            }
+                            if (patientComplet.dateNaissance) {
+                                patientComplet.dateNaissance = new Date(patientComplet.dateNaissance);
+                            }
+
+                            console.log('✅ Détails complets du patient chargés:', patientComplet);
+                            console.log('   - ID:', patientComplet.id);
+                            console.log('   - Nom:', patientComplet.firstName, patientComplet.lastName);
+                            console.log('   - N° Carnet:', patientComplet.numeroCarnet);
+
+                            // Enregistrer le patient dans le service de propagation
+                            PropagationService.setPatientSender(patientComplet);
+
+                            // Naviguer vers la page de gestion des antécédents
+                            window.location.href = 'antecedent';
+                        } else {
+                            console.error('❌ Erreur: Données patient non trouvées');
+                            alert('Erreur lors du chargement des informations du patient');
+                        }
+                    },
+                    function (error) {
+                        console.error('❌ Erreur lors du chargement du patient:', error);
+                        alert('Erreur lors du chargement des informations du patient');
+                    }
+                );
         };
 
         $scope.deletePatient = function (id) {

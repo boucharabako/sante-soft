@@ -6,7 +6,25 @@
             
             <li class="nav-item"><a class="nav-link" sec:authorize="hasAnyAuthority('FC_USER')" th:href="@{/parametre/utilisateur}"><i class="ti-control-record"></i>Gestion des utilisateurs</a></li>
             <li class="nav-item"><a class="nav-link" sec:authorize="hasAnyAuthority('FC_GROUPE')" href="#"><i class="ti-control-record"></i>Gestion des groupes</a></li>
-            <li class="nav-item"><a class="nav-link" sec:authorize="hasAnyAuthority('FC_PROF')" th:href="@{/parametre/profil}"><i class="ti-control-record"></i> Gestion des profils</a></li> 
+            <li class="nav-item"><a class="nav-link" sec:authorize="hasAnyAuthority('FC_PROF')" th:href="@{/parametre/profil}"><i class="ti-control-record"></i> Gestion des profils</a></li>
+
+        </ul>
+    </li>
+    <li>
+        <a href="javascript: void(0);" sec:authorize="hasAnyAuthority('FC_PROF','FC_ADMIN')" ><i class="fas fa-user-shield"> </i><span>Admistration</span><span class="menu-arrow"><i class="mdi mdi-chevron-right"></i></span></a>
+        <ul class="nav-second-level" aria-expanded="false" style="width: 300px;">
+            
+            <li class="nav-item"><a class="nav-link" sec:authorize="hasAnyAuthority('FC_ADMIN')" th:href="@{/gestion/etablissement}"><i class="ti-control-record"></i> Gestion des établissement</a></li> 
+
+            <li class="nav-item"><a class="nav-link" sec:authorize="hasAnyAuthority('FC_PROF','FC_ADMIN')" th:href="@{/gestion/patient}"><i class="ti-control-record"></i>Gestion des patients</a></li>
+            <li class="nav-item"> <a class="nav-link" sec:authorize="hasAnyAuthority('FC_ADMIN')" th:href="@{/gestion/professionel}"><i class="ti-control-record"></i>Gestion des professionels</a></li> 
+        </ul>
+    </li>
+    <li>
+        <a href="javascript: void(0);" sec:authorize="hasAnyAuthority('FC_PROF')" ><i class="fas fa-user-shield"> </i><span>Accueil</span><span class="menu-arrow"><i class="mdi mdi-chevron-right"></i></span></a>
+        <ul class="nav-second-level" aria-expanded="false" style="width: 300px;">
+            
+            <li class="nav-item"><a class="nav-link" sec:authorize="hasAnyAuthority('FC_PROF')" th:href="@{/gestion/patients}"><i class="ti-control-record"></i>Gestion des patients</a></li>
         </ul>
     </li>
     <li>

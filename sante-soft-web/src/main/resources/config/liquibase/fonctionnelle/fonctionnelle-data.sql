@@ -99,7 +99,7 @@ INSERT INTO sante.type_antecedent(id, code, categorie_antecedent, libelle, descr
 VALUES 
 
 -- Antécédents médicaux (AME)
-('1', 'MCR', '1', 'Maladies chroniques', 'Maladies chroniques'),
+('1', 'MCR', '1', 'Maladies chroniques', 'Maladies chroniques'), 
 ('2', 'MIN', '1', 'Maladies infectieuses', 'Maladies infectieuses'),
 ('3', 'MME', '1', 'Maladies métaboliques', 'Maladies métaboliques'),
 ('4', 'MCV', '1', 'Maladies cardiovasculaires', 'Maladies cardiovasculaires'),
@@ -155,3 +155,124 @@ description= EXCLUDED.description,
 unite= EXCLUDED.unite,
 valeur_min= EXCLUDED.valeur_min,
 valeur_max= EXCLUDED.valeur_max;
+
+
+
+INSERT INTO sante.antecedent(id, code, type_antecedent, libelle, description) 
+VALUES 
+
+-- ============================
+-- 1. MALADIES CHRONIQUES (1)
+-- ============================
+('1',  'HTA',   '1', 'Hypertension artérielle', 'Hypertension artérielle chronique'),
+('2',  'DT2',   '1', 'Diabète de type 2', 'Diabète sucré de type 2'),
+('3',  'IRC',   '1', 'Insuffisance rénale chronique', 'Atteinte rénale chronique'),
+('4',  'ASTH',  '1', 'Asthme chronique', 'Asthme persistant'),
+('5', 'ARTH',  '1', 'Arthrose', 'Maladie dégénérative des articulations'),
+('6', 'RCH',   '1', 'Rectocolite hémorragique', 'Maladie inflammatoire chronique intestinale'),
+('7', 'CROHN', '1', 'Maladie de Crohn', 'Atteinte inflammatoire du tube digestif'),
+
+-- ============================
+-- 2. MALADIES INFECTIEUSES (2)
+-- ============================
+('8',  'TB',   '2', 'Tuberculose', 'Tuberculose pulmonaire ou extrapulmonaire'),
+('9',  'VIH',  '2', 'VIH', 'Infection par le virus VIH'),
+('10',  'VHB',  '2', 'Hépatite B', 'Infection chronique ou aiguë par le VHB'),
+('11', 'VHC',  '2', 'Hépatite C', 'Infection par le virus de l’hépatite C'),
+('12', 'PALU', '2', 'Paludisme', 'Épisodes de paludisme confirmés'),
+
+-- ============================
+-- 3. MALADIES MÉTABOLIQUES (3)
+-- ============================
+('13',  'DLP',  '3', 'Dyslipidémie', 'Anomalie du cholestérol ou des triglycérides'),
+('14',  'GOUT', '3', 'Goutte', 'Hyperuricémie chronique'),
+('15', 'OBES', '3', 'Obésité', 'IMC ≥ 30 kg/m²'),
+('16', 'HYPTH','3', 'Hypothyroïdie', 'Déficit en hormones thyroïdiennes'),
+
+-- ============================
+-- 4. MALADIES CARDIOVASCULAIRES (4)
+-- ============================
+('17', 'IDM',  '4', 'Infarctus du myocarde', 'Antécédent d’IDM'),
+('18', 'AVC',  '4', 'AVC', 'Accident vasculaire cérébral'),
+('19', 'IC',   '4', 'Insuffisance cardiaque', 'Insuffisance cardiaque chronique'),
+('20', 'ARTP', '4', 'Artériopathie périphérique', 'Atteinte des artères des membres inférieurs'),
+
+-- ============================
+-- 5. MALADIES RESPIRATOIRES (5)
+-- ============================
+('21', 'BPCO',  '5', 'BPCO', 'Bronchopneumopathie chronique obstructive'),
+('22', 'PNM-R','5', 'Pneumonie récidivante', 'Pneumonies répétées'),
+('23', 'FIBP', '5', 'Fibrose pulmonaire', 'Maladie pulmonaire interstitielle'),
+
+-- ============================
+-- 6. MALADIES NEUROLOGIQUES (6)
+-- ============================
+('24', 'EPI',  '6', 'Épilepsie', 'Crises épileptiques récurrentes'),
+('25', 'MIGC', '6', 'Migraine chronique', 'Migraine sévère persistante'),
+('26', 'PARK', '6', 'Maladie de Parkinson', 'Trouble neurodégénératif'),
+('27', 'DEM',  '6', 'Démence', 'Déclin cognitif progressif'),
+
+-- ============================
+-- 7. CHIRURGIE DIGESTIVE (7)
+-- ============================
+('28', 'APPE', '7', 'Appendicectomie', 'Ablation de l’appendice'),
+('29', 'CHOLC','7', 'Cholécystectomie', 'Ablation de la vésicule biliaire'),
+('30', 'HERNV','7', 'Hernie inguinale opérée', 'Cure de hernie inguinale'),
+
+-- ============================
+-- 8. CHIRURGIE CARDIOVASCULAIRE (8)
+-- ============================
+('31', 'PONT', '8', 'Pontage coronarien', 'Revascularisation'),
+('32', 'STENT','8', 'Pose de stent', 'Stent coronarien'),
+('33', 'PACEM','8', 'Pacemaker', 'Implantation d’un stimulateur cardiaque'),
+
+-- ============================
+-- 9. CHIRURGIE ORL (9)
+-- ============================
+('34', 'AMYG', '9', 'Amygdalectomie', 'Ablation des amygdales'),
+('35', 'ADENO','9', 'Adénoïdectomie', 'Ablation des végétations'),
+
+-- ============================
+-- 10. CHIRURGIE OBSTÉTRIQUE (10)
+-- ============================
+('36', 'CESA','10', 'Césarienne', 'Accouchement par césarienne'),
+('37', 'GEU', '10', 'Grossesse extra-utérine opérée', 'Traitement chirurgical de GEU'),
+
+-- ============================
+-- 11. CHIRURGIE ORTHOPÉDIQUE (11)
+-- ============================
+('38', 'FRACT','11', 'Fracture opérée', 'Ostéosynthèse'),
+('39', 'PROTH', '11', 'Prothèse articulaire', 'Prothèse de hanche ou de genou'),
+
+-- ============================
+-- 12–15. ALLERGIES (12–15)
+-- ============================
+('40', 'AL-PEN','12', 'Allergie à la pénicilline', 'Réaction allergique aux pénicillines'),
+('41', 'AL-AR', '13', 'Allergie à l’arachide', 'Hypersensibilité alimentaire'),
+('42', 'ASTH-A','14', 'Asthme allergique', 'Allergie respiratoire avec asthme'),
+('43', 'AL-NI', '15', 'Allergie au nickel', 'Dermatite de contact'),
+('44', 'AL-LAT','12', 'Allergie au latex', 'Réaction au latex médical'),
+
+-- ============================
+-- 16–19. ANTÉCÉDENTS FAMILIAUX
+-- ============================
+('45', 'DFAM', '16', 'Drépanocytose familiale', 'Hérédité drépanocytaire'),
+('46', 'IDM-F','17', 'Infarctus familial', 'Antécédent d’IDM chez un parent proche'),
+('47', 'CS-F', '18', 'Cancer du sein familial', 'Cancer du sein dans la famille'),
+('48', 'DBT-F','19', 'Diabète familial', 'Diabète chez un parent proche'),
+('49', 'HTA-F','17', 'Hypertension familiale', 'HTA chez un parent de premier degré'),
+
+-- ============================
+-- 20–22. ANTÉCÉDENTS OBSTÉTRICAUX (20–22)
+-- ============================
+('50', 'GEM',  '20', 'Grossesse gémellaire antérieure', 'Antécédent de grossesse multiple'),
+('51', 'PREM', '21', 'Accouchement prématuré', 'Avant 37 SA'),
+('52', 'PREE', '22', 'Prééclampsie', 'Complication obstétricale sévère'),
+('53', 'FCS',  '21', 'Fausses couches répétées', '≥ 2 fausses couches spontanées consécutives')
+
+ON CONFLICT (id) DO UPDATE 
+SET
+code= EXCLUDED.code,
+type_antecedent= EXCLUDED.type_antecedent,
+libelle= EXCLUDED.libelle,
+description= EXCLUDED.description;

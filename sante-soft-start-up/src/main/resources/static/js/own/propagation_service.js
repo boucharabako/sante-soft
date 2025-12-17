@@ -554,18 +554,44 @@ App.factory('PropagationService', ['$rootScope', function ($rootScope) {
                 //jslog("Envoie de la piece au formulaire de tiers reussi" + angular.toJson(tiersPayementPieceObject));
             },
             setPatientSender: function (patien) {
-                patient.id = patien.id;
-                patient.nom = patien.nom;
-                patient.prenoms = patien.prenoms;
-                patient.numeroCarnet = patien.numeroCarnet;
-                patient.dateNaissance = patien.dateNaissance;
-                                alert("AAAA");
+                // Copier toutes les propriétés du patient
+                patient = angular.copy(patien);
+
+                // Sauvegarder dans sessionStorage pour persister entre les pages
+                try {
+                    sessionStorage.setItem('currentPatient', JSON.stringify(patient));
+                    console.log('✅ Patient sauvegardé dans sessionStorage:', patient);
+                } catch (e) {
+                    console.error('❌ Erreur lors de la sauvegarde du patient dans sessionStorage:', e);
+                }
 
                 $rootScope.$broadcast("patientSender");
             },
 
             getPatientSender: function () {
+                // Si le patient n'est pas en mémoire, essayer de le récupérer depuis sessionStorage
+                if (!patient || !patient.id) {
+                    try {
+                        var storedPatient = sessionStorage.getItem('currentPatient');
+                        if (storedPatient) {
+                            patient = JSON.parse(storedPatient);
+                            console.log('✅ Patient récupéré depuis sessionStorage:', patient);
+                        }
+                    } catch (e) {
+                        console.error('❌ Erreur lors de la récupération du patient depuis sessionStorage:', e);
+                    }
+                }
                 return patient;
+            },
+
+            clearPatientSender: function () {
+                patient = {};
+                try {
+                    sessionStorage.removeItem('currentPatient');
+                    console.log('✅ Patient effacé du sessionStorage');
+                } catch (e) {
+                    console.error('❌ Erreur lors de la suppression du patient du sessionStorage:', e);
+                }
             },
             getTiersReservationObject: function () {
                 return tiersPayementPieceObject;

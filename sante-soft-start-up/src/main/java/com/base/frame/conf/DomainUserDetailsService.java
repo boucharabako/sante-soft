@@ -78,12 +78,13 @@ public class DomainUserDetailsService implements UserDetailsService {
             lps.forEach(p -> {
                 System.out.println("======== p" + p.toString());
                 List<Habilitation> hb = habilitationRepository.findByProfil(p.getId());
+                System.out.println("La taille:"+hb.size());
 
                 hb.stream().filter(x->x.getFonction()!=null &&(x.getFonction().getCode()!=null
                         ))
 
                         . forEach((a) -> {
-                             System.out.println("======== a" + a.toString());
+                             System.out.println("======== a:" + a.getFonction().getCode());
                             authorities.add(a.getFonction().getCode());
                             Integer i = Integer.valueOf(a.getNiveauHabilitation().getCode());
                             Util.findChildren(i).stream().forEach(j -> {
@@ -109,7 +110,7 @@ public class DomainUserDetailsService implements UserDetailsService {
             });
             authorities.add("CONNECTED");
 
-            LOG.info("nnnnnnnn"+authorities);
+            LOG.info("Les fonctions:"+authorities);
             user.setAuthorities(authorities);
 
             List<GrantedAuthority> grantedAuthorities = user.getAuthorities().stream()

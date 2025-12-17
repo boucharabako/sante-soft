@@ -1,5 +1,7 @@
 com\base\frame\achat\fonctionnelle\ressources\PaymentController.class
 com\base\frame\achat\fonctionnelle\ressources\ProduitRessource.class
+com\base\frame\carnet\sante\ressources\AntecedentRessource.class
+com\base\frame\carnet\sante\ressources\ConsultationRessource.class
 com\base\frame\carnet\sante\ressources\PatientRessource.class
 com\base\frame\achat\fonctionnelle\controller\ConsultationController.class
 com\base\frame\carnet\sante\ressources\ProfessionnelSanteRessource.class
@@ -11,4 +13,5 @@ com\base\frame\achat\fonctionnelle\controller\ProduitController.class
 com\base\frame\carnet\sante\controller\ProfessionnelSanteController.class
 com\base\frame\carnet\sante\ressources\EtablissementRessource.class
 com\base\frame\achat\fonctionnelle\controller\EcommerceController.class
+com\base\frame\carnet\sante\controller\AntecedentController.class
 com\base\frame\carnet\sante\controller\EtablissementController.class

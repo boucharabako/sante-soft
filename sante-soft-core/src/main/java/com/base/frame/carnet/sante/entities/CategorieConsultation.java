@@ -5,6 +5,8 @@
  */
 package com.base.frame.carnet.sante.entities;
 
+import com.base.frame.socle.utils.audit.AbstractAuditingEntity;
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,7 +22,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "categorie_consultation", schema = "sante")
-public class CategorieConsultation {
+public class CategorieConsultation extends AbstractAuditingEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "system-uuid")

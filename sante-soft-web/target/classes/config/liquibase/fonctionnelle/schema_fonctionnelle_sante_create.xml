@@ -223,7 +223,7 @@ and open the template in the editor.
     
  
     <changeSet author="Bouchara (generated)" id="16-11-2025-1-28">
-        <createTable schemaName="${sante_schema_name}" tableName="antecedant_medical">
+        <createTable schemaName="${sante_schema_name}" tableName="antecedant_patient">
             <column name="id" type="VARCHAR(50)">
                 <constraints nullable="false"/>
             </column>
@@ -252,16 +252,16 @@ and open the template in the editor.
         </createTable>
     </changeSet>
     <changeSet author="Bouchara (generated)" id="16-11-2025-1-29">
-        <addPrimaryKey schemaName="${sante_schema_name}" columnNames="id" constraintName="antecedant_pkey" tableName="antecedant_medical"/>
+        <addPrimaryKey schemaName="${sante_schema_name}" columnNames="id" constraintName="antecedant_pkey" tableName="antecedant_patient"/>
     </changeSet>
     
     <changeSet author="Bouchara (generated)" id="16-11-2025-1-30">
-        <addForeignKeyConstraint baseTableSchemaName="${sante_schema_name}" baseColumnNames="id_patient" baseTableName="antecedant_medical" constraintName="patient_on_entecedant_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="patient" referencedTableSchemaName="${sante_schema_name}"/>
+        <addForeignKeyConstraint baseTableSchemaName="${sante_schema_name}" baseColumnNames="id_patient" baseTableName="antecedant_patient" constraintName="patient_on_entecedant_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="patient" referencedTableSchemaName="${sante_schema_name}"/>
     </changeSet>
     
        
     <changeSet author="Bouchara (generated)" id="16-11-2025-1-310">
-        <addForeignKeyConstraint baseTableSchemaName="${sante_schema_name}" baseColumnNames="type_antecedent" baseTableName="antecedant_medical" constraintName="type_on_antecedent_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="type_antecedent" referencedTableSchemaName="${sante_schema_name}"/>
+        <addForeignKeyConstraint baseTableSchemaName="${sante_schema_name}" baseColumnNames="type_antecedent" baseTableName="antecedant_patient" constraintName="type_on_antecedent_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="type_antecedent" referencedTableSchemaName="${sante_schema_name}"/>
     </changeSet>
     
     
@@ -667,7 +667,7 @@ and open the template in the editor.
     </changeSet>
 
     <changeSet author="Bouchara (generated)" id="16-11-2025-1-53">
-        <addForeignKeyConstraint baseTableSchemaName="${sante_schema_name}" baseColumnNames="id_antecedent" baseTableName="historique_antecedent" constraintName="ant_on_historique_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="antecedant_medical" referencedTableSchemaName="${sante_schema_name}"/>
+        <addForeignKeyConstraint baseTableSchemaName="${sante_schema_name}" baseColumnNames="id_antecedent" baseTableName="historique_antecedent" constraintName="ant_on_historique_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="antecedant_patient" referencedTableSchemaName="${sante_schema_name}"/>
     </changeSet>
     
     <changeSet author="Bouchara (generated)" id="16-11-2025-1-54">
@@ -680,5 +680,62 @@ and open the template in the editor.
             <column name="type_fichier" type="VARCHAR(50)"/>
         </addColumn>    
     </changeSet>-->
+        <changeSet author="Bouchara (generated)" id="16-11-2025-1-55">
+        <createTable schemaName="${sante_schema_name}" tableName="antecedent">
+            <column name="id" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <!-- Colonnes d'audit -->
+            <column name="created_by" type="VARCHAR(50)"/>
+            <column name="created_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="created_user_ip_adresse" type="VARCHAR(255)"/>
+            <column name="created_user_agent_info" type="VARCHAR(255)"/>
+            <column name="created_user_device" type="VARCHAR(255)"/>
+            <column name="created_user_zone" type="VARCHAR(255)"/>
+            <column name="last_modified_by" type="VARCHAR(50)"/>
+            <column name="last_modified_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="last_modified_user_ip_adresse" type="VARCHAR(255)"/>
+            <column name="last_modified_user_agent_info" type="VARCHAR(255)"/>
+            <column name="last_modified_user_device" type="VARCHAR(255)"/>
+            <column name="last_modified_user_zone" type="VARCHAR(255)"/>
+            
+            <column name="type_antecedent" type="VARCHAR(50)"/>
+            <column name="code" type="VARCHAR(50)"/>
+            <column name="libelle" type="VARCHAR(255)"/>
+            <column name="description" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-56">
+        <addPrimaryKey schemaName="${sante_schema_name}" columnNames="id" constraintName="antec_pkey" tableName="antecedent"/>
+    </changeSet>
+  
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-57">
+        <addForeignKeyConstraint baseTableSchemaName="${sante_schema_name}" baseColumnNames="type_antecedent" baseTableName="antecedent" constraintName="type_on_ante_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="type_antecedent" referencedTableSchemaName="${sante_schema_name}"/>
+    </changeSet>
+    
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-58">
+        <addColumn tableName="antecedant_patient" schemaName="${sante_schema_name}">
+            <column name="antecedent" type="VARCHAR(50)"/>
+        </addColumn>    
+    </changeSet>
+    
+     <changeSet author="Bouchara (generated)" id="16-11-2025-1-59">
+        <addColumn tableName="antecedant_patient" schemaName="${sante_schema_name}">
+            <column name="categorie_antecedent" type="VARCHAR(50)"/>
+        </addColumn>    
+    </changeSet>
+    
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-60">
+        <addForeignKeyConstraint baseTableSchemaName="${sante_schema_name}" baseColumnNames="antecedent" baseTableName="antecedant_patient" constraintName="ant_on_ant_patient_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="antecedent" referencedTableSchemaName="${sante_schema_name}"/>
+    </changeSet>
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-61">
+        <addForeignKeyConstraint baseTableSchemaName="${sante_schema_name}" baseColumnNames="categorie_antecedent" baseTableName="antecedant_patient" constraintName="cat_on_ant_patient_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="type_antecedent" referencedTableSchemaName="${sante_schema_name}"/>
+    </changeSet>
+    
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-62">
+        <addColumn tableName="antecedant_patient" schemaName="${sante_schema_name}">
+            <column name="action_effectuee" type="VARCHAR(50)"/>
+        </addColumn>    
+    </changeSet>
     
 </databaseChangeLog>
