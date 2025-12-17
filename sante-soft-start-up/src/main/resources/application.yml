@@ -26,4 +26,4 @@ system:
         code: ADMIN
         intitule: Administrateurs
         description: Administrateurs
-        habilitations: FC_PROF,FC_USER
+        #habilitations: FC_PROF,FC_USER

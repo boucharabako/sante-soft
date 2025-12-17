@@ -57,73 +57,33 @@
                 <a class="dropdown-item" sec:authorize="hasAnyAuthority('FC_PROF')" th:href="@{/parametre/profil}"><i class="fas fa-user-lock"></i> Profils</a>
             </div>
         </li>
-
         <li class="dropdown">
-            <a class="nav-link dropdown-toggle waves-effect waves-light nav-user" sec:authorize="hasAnyAuthority('FC_POSTE_POLICE', 'FC_COMMISSARIAT','FC_GENDARMERIE','FC_AGENT')" data-toggle="dropdown" href="#" role="button"
+            <!--<a class="nav-link dropdown-toggle waves-effect waves-light nav-user" sec:authorize="hasAnyAuthority('FC_USER','FC_GROUPE','FC_PROF')"  data-toggle="dropdown" href="#" role="button"-->
+            <a class="nav-link dropdown-toggle waves-effect waves-light nav-user" sec:authorize="hasAnyAuthority('FC_PROF','FC_ADMIN')"  data-toggle="dropdown" href="#" role="button"
                aria-haspopup="false" aria-expanded="false">                                                
-                <span class="ml-1 nav-user-name hidden-sm"> <i class="fas fa-sitemap"> Services</i><i class="mdi mdi-chevron-down"></i> </span>
+                <span class="ml-1 nav-user-name hidden-sm"> <i class="fas fa-user-shield"> Admistration</i><i class="mdi mdi-chevron-down"></i> </span>
             </a>
             <div class="dropdown-menu dropdown-menu-right">
 
-                <a class="dropdown-item" sec:authorize="hasAnyAuthority('FC_POSTE_POLICE')" th:href="@{/gestion/poste_police}"><i class="far fa-flag"></i> Postes de police</a>
-                <a class="dropdown-item" sec:authorize="hasAnyAuthority('FC_COMMISSARIAT')" th:href="@{/gestion/commissariat}"><i class="fas fa-flag-checkered"></i> Commissariats</a>
-                <a class="dropdown-item" sec:authorize="hasAnyAuthority('FC_GENDARMERIE')" th:href="@{/gestion/gendarmerie}"><i class="fas fa-flag"></i> Gendarmeries</a>
-                <a class="dropdown-item" sec:authorize="hasAnyAuthority('FC_AGENT')" th:href="@{/gestion/agent}"><i class="fas fa-user-friends"></i> Agents</a>
+                <a class="dropdown-item" sec:authorize="hasAnyAuthority('FC_ADMIN')" th:href="@{/gestion/etablissement}"><i class="fas fa-user"></i> Etablissements</a>
+                <a class="dropdown-item" sec:authorize="hasAnyAuthority('FC_PROF','FC_ADMIN')" th:href="@{/gestion/patient}"><i class="fas fa-users"></i> Patients</a>
+                <a class="dropdown-item" sec:authorize="hasAnyAuthority('FC_ADMIN')" th:href="@{/parametre/professionels}"><i class="fas fa-user-lock"></i> Professionels</a>
             </div>
         </li>
-        <li class="dropdown">
-            <a class="nav-link dropdown-toggle waves-effect waves-light nav-user" sec:authorize="hasAnyAuthority('FC_DECLARANT','FC_PIECE_IDENTITE','FC_PIECE','FC_ENGIN','FC_INFRACTION')" data-toggle="dropdown" href="#" role="button"
+        
+         <li class="dropdown">
+            <!--<a class="nav-link dropdown-toggle waves-effect waves-light nav-user" sec:authorize="hasAnyAuthority('FC_USER','FC_GROUPE','FC_PROF')"  data-toggle="dropdown" href="#" role="button"-->
+            <a class="nav-link dropdown-toggle waves-effect waves-light nav-user" sec:authorize="hasAnyAuthority('FC_PROF','FC_ADMIN')"  data-toggle="dropdown" href="#" role="button"
                aria-haspopup="false" aria-expanded="false">                                                
-                <span class="ml-1 nav-user-name hidden-sm"> <i class="fas fa-recycle"> Gestion des Clients</i><i class="mdi mdi-chevron-down"></i> </span>
+                <span class="ml-1 nav-user-name hidden-sm"> <i class="fas fa-user-shield"> Accueil</i><i class="mdi mdi-chevron-down"></i> </span>
             </a>
             <div class="dropdown-menu dropdown-menu-right">
 
-                <a class="dropdown-item" sec:authorize="hasAnyAuthority('FC_DECLARANT')" th:href="@{/gestion/declarant}"><i class="fab fa-jenkins"></i> Déclarants</a>
-                <a class="dropdown-item" sec:authorize="hasAnyAuthority('FC_PIECE_IDENTITE')" th:href="@{/gestion/piece_identite}"><i class="far fa-id-card"></i> Pieces identités</a>
-                <a class="dropdown-item" sec:authorize="hasAnyAuthority('FC_PIECE')" th:href="@{/gestion/piece_perdu}"><i class="fas fa-users-cog"></i> Pièces perdues</a>
-                <a class="dropdown-item" sec:authorize="hasAnyAuthority('FC_PIECE')" th:href="@{/gestion/piece_requisitionne}"><i class="fas fa-users-cog"></i> Pièces réquisitionnées</a>
-                <a class="dropdown-item" sec:authorize="hasAnyAuthority('FC_ENGIN')" th:href="@{/gestion/engin_perdu}"><i class="fas fa-motorcycle"></i> Engins perdus</a>
-                <a class="dropdown-item" sec:authorize="hasAnyAuthority('FC_ENGIN')" th:href="@{/gestion/engin_requisitionne}"><i class="fas fa-motorcycle"></i> Engins réquisitionnées</a>
-                <a class="dropdown-item" sec:authorize="hasAnyAuthority('FC_INFRACTION')" th:href="@{/gestion/infraction}"><i class="fas fa-ban"></i> Infractions</a>
-
+                <a class="dropdown-item" sec:authorize="hasAnyAuthority('FC_PROF','FC_ADMIN')" th:href="@{/gestion/patient}"><i class="fas fa-users"></i> Patients</a>
             </div>
-
         </li>
-        <li class="dropdown">
-            <a class="nav-link dropdown-toggle waves-effect waves-light nav-user" sec:authorize="hasAnyAuthority('FC_COMM','FC_PROD')" data-toggle="dropdown" href="#" role="button"
-               aria-haspopup="false" aria-expanded="false">                                                
-                <span class="ml-1 nav-user-name hidden-sm"> <i class="fas fa-envelope"> Gestion </i><i class="mdi mdi-chevron-down"></i> </span>
-            </a>
-            <div class="dropdown-menu dropdown-menu-right">
-
-                <!--<a class="dropdown-item" sec:authorize="hasAnyAuthority('FC_SMS')" th:href="@{/gestion/produit}"><i class="fas fa-envelope"></i> SMS</a>-->
-                <a class="dropdown-item"  sec:authorize="hasAnyAuthority('FC_PROD')" th:href="@{/gestion/produit}"><i class="fas fa-plus"></i> Gestion des produits</a>
-                <a class="dropdown-item"  sec:authorize="hasAnyAuthority('FC_PATIENT')" th:href="@{/gestion/patient}"><i class="fas fa-user-injured"></i> Gestion des patients</a>
-                <a class="dropdown-item"  sec:authorize="hasAnyAuthority('FC_PROFESSIONNEL')" th:href="@{/gestion/professionnel}"><i class="fas fa-user-md"></i> Gestion des professionnels</a>
-                <a class="dropdown-item"  sec:authorize="hasAnyAuthority('FC_ETABLISSEMENT')" th:href="@{/gestion/etablissement}"><i class="fas fa-hospital"></i> Gestion des établissements</a>
-                <a class="dropdown-item"  sec:authorize="hasAnyAuthority('FC_ANTECEDENT')" th:href="@{/gestion/antecedent}"><i class="fas fa-notes-medical"></i> Gestion des antécédents</a>
-                <a class="dropdown-item" sec:authorize="hasAnyAuthority('FC_COMM')" th:href="@{/gestion/commande}"><i class="fas fa-recycle"></i> Gestion des commandes</a>
-
-
-            </div>
-
-        </li>
-        <li class="dropdown">
-            <a class="nav-link dropdown-toggle waves-effect waves-light nav-user" sec:authorize="hasAnyAuthority('FC_GRADE','FC_TYPE_ENGIN','FC_TYPE_PIECE','FC_TYPE_SMS','FC_TYPE_INFRACTION')" data-toggle="dropdown" href="#" role="button"
-               aria-haspopup="false" aria-expanded="false">                                                
-                <span class="ml-1 nav-user-name hidden-sm"> <i class="fas fa-cogs"> Parametrages</i><i class="mdi mdi-chevron-down"></i> </span>
-            </a>
-            <div class="dropdown-menu dropdown-menu-right">
-
-                <a class="dropdown-item" sec:authorize="hasAnyAuthority('FC_GRADE')" th:href="@{/gestion/grade}"><i class="fas fa-graduation-cap"></i> Grades</a>
-                <a class="dropdown-item" sec:authorize="hasAnyAuthority('FC_TYPE_ENGIN')" th:href="@{/gestion/type_engin}"><i class="fas fa-indent"></i> Type d'engins</a>
-                <a class="dropdown-item" sec:authorize="hasAnyAuthority('FC_TYPE_PIECE')" th:href="@{/gestion/type_piece}"><i class="far fa-list-alt"></i> Type de pièces</a>
-                <a class="dropdown-item" sec:authorize="hasAnyAuthority('FC_TYPE_SMS')" th:href="@{/gestion/type_sms}"><i class="far fa-list-alt"></i> Type SMS</a>
-                <a class="dropdown-item" sec:authorize="hasAnyAuthority('FC_TYPE_INFRACTION')" th:href="@{/gestion/type_infraction}"><i class="far fa-list-alt"></i> Type Infraction</a>
-
-            </div>
-
-        </li>
+        
+        
     </ul>
 
 </nav>

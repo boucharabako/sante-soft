@@ -1,0 +1,45 @@
+<!-- Modal Commande -->
+<div class="modal fade compose-modal" id="detail-commande" tabindex="-1" role="dialog" aria-hidden="true" style="max-height: 100%; margin: 50px 10px 50px -90px;">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width:200%; height: 70%;">
+            <div class="modal-header">
+                <h5 class="modal-title mt-0" id="exampleModalLabel">{{titleModale}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <div class="container">
+                        <!-- Liste (tableau) -->
+                        <div class="list">
+                            <table id="product_table" class="table table-striped table-bordered dt-responsive nowrap dataTable no-footer dtr-inline" style="width: 100%;" role="grid" aria-describedby="product_table_info">
+                                <thead>
+                                    <tr role="row">
+                                        <th class="sorting_disabled" style="width: 10%;">Produit</th>
+                                        <th class="sorting_disabled" style="width: 20%;">Prix unitaire</th>
+                                        <th class="sorting_disabled" style="width: 30%;">Quantité</th>
+                                        <th class="sorting_disabled" style="width: 10%;">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr role="row" data-ng-repeat="p in objetCommande.listDetailCommande track by $index">
+                                        <td data-ng-bind="p.produit" style="width: 10%;"></td>
+                                        <td data-ng-bind="p.prixUnitaire" style="width: 20%;"></td>
+                                        <td data-ng-bind="p.quantiteCommande" style="width: 30%;"></td>
+                                        <td data-ng-bind="p.total" style="width: 10%;"></td>
+                                    </tr>
+                                </tbody>
+                            </table>                        </div>
+                        <!-- Espace div -->
+
+                    </div>
+                    <div ng-if="objetCommande.fichier!==null" class="div-content">
+                        <img ng-src="{{ objetCommande.fichier }}" alt="{{ objetCommande.numeroCommande }}" width="200">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

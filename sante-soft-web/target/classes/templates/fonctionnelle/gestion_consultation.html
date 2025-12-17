@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorator="template">
+    <head>
+        <title>Nouvelle Consultation</title>
+        <link th:href="@{/plugins/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
+        <link th:href="@{/plugins/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet"/>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+        <script th:src="@{/js/controllers/consultationController.js}"></script>
+        <script src="app.js"></script>
+        <style type="text/css">
+            .section-card {
+                border: 1px solid #e0e0e0;
+                border-radius: 10px;
+                padding: 20px;
+                margin-bottom: 25px;
+                background: #fff;
+            }
+            .section-header {
+                font-size: 20px;
+                font-weight: 600;
+                color: #333;
+                margin-bottom: 20px;
+                padding-bottom: 10px;
+                border-bottom: 2px solid #e0e0e0;
+                display: flex;
+                align-items: center;
+            }
+            .section-header i {
+                margin-right: 10px;
+                font-size: 24px;
+            }
+            .patient-info {
+                background: #f8f9fa;
+                border-left: 4px solid #667eea;
+                padding: 20px;
+                border-radius: 8px;
+                margin-bottom: 25px;
+            }
+            .observation-item {
+                background: #e8f5e9;
+                border-left: 4px solid #4caf50;
+                padding: 12px;
+                margin-bottom: 10px;
+                border-radius: 5px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .antecedent-item {
+                background: #e1f5fe;
+                border-left: 4px solid #03a9f4;
+                padding: 12px;
+                margin-bottom: 10px;
+                border-radius: 5px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .prescription-item {
+                background: #f3e5f5;
+                border-left: 4px solid #9c27b0;
+                padding: 12px;
+                margin-bottom: 10px;
+                border-radius: 5px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .examen-item {
+                background: #fff3e0;
+                border-left: 4px solid #ff9800;
+                padding: 12px;
+                margin-bottom: 10px;
+                border-radius: 5px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .btn-add {
+                background: #4caf50;
+                color: white;
+                border: none;
+            }
+            .btn-add:hover {
+                background: #45a049;
+                color: white;
+            }
+            .btn-remove {
+                background: #f44336;
+                color: white;
+                border: none;
+                padding: 5px 10px;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+            .btn-remove:hover {
+                background: #da190b;
+            }
+            .form-label {
+                font-weight: 600;
+                color: #555;
+                margin-bottom: 8px;
+            }
+            .required::after {
+                content: " *";
+                color: red;
+            }
+            .page-header-custom {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                padding: 20px;
+                border-radius: 8px;
+                margin-bottom: 20px;
+            }
+            .badge-custom {
+                padding: 5px 10px;
+                border-radius: 4px;
+                font-size: 12px;
+                font-weight: 600;
+            }
+        </style>
+    </head>
+    <body>
+        <div layout:fragment="content" id="consultationForm" data-ng-cloak="">
+            <div class="row" ng-controller="consultationController" ng-init="init()" data-ng-cloak="">
+                
+                <!-- En-tête -->
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body page-header-custom">
+                            <div class="row align-items-center">
+                                <div class="col-md-8">
+                                    <h3 class="mb-0"><i class="fas fa-stethoscope"></i> Nouvelle Consultation</h3>
+                                    <p class="mb-0">Enregistrement d'une consultation médicale</p>
+                                </div>
+                                <div class="col-md-4 text-right">
+                                    <label class="text-white mr-2">Date de consultation:</label>
+                                    <input type="date" class="form-control d-inline-block" style="width: auto;" ng-model="consultation.dateConsultation">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Informations Patient -->
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header" style="background: linear-gradient(135deg, #1976D2 0%, #42A5F5 100%); border-radius: 10px 10px 0 0; padding: 15px;">
+                            <h5 style="color: white; font-weight: bold; margin: 0;">
+                                <i class="fas fa-user-circle"></i> Informations du Patient
+                            </h5>
+                        </div>
+                        <div class="card-body" style="background: #ffffff; border-radius: 0 0 10px 10px; padding: 25px;">
+                            <div class="patient-info">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <!-- Première ligne -->
+                                        <div class="row mb-3">
+                                            <div class="col-md-3">
+                                                <div class="patient-detail-item" style="display: flex; align-items: center; padding: 8px 0; font-size: 14px;">
+                                                    <i class="fas fa-id-card" style="width: 24px; color: #3498db; margin-right: 10px; font-size: 14px;"></i>
+                                                    <span style="font-weight: 500; color: #636e72; margin-right: 8px;">Carnet:</span>
+                                                    <span style="color: #2d3436; font-weight: 500;">{{patient.numeroCarnet || 'Non renseigné'}}</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="patient-detail-item" style="display: flex; align-items: center; padding: 8px 0; font-size: 14px;">
+                                                    <i class="fas fa-user" style="width: 24px; color: #2196F3; margin-right: 10px; font-size: 14px;"></i>
+                                                    <span style="font-weight: 500; color: #636e72; margin-right: 8px;">Nom complet:</span>
+                                                    <span style="color: #2d3436; font-weight: 500;">{{patient.firstName}} {{patient.lastName}}</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="patient-detail-item" style="display: flex; align-items: center; padding: 8px 0; font-size: 14px;">
+                                                    <i class="fas fa-venus-mars" style="width: 24px; color: #9b59b6; margin-right: 10px; font-size: 14px;"></i>
+                                                    <span style="font-weight: 500; color: #636e72; margin-right: 8px;">Sexe:</span>
+                                                    <span style="color: #2d3436; font-weight: 500;">{{patient.sexeLibelle || patient.sexe || 'Non renseigné'}}</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="patient-detail-item" style="display: flex; align-items: center; padding: 8px 0; font-size: 14px;">
+                                                    <i class="fas fa-birthday-cake" style="width: 24px; color: #e74c3c; margin-right: 10px; font-size: 14px;"></i>
+                                                    <span style="font-weight: 500; color: #636e72; margin-right: 8px;">Né(e) le:</span>
+                                                    <span style="color: #2d3436; font-weight: 500;">{{patient.dateNaissance | date: 'dd/MM/yyyy'}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Deuxième ligne -->
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="patient-detail-item" style="display: flex; align-items: center; padding: 8px 0; font-size: 14px;">
+                                                    <i class="fas fa-tint" style="width: 24px; color: #c0392b; margin-right: 10px; font-size: 14px;"></i>
+                                                    <span style="font-weight: 500; color: #636e72; margin-right: 8px;">Groupe:</span>
+                                                    <span style="color: #2d3436; font-weight: 500;">{{patient.groupeSanguinLibelle || patient.groupeSanguin || 'Non renseigné'}}</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="patient-detail-item" style="display: flex; align-items: center; padding: 8px 0; font-size: 14px;">
+                                                    <i class="fas fa-envelope" style="width: 24px; color: #f39c12; margin-right: 10px; font-size: 14px;"></i>
+                                                    <span style="font-weight: 500; color: #636e72; margin-right: 8px;">Email:</span>
+                                                    <span style="color: #2d3436; font-weight: 500; font-size: 12px;">{{patient.email || 'Non renseigné'}}</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="patient-detail-item" style="display: flex; align-items: center; padding: 8px 0; font-size: 14px;">
+                                                    <i class="fas fa-phone" style="width: 24px; color: #27ae60; margin-right: 10px; font-size: 14px;"></i>
+                                                    <span style="font-weight: 500; color: #636e72; margin-right: 8px;">Tél:</span>
+                                                    <span style="color: #2d3436; font-weight: 500;">{{patient.tel || 'Non renseigné'}}</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="patient-detail-item" style="display: flex; align-items: center; padding: 8px 0; font-size: 14px;">
+                                                    <i class="fas fa-calendar" style="width: 24px; color: #16a085; margin-right: 10px; font-size: 14px;"></i>
+                                                    <span style="font-weight: 500; color: #636e72; margin-right: 8px;">Inscrit le:</span>
+                                                    <span style="color: #2d3436; font-weight: 500;">{{patient.dateEnregistrement | date: 'dd/MM/yyyy'}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Observations Médicales -->
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="section-header">
+                                <i class="fas fa-heartbeat text-success"></i>
+                                Observations Médicales
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-3">
+                                    <select class="form-control"
+                                            ng-model="nouvelleObservation.typeObservation"
+                                            ng-change="onTypeObservationChange()"
+                                            ng-options="typeObs as typeObs.libelle for typeObs in listeTypesObservation track by typeObs.id">
+                                        <option value="">-- Sélectionner un type --</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="number"
+                                           step="0.01"
+                                           class="form-control"
+                                           ng-model="nouvelleObservation.valeur"
+                                           placeholder="Valeur"
+                                           ng-disabled="!nouvelleObservation.typeObservation">
+                                    <small class="text-muted" ng-if="nouvelleObservation.valeurMin && nouvelleObservation.valeurMax">
+                                        Min: {{nouvelleObservation.valeurMin}} - Max: {{nouvelleObservation.valeurMax}}
+                                    </small>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text"
+                                           class="form-control"
+                                           ng-model="nouvelleObservation.unite"
+                                           placeholder="Unité"
+                                           readonly>
+                                </div>
+                                <div class="col-md-3">
+                                    <button class="btn btn-add btn-block" ng-click="ajouterObservation()">
+                                        <i class="fas fa-plus"></i> Ajouter
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div ng-show="observations.length > 0">
+                                <div class="observation-item" ng-repeat="obs in observations">
+                                    <div>
+                                        <strong>{{obs.type}}:</strong> {{obs.valeur}} {{obs.unite}}
+                                    </div>
+                                    <button class="btn-remove" ng-click="supprimerObservation($index)">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div ng-show="observations.length === 0" class="text-muted text-center py-3">
+                                Aucune observation enregistrée
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Antécédents Médicaux -->
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="section-header">
+                                <i class="fas fa-history text-info"></i>
+                                Antécédents Médicaux
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-3">
+                                    <label class="form-label">Catégorie</label>
+                                    <select class="form-control"
+                                            ng-model="nouvelAntecedent.categorieAntecedent"
+                                            ng-change="onCategorieAntecedentChange()"
+                                            ng-options="cat as cat.libelle for cat in listeCategoriesAntecedent track by cat.id">
+                                        <option value="">-- Sélectionner une catégorie --</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Type</label>
+                                    <select class="form-control"
+                                            ng-model="nouvelAntecedent.typeAntecedent"
+                                            ng-options="type as type.libelle for type in listeTypesAntecedent track by type.id"
+                                            ng-disabled="!nouvelAntecedent.categorieAntecedent">
+                                        <option value="">-- Sélectionner un type --</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Description</label>
+                                    <input type="text"
+                                           class="form-control"
+                                           ng-model="nouvelAntecedent.description"
+                                           placeholder="Description de l'antécédent"
+                                           ng-disabled="!nouvelAntecedent.typeAntecedent">
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">&nbsp;</label>
+                                    <button class="btn btn-add btn-block" ng-click="ajouterAntecedent()">
+                                        <i class="fas fa-plus"></i> Ajouter
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div ng-show="antecedents.length > 0">
+                                <div class="antecedent-item" ng-repeat="ant in antecedents">
+                                    <div>
+                                        <span class="badge badge-primary badge-custom">{{ant.categorie}}</span>
+                                        <span class="badge badge-info badge-custom ml-1">{{ant.type}}</span>
+                                        <strong class="ml-2">{{ant.description}}</strong>
+                                        <small class="text-muted ml-2" ng-show="ant.dateDebut">Depuis: {{ant.dateDebut | date:'dd/MM/yyyy'}}</small>
+                                    </div>
+                                    <button class="btn-remove" ng-click="supprimerAntecedent($index)">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div ng-show="antecedents.length === 0" class="text-muted text-center py-3">
+                                Aucun antécédent enregistré
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Informations Générales de la Consultation -->
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="section-header">
+                                <i class="fas fa-file-medical text-primary"></i>
+                                Informations Générales
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label required">Motif de la consultation</label>
+                                <textarea class="form-control" rows="2" ng-model="consultation.motif" 
+                                          placeholder="Ex: Douleurs abdominales, Contrôle de routine..."></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label required">Diagnostic</label>
+                                <textarea class="form-control" rows="3" ng-model="consultation.diagnostic" 
+                                          placeholder="Diagnostic médical détaillé..."></textarea>
+                            </div>
+
+                            <div class="form-group mb-0">
+                                <label class="form-label">Traitement recommandé</label>
+                                <textarea class="form-control" rows="2" ng-model="consultation.traitement" 
+                                          placeholder="Plan de traitement..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Prescriptions -->
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="section-header">
+                                <i class="fas fa-pills" style="color: #9c27b0;"></i>
+                                Prescriptions
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" ng-model="nouvellePrescription.medicament" 
+                                           placeholder="Médicament">
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" ng-model="nouvellePrescription.posologie" 
+                                           placeholder="Posologie (ex: 2x/jour)">
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" ng-model="nouvellePrescription.duree" 
+                                           placeholder="Durée (ex: 7 jours)">
+                                </div>
+                                <div class="col-md-2">
+                                    <button class="btn btn-add btn-block" ng-click="ajouterPrescription()">
+                                        <i class="fas fa-plus"></i> Ajouter
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div ng-show="prescriptions.length > 0">
+                                <div class="prescription-item" ng-repeat="pres in prescriptions">
+                                    <div>
+                                        <strong>{{pres.medicament}}</strong> - {{pres.posologie}}
+                                        <span ng-show="pres.duree"> pendant {{pres.duree}}</span>
+                                    </div>
+                                    <button class="btn-remove" ng-click="supprimerPrescription($index)">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div ng-show="prescriptions.length === 0" class="text-muted text-center py-3">
+                                Aucune prescription enregistrée
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Examens Complémentaires -->
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="section-header">
+                                <i class="fas fa-vial text-warning"></i>
+                                Examens Complémentaires
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-3">
+                                    <select class="form-control" ng-model="nouvelExamen.typeExamen">
+                                        <option value="">Type d'examen</option>
+                                        <option ng-repeat="type in typesExamen" value="{{type}}">{{type}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" ng-model="nouvelExamen.resultat" 
+                                           placeholder="Résultat de l'examen">
+                                </div>
+                                <div class="col-md-3">
+                                    <button class="btn btn-add btn-block" ng-click="ajouterExamen()">
+                                        <i class="fas fa-plus"></i> Ajouter
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div ng-show="examens.length > 0">
+                                <div class="examen-item" ng-repeat="exam in examens">
+                                    <div>
+                                        <strong>{{exam.typeExamen}}</strong>
+                                        <span ng-show="exam.resultat"> - {{exam.resultat}}</span>
+                                    </div>
+                                    <button class="btn-remove" ng-click="supprimerExamen($index)">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div ng-show="examens.length === 0" class="text-muted text-center py-3">
+                                Aucun examen enregistré
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Boutons d'action -->
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="text-right">
+                                <button class="btn btn-secondary mr-2" ng-click="annuler()">
+                                    <i class="fas fa-times"></i> Annuler
+                                </button>
+                                <button class="btn btn-primary" ng-click="enregistrerConsultation()">
+                                    <i class="fas fa-save"></i> Enregistrer la consultation
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </body>
+</html>
