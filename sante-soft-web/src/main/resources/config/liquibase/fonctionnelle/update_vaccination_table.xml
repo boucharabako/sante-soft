@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <!-- Modification de la table vaccination -->
+    <changeSet author="Bouchara" id="17-12-2025-update-vaccination-table">
+        
+        <!-- Renommer la colonne id_vaccin en vaccin -->
+        <renameColumn schemaName="${sante_schema_name}" 
+                      tableName="vaccination" 
+                      oldColumnName="id_vaccin" 
+                      newColumnName="vaccin" 
+                      columnDataType="VARCHAR(255)"/>
+        
+        <!-- Ajouter la colonne observations -->
+        <addColumn schemaName="${sante_schema_name}" tableName="vaccination">
+            <column name="observations" type="TEXT">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        
+        <comment>Modification de la table vaccination: renommage de id_vaccin en vaccin et ajout de la colonne observations</comment>
+    </changeSet>
+
+</databaseChangeLog>
+

@@ -16,7 +16,7 @@
     <include file="config/liquibase/fonctionnelle/schema_fonctionnelle_sante_create.xml" relativeToChangelogFile="false"/>
 
 
-    <changeSet author="liquibase-docs" id="fonctionnelle-data-v-1.31">
+    <changeSet author="liquibase-docs" id="fonctionnelle-data-v-1.40">
         <sqlFile
             encoding="utf8"
             endDelimiter="\nGO"
@@ -26,6 +26,11 @@
             stripComments="true"/>
     </changeSet>
 
+    <!-- Ajout de la colonne deleted pour la suppression logique -->
+    <include file="config/liquibase/fonctionnelle/add_deleted_column_antecedent_patient.xml" relativeToChangelogFile="false"/>
+
+    <!-- Modification de la table vaccination -->
+    <include file="config/liquibase/fonctionnelle/update_vaccination_table.xml" relativeToChangelogFile="false"/>
 
 
 

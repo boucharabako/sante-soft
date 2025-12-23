@@ -2,7 +2,7 @@
 <div class="modal fade" id="detail-vaccination" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header" style="background: linear-gradient(135deg, #00b894 0%, #00cec9 100%); color: white;">
+            <div class="modal-header" style="background: #2bb605; color: white;">
                 <h5 class="modal-title mt-0">
                     <i class="fas fa-syringe"></i> {{titleModale}}
                 </h5>
@@ -18,11 +18,13 @@
                             <label class="control-label font-weight-bold">
                                 Vaccin <span style="color: red;">*</span>
                             </label>
-                            <input type="text" 
-                                   class="form-control" 
-                                   ng-model="objetVaccination.vaccin"
-                                   ng-class="{'is-invalid': formErrors.vaccin}"
-                                   placeholder="Ex: BCG, DTP, Hépatite B...">
+                            <select id="selectVaccin"
+                                    class="form-control"
+                                    ng-model="objetVaccination.vaccin"
+                                    ng-class="{'is-invalid': formErrors.vaccin}">
+                                <option value="">-- Sélectionner un vaccin --</option>
+                                <option data-ng-repeat="vaccin in listeVaccins" value="{{vaccin}}">{{vaccin}}</option>
+                            </select>
                             <div class="invalid-feedback" ng-show="formErrors.vaccin" style="display: block;">
                                 {{formErrors.vaccin}}
                             </div>
@@ -32,8 +34,8 @@
                             <label class="control-label font-weight-bold">
                                 Date de vaccination <span style="color: red;">*</span>
                             </label>
-                            <input type="date" 
-                                   class="form-control" 
+                            <input type="date"
+                                   class="form-control"
                                    ng-model="objetVaccination.dateVaccination"
                                    ng-class="{'is-invalid': formErrors.dateVaccination}">
                             <div class="invalid-feedback" ng-show="formErrors.dateVaccination" style="display: block;">
@@ -47,8 +49,8 @@
                             <label class="control-label font-weight-bold">
                                 Numéro de lot
                             </label>
-                            <input type="text" 
-                                   class="form-control" 
+                            <input type="text"
+                                   class="form-control"
                                    ng-model="objetVaccination.lot"
                                    placeholder="Numéro de lot du vaccin">
                         </div>
@@ -57,8 +59,8 @@
                             <label class="control-label font-weight-bold">
                                 Prochain rappel
                             </label>
-                            <input type="date" 
-                                   class="form-control" 
+                            <input type="date"
+                                   class="form-control"
                                    ng-model="objetVaccination.prochainRappel">
                         </div>
                     </div>
@@ -66,9 +68,19 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label class="control-label font-weight-bold">
+                                Lieu de vaccination
+                            </label>
+                            <input type="text"
+                                   class="form-control"
+                                   ng-model="objetVaccination.lieuVaccination"
+                                   placeholder="Ex: Centre de santé, Hôpital...">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="control-label font-weight-bold">
                                 Statut <span style="color: red;">*</span>
                             </label>
-                            <select class="form-control" 
+                            <select class="form-control"
                                     ng-model="objetVaccination.statut"
                                     ng-class="{'is-invalid': formErrors.statut}">
                                 <option value="">-- Sélectionner --</option>
@@ -79,16 +91,6 @@
                             <div class="invalid-feedback" ng-show="formErrors.statut" style="display: block;">
                                 {{formErrors.statut}}
                             </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="control-label font-weight-bold">
-                                Professionnel de santé
-                            </label>
-                            <input type="text" 
-                                   class="form-control" 
-                                   ng-model="objetVaccination.professionnelSante"
-                                   placeholder="Nom du professionnel">
                         </div>
                     </div>
 

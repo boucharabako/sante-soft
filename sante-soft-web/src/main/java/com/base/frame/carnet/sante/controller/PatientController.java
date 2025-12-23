@@ -14,20 +14,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author Bouchara
  */
 @Controller
-@RequestMapping(path = "/gestion/patient")
+@RequestMapping(path = "/gestion")
 public class PatientController {
 
     public static final String PAGE_LIST_FILE_PATH = "fonctionnelle/gestion_patient";
     public static final String PAGE_DETAIL_FILE_PATH = "fonctionnelle/detail_consultation_patient";
+    public static final String PAGE_INFORMATION_PATIENT_FILE_PATH = "fonctionnelle/information_patient";
 
-    @RequestMapping()
+    @RequestMapping("/patient")
     public String homeList(Model model) {
         return PAGE_LIST_FILE_PATH;
     }
 
-    @RequestMapping("/detail")
+    @RequestMapping("/patient/detail")
     public String detailPatient(Model model) {
         return PAGE_DETAIL_FILE_PATH;
+    }
+
+    @RequestMapping("/information/patient")
+    public String informationPatient(Model model) {
+        return PAGE_INFORMATION_PATIENT_FILE_PATH;
     }
 }
 

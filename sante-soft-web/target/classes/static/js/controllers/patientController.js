@@ -328,6 +328,46 @@ App.controller("patientController", ['$scope', 'GenericService','PropagationServ
                 );
         };
 
+        $scope.voirVaccinations = function (patient) {
+            console.log('💉 Ouverture des vaccinations pour le patient:', patient);
+
+            // Charger les détails complets du patient avant de naviguer
+            GenericService.get(detailPatientURL + "?id=" + patient.id)
+                .then(
+                    function (data) {
+                        if (data && data.patient) {
+                            var patientComplet = data.patient;
+
+                            // Convertir les dates en objets Date pour l'affichage
+                            if (patientComplet.dateEnregistrement) {
+                                patientComplet.dateEnregistrement = new Date(patientComplet.dateEnregistrement);
+                            }
+                            if (patientComplet.dateNaissance) {
+                                patientComplet.dateNaissance = new Date(patientComplet.dateNaissance);
+                            }
+
+                            console.log('✅ Détails complets du patient chargés:', patientComplet);
+                            console.log('   - ID:', patientComplet.id);
+                            console.log('   - Nom:', patientComplet.firstName, patientComplet.lastName);
+                            console.log('   - N° Carnet:', patientComplet.numeroCarnet);
+
+                            // Enregistrer le patient dans le service de propagation
+                            PropagationService.setPatientSender(patientComplet);
+
+                            // Naviguer vers la page de gestion des vaccinations
+                            window.location.href = 'vaccination?idPatient=' + patientComplet.id;
+                        } else {
+                            console.error('❌ Erreur: Données patient non trouvées');
+                            alert('Erreur lors du chargement des informations du patient');
+                        }
+                    },
+                    function (error) {
+                        console.error('❌ Erreur lors du chargement du patient:', error);
+                        alert('Erreur lors du chargement des informations du patient');
+                    }
+                );
+        };
+
         $scope.deletePatient = function (id) {
             if (confirm("Êtes-vous sûr de vouloir supprimer ce patient ?")) {
                 GenericService.post(deletePatientURL + "?id=" + id)

@@ -43,9 +43,9 @@
 
 
     </ul>
-    <ul class="list-unstyled topbar-nav  mb-0">  
+<!--    <ul class="list-unstyled topbar-nav  mb-0">  
         <li class="dropdown">
-            <!--<a class="nav-link dropdown-toggle waves-effect waves-light nav-user" sec:authorize="hasAnyAuthority('FC_USER','FC_GROUPE','FC_PROF')"  data-toggle="dropdown" href="#" role="button"-->
+            <a class="nav-link dropdown-toggle waves-effect waves-light nav-user" sec:authorize="hasAnyAuthority('FC_USER','FC_GROUPE','FC_PROF')"  data-toggle="dropdown" href="#" role="button"
             <a class="nav-link dropdown-toggle waves-effect waves-light nav-user" sec:authorize="hasAnyAuthority('FC_USER','FC_GROUPE','FC_PROF')"  data-toggle="dropdown" href="#" role="button"
                aria-haspopup="false" aria-expanded="false">                                                
                 <span class="ml-1 nav-user-name hidden-sm"> <i class="fas fa-user-shield"> Habilitations</i><i class="mdi mdi-chevron-down"></i> </span>
@@ -58,33 +58,37 @@
             </div>
         </li>
         <li class="dropdown">
-            <!--<a class="nav-link dropdown-toggle waves-effect waves-light nav-user" sec:authorize="hasAnyAuthority('FC_USER','FC_GROUPE','FC_PROF')"  data-toggle="dropdown" href="#" role="button"-->
+            <a class="nav-link dropdown-toggle waves-effect waves-light nav-user" sec:authorize="hasAnyAuthority('FC_USER','FC_GROUPE','FC_PROF')"  data-toggle="dropdown" href="#" role="button"
             <a class="nav-link dropdown-toggle waves-effect waves-light nav-user" sec:authorize="hasAnyAuthority('FC_PROF','FC_ADMIN')"  data-toggle="dropdown" href="#" role="button"
                aria-haspopup="false" aria-expanded="false">                                                
-                <span class="ml-1 nav-user-name hidden-sm"> <i class="fas fa-user-shield"> Admistration</i><i class="mdi mdi-chevron-down"></i> </span>
+                <span class="ml-1 nav-user-name hidden-sm"> <i class="fas fa-user-shield"> Administration</i><i class="mdi mdi-chevron-down"></i> </span>
             </a>
             <div class="dropdown-menu dropdown-menu-right">
 
                 <a class="dropdown-item" sec:authorize="hasAnyAuthority('FC_ADMIN')" th:href="@{/gestion/etablissement}"><i class="fas fa-user"></i> Etablissements</a>
                 <a class="dropdown-item" sec:authorize="hasAnyAuthority('FC_PROF','FC_ADMIN')" th:href="@{/gestion/patient}"><i class="fas fa-users"></i> Patients</a>
-                <a class="dropdown-item" sec:authorize="hasAnyAuthority('FC_ADMIN')" th:href="@{/parametre/professionels}"><i class="fas fa-user-lock"></i> Professionels</a>
+                <a class="dropdown-item" sec:authorize="hasAnyAuthority('FC_ADMIN')" th:href="@{/gestion/professionnel}"><i class="fas fa-user-lock"></i> Professionels</a>
             </div>
         </li>
         
          <li class="dropdown">
-            <!--<a class="nav-link dropdown-toggle waves-effect waves-light nav-user" sec:authorize="hasAnyAuthority('FC_USER','FC_GROUPE','FC_PROF')"  data-toggle="dropdown" href="#" role="button"-->
-            <a class="nav-link dropdown-toggle waves-effect waves-light nav-user" sec:authorize="hasAnyAuthority('FC_PROF','FC_ADMIN')"  data-toggle="dropdown" href="#" role="button"
+            <a class="nav-link dropdown-toggle waves-effect waves-light nav-user" sec:authorize="hasAnyAuthority('FC_USER','FC_GROUPE','FC_PROF')"  data-toggle="dropdown" href="#" role="button"
+            <a class="nav-link dropdown-toggle waves-effect waves-light nav-user" sec:authorize="hasAnyAuthority('FC_PROFESSIONNEL','FC_PROF','FC_ADMIN')"  data-toggle="dropdown" href="#" role="button"
                aria-haspopup="false" aria-expanded="false">                                                
-                <span class="ml-1 nav-user-name hidden-sm"> <i class="fas fa-user-shield"> Accueil</i><i class="mdi mdi-chevron-down"></i> </span>
+                <span class="ml-1 nav-user-name hidden-sm"> <i class="fas fa-user-shield"> Réception</i><i class="mdi mdi-chevron-down"></i> </span>
             </a>
             <div class="dropdown-menu dropdown-menu-right">
 
-                <a class="dropdown-item" sec:authorize="hasAnyAuthority('FC_PROF','FC_ADMIN')" th:href="@{/gestion/patient}"><i class="fas fa-users"></i> Patients</a>
+                <a class="dropdown-item" sec:authorize="hasAnyAuthority('FC_PROFESSIONNEL','FC_PROF','FC_ADMIN')" th:href="@{/gestion/patient}"><i class="fas fa-users"></i> Patients</a>
+                <a class="dropdown-item" sec:authorize="hasAnyAuthority('FC_PROFESSIONNEL','FC_PROF','FC_ADMIN')" th:href="@{/gestion/consultation/liste}"><i class="fas fa-file-medical"></i> Liste des consultations
+                </a>
+
+                
             </div>
         </li>
         
         
-    </ul>
+    </ul>-->
 
 </nav>
 <!-- end navbar-->

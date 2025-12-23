@@ -10,6 +10,7 @@ import com.base.frame.account.core.repository.UtilisateurPasswordRepository;
 import com.base.frame.account.core.repository.UtilisateurProfilRepository;
 import com.base.frame.account.core.repository.UtilisateurRepository;
 import com.base.frame.account.entity.Profil;
+import com.base.frame.account.entity.Utilisateur;
 import com.base.frame.account.entity.UtilisateurPassword;
 import com.base.frame.account.entity.UtilisateurProfil;
 import com.base.frame.account.utils.AccountConstant;
@@ -267,6 +268,23 @@ public class PatientService {
             t = this.mapEntityIntoDTO(this.patientRepository.findById(id).get());
         }
         return t;
+    }
+
+    /**
+     * Récupérer un patient par son username
+     * @param username Username de l'utilisateur
+     * @return PatientDTO ou null si non trouvé
+     */
+    public PatientDTO getPatientByUsername(String username) {
+        Optional<Utilisateur> utilisateur = this.utilisateurRepository.findByUsername(username);
+        if (utilisateur.isPresent()) {
+            String userId = utilisateur.get().getId();
+            // Vérifier si cet utilisateur est un patient
+            if (this.patientRepository.existsById(userId)) {
+                return this.mapEntityIntoDTO(this.patientRepository.findById(userId).get());
+            }
+        }
+        return null;
     }
 
     public Page<PatientDTO> findBySpecTerm(String numeroCarnet, String mc, String groupeSanguin, Pageable pageRequest) {

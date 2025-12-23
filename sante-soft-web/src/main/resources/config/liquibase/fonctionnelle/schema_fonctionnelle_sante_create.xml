@@ -517,7 +517,7 @@ and open the template in the editor.
     
     
     
-    <changeSet author="Bouchara (generated)" id="16-11-2025-1-42">
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-422">
         <createTable schemaName="${sante_schema_name}" tableName="vaccination">
             <column name="id" type="VARCHAR(50)">
                 <constraints nullable="false"/>
@@ -537,11 +537,10 @@ and open the template in the editor.
             <column name="last_modified_user_zone" type="VARCHAR(255)"/>
             
             <column name="id_vaccin" type="VARCHAR(50)"/>
-            <column name="lieu" type="VARCHAR(255)"/>
-            <column name="unite" type="VARCHAR(50)"/>
+            <column name="statut" type="VARCHAR(50)"/>
             <column name="id_patient" type="VARCHAR(50)"/>
             <column name="lieu_vaccination" type="VARCHAR(255)"/>
-
+            <column name="numero_lot" type="VARCHAR(255)"/>
             <column name="date_vaccination" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
             <column name="date_rappel" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
       

@@ -8,9 +8,15 @@ App.controller('antecedentController', ['$scope', '$http', '$location', '$rootSc
     const listCategoriesAntecedentURL = urlBase + "/listCategoriesAntecedent";
     const listTypesAntecedentByCategorieURL = urlBase + "/listTypesAntecedentByCategorie";
     const listAntecedentsByTypeURL = urlBase + "/listAntecedentsByType";
-    const listAntecedentsPatientURL = urlBase + "/listAntecedentsPatient";
-    const saveAntecedentURL = urlBase + "/saveAntecedent";
+    const listAntecedentsPatientURL = urlBase + "/listAllAntecedentsPatient";
+    const saveAntecedentURL = urlBase + "/saveOrUpdateAntecedent";
     const deleteAntecedentURL = urlBase + "/deleteAntecedent";
+    const getAntecedentURL = urlBase + "/getAntecedent";
+
+    console.log("=== URLS DE L'API ANTECEDENT ===");
+    console.log("appUrl:", appUrl);
+    console.log("urlBase:", urlBase);
+    console.log("saveAntecedentURL:", saveAntecedentURL);
 
     // Initialisation des données
     $scope.patient = {};
@@ -206,10 +212,12 @@ App.controller('antecedentController', ['$scope', '$http', '$location', '$rootSc
 
         $http.get(url).then(function(response) {
             console.log("Reponse antecedents patient:", response);
-            if (response && response.data) {
-                $scope.antecedents = response.data;
+            if (response && response.data && response.data.listAntecedents) {
+                $scope.antecedents = response.data.listAntecedents;
                 console.log("Antecedents du patient charges:", $scope.antecedents.length);
                 console.log("Liste des antecedents:", $scope.antecedents);
+            } else {
+                $scope.antecedents = [];
             }
         }, function(error) {
             console.error("Erreur lors du chargement des antecedents du patient:", error);
@@ -219,12 +227,13 @@ App.controller('antecedentController', ['$scope', '$http', '$location', '$rootSc
 
     // Charger l'historique
     $scope.chargerHistorique = function(patientId) {
-        var url = urlBase + "/historique?idPatient=" + patientId;
+        var url = urlBase + "/historiqueAntecedentsPatient?idPatient=" + patientId;
 
         $http.get(url).then(function(response) {
-            if (response && response.data) {
-                $scope.historique = response.data;
+            if (response && response.data && response.data.historique) {
+                $scope.historique = response.data.historique;
                 console.log("Historique charge:", $scope.historique.length);
+                console.log("Donnees historique:", $scope.historique);
             }
         }, function(error) {
             console.error("Erreur lors du chargement de l'historique:", error);
@@ -250,7 +259,7 @@ App.controller('antecedentController', ['$scope', '$http', '$location', '$rootSc
         // Filtrer par catégorie
         if ($scope.selectedCategory !== 'all') {
             filtered = filtered.filter(function(ant) {
-                return ant.categorieAntecedent && ant.categorieAntecedent.id == $scope.selectedCategory;
+                return ant.categorieAntecedent && ant.categorieAntecedent == $scope.selectedCategory;
             });
         }
 
@@ -258,9 +267,10 @@ App.controller('antecedentController', ['$scope', '$http', '$location', '$rootSc
         if ($scope.searchTerm && $scope.searchTerm.trim() !== '') {
             var searchLower = $scope.searchTerm.toLowerCase();
             filtered = filtered.filter(function(ant) {
-                return (ant.typeAntecedent && ant.typeAntecedent.libelle && ant.typeAntecedent.libelle.toLowerCase().indexOf(searchLower) !== -1) ||
+                return (ant.typeAntecedentLibelle && ant.typeAntecedentLibelle.toLowerCase().indexOf(searchLower) !== -1) ||
+                       (ant.antecedentLibelle && ant.antecedentLibelle.toLowerCase().indexOf(searchLower) !== -1) ||
                        (ant.description && ant.description.toLowerCase().indexOf(searchLower) !== -1) ||
-                       (ant.categorieAntecedent && ant.categorieAntecedent.libelle && ant.categorieAntecedent.libelle.toLowerCase().indexOf(searchLower) !== -1);
+                       (ant.categorieAntecedentLibelle && ant.categorieAntecedentLibelle.toLowerCase().indexOf(searchLower) !== -1);
             });
         }
 
@@ -273,7 +283,7 @@ App.controller('antecedentController', ['$scope', '$http', '$location', '$rootSc
         }
 
         return $scope.antecedents.filter(function(ant) {
-            return ant.categorieAntecedent && ant.categorieAntecedent.id == categoryId;
+            return ant.categorieAntecedent && ant.categorieAntecedent == categoryId;
         }).length;
     };
 
@@ -598,14 +608,18 @@ App.controller('antecedentController', ['$scope', '$http', '$location', '$rootSc
 
         var antecedent = {
             idPatient: $scope.patient.id,
-            idCategorieAntecedent: $scope.nouvelAntecedent.categorieAntecedent.id,
-            idTypeAntecedent: $scope.nouvelAntecedent.typeAntecedent.id,
+            categorieAntecedent: $scope.nouvelAntecedent.categorieAntecedent.id,
+            typeAntecedent: $scope.nouvelAntecedent.typeAntecedent.id,
+            antecedent: $scope.nouvelAntecedent.antecedent ? $scope.nouvelAntecedent.antecedent.id : null,
             description: $scope.nouvelAntecedent.description,
             dateDebut: $scope.nouvelAntecedent.dateDebut,
             dateFin: $scope.nouvelAntecedent.dateFin,
             statut: $scope.nouvelAntecedent.statut,
             traitementSuivi: $scope.nouvelAntecedent.traitementSuivi
         };
+
+        console.log("Envoi de l'antecedent:", antecedent);
+        console.log("URL:", saveAntecedentURL);
 
         $http.post(saveAntecedentURL, antecedent).then(function(response) {
             console.log("Antecedent ajoute avec succes");
@@ -615,6 +629,7 @@ App.controller('antecedentController', ['$scope', '$http', '$location', '$rootSc
             // TODO: Fermer la modal
         }, function(error) {
             console.error("Erreur lors de l'ajout de l'antecedent:", error);
+            console.error("Details de l'erreur:", error.data);
         });
     };
 
@@ -631,9 +646,9 @@ App.controller('antecedentController', ['$scope', '$http', '$location', '$rootSc
         // Remplir l'objet avec les données de l'antécédent à modifier
         $scope.objetAntecedent = {
             id: antecedent.id,
-            categorieAntecedent: (antecedent.categorieAntecedent && antecedent.categorieAntecedent.id) ? antecedent.categorieAntecedent.id.toString() : '',
-            typeAntecedent: (antecedent.typeAntecedent && antecedent.typeAntecedent.id) ? antecedent.typeAntecedent.id.toString() : '',
-            antecedent: (antecedent.antecedent && antecedent.antecedent.id) ? antecedent.antecedent.id.toString() : '',
+            categorieAntecedent: antecedent.categorieAntecedent || '',
+            typeAntecedent: antecedent.typeAntecedent || '',
+            antecedent: antecedent.antecedent || '',
             description: antecedent.description || '',
             dateDebut: antecedent.dateDebut ? new Date(antecedent.dateDebut) : null,
             dateFin: antecedent.dateFin ? new Date(antecedent.dateFin) : null,
@@ -719,7 +734,7 @@ App.controller('antecedentController', ['$scope', '$http', '$location', '$rootSc
             return;
         }
 
-        var url = deleteAntecedentURL + "?id=" + antecedentId;
+        var url = deleteAntecedentURL + "/" + antecedentId;
 
         $http.delete(url).then(function(response) {
             console.log("Antecedent supprime avec succes");

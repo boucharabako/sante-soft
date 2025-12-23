@@ -29,8 +29,10 @@ public class Vaccination extends AbstractAuditingEntity implements Serializable 
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
     @Column(name = "id")
     private String id;
-    @Column(name = "id_vaccin")
-    private String idVaccin;
+    @Column(name = "vaccin")
+    private String vaccin;
+    @Column(name = "numero_lot")
+    private String numeroLot;
     @Column(name = "id_patient")
     private String idPatient;
     @Column(name = "lieu_vaccination")
@@ -39,6 +41,10 @@ public class Vaccination extends AbstractAuditingEntity implements Serializable 
     private Instant dateVaccination;
     @Column(name = "date_rappel")
     private Instant dateRappel;
+    @Column(name = "statut")
+    private String statut;
+    @Column(name = "observations")
+    private String observations;
 
     public String getId() {
         return id;
@@ -48,12 +54,12 @@ public class Vaccination extends AbstractAuditingEntity implements Serializable 
         this.id = id;
     }
 
-    public String getIdVaccin() {
-        return idVaccin;
+    public String getVaccin() {
+        return vaccin;
     }
 
-    public void setIdVaccin(String idVaccin) {
-        this.idVaccin = idVaccin;
+    public void setVaccin(String vaccin) {
+        this.vaccin = vaccin;
     }
 
     public String getIdPatient() {
@@ -88,9 +94,34 @@ public class Vaccination extends AbstractAuditingEntity implements Serializable 
         this.dateRappel = dateRappel;
     }
 
+    public String getNumeroLot() {
+        return numeroLot;
+    }
+
+    public void setNumeroLot(String numeroLot) {
+        this.numeroLot = numeroLot;
+    }
+
+    public String getStatut() {
+        return statut;
+    }
+
+    public void setStatut(String statut) {
+        this.statut = statut;
+    }
+
+    public String getObservations() {
+        return observations;
+    }
+
+    public void setObservations(String observations) {
+        this.observations = observations;
+    }
+
+
     @Override
     public String toString() {
-        return "Vaccination{" + "id=" + id + ", idVaccin=" + idVaccin + ", idPatient=" + idPatient + ", lieuVaccination=" + lieuVaccination + ", dateVaccination=" + dateVaccination + ", dateRappel=" + dateRappel + '}';
+        return "Vaccination{" + "id=" + id + ", vaccin=" + vaccin + ", idPatient=" + idPatient + ", lieuVaccination=" + lieuVaccination + ", dateVaccination=" + dateVaccination + ", dateRappel=" + dateRappel + ", statut=" + statut + ", observations=" + observations + '}';
     }
 
    

@@ -9,12 +9,14 @@ import com.base.frame.carnet.sante.dtos.ParamListDTO;
 import com.base.frame.carnet.sante.dtos.PatientDTO;
 import com.base.frame.carnet.sante.repositories.ParamListDTORepository;
 import com.base.frame.carnet.sante.services.PatientService;
+import com.base.frame.socle.core.ISecurityUtils;
 import com.base.frame.socle.core.iservice.ISocleGenericService;
 import com.base.frame.socle.core.utils.SocleConstant;
 import com.base.frame.socle.utils.Constants;
 import com.base.frame.socle.utils.validators.MessageSourceKV;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -44,6 +46,8 @@ public class PatientRessource {
     private ISocleGenericService socleGenericService;
     @Autowired
     private ParamListDTORepository paramListDTORepository;
+    @Autowired
+    private ISecurityUtils securityUtils;
 
     @RequestMapping(value = "/saveOrUpdatePatient", method = RequestMethod.POST)
     public ResponseEntity<HashMap<String, Object>> saveOrUpdatePatient(@RequestBody PatientDTO patientDto) throws CloneNotSupportedException {
@@ -146,6 +150,55 @@ public class PatientRessource {
         HttpHeaders headers = new HttpHeaders();
         headers.add(Constants.PROPRIETE_HEADERS_RESPONDED, Constants.PROPRIETE_HEADERS_TIMEZONESCONTROLLER);
         return ResponseEntity.accepted().headers(headers).body(model);
+    }
+
+    /**
+     * Récupérer les informations du patient connecté
+     * @return Informations du patient connecté
+     */
+    @RequestMapping(value = "/getCurrentPatient", method = RequestMethod.GET)
+    public ResponseEntity<HashMap<String, Object>> getCurrentPatient() {
+        HashMap<String, Object> model = new HashMap<>();
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(Constants.PROPRIETE_HEADERS_RESPONDED, Constants.PROPRIETE_HEADERS_TIMEZONESCONTROLLER);
+
+        try {
+            // Récupérer l'utilisateur connecté
+            Optional<String> currentUserLogin = securityUtils.getCurrentUserLogin();
+
+            if (currentUserLogin.isPresent()) {
+                String username = currentUserLogin.get();
+                System.out.println("======================== Utilisateur connecté: " + username);
+
+                // Récupérer le patient par son username (qui est l'ID de l'utilisateur)
+                PatientDTO patient = this.patientService.getPatientByUsername(username);
+
+                if (patient != null) {
+                    model.put("patient", patient);
+                    model.put("success", true);
+                    System.out.println("✅ Patient connecté trouvé: " + patient.getFirstName() + " " + patient.getLastName());
+                } else {
+                    model.put("success", false);
+                    model.put("message", "Patient non trouvé pour l'utilisateur connecté");
+                    System.out.println("❌ Aucun patient trouvé pour l'utilisateur: " + username);
+                }
+            } else {
+                model.put("success", false);
+                model.put("message", "Aucun utilisateur connecté");
+                System.out.println("❌ Aucun utilisateur connecté");
+            }
+
+            return ResponseEntity.ok().headers(headers).body(model);
+
+        } catch (Exception e) {
+            System.err.println("❌ Erreur lors de la récupération du patient connecté: " + e.getMessage());
+            e.printStackTrace();
+
+            model.put("success", false);
+            model.put("message", "Erreur: " + e.getMessage());
+
+            return ResponseEntity.status(500).headers(headers).body(model);
+        }
     }
 }
 

@@ -1,5 +1,17 @@
-App.controller('vaccinationController', function ($scope, $http, $location, PropagationService) {
+App.controller('vaccinationController', function ($scope, $http, $location, $timeout, PropagationService) {
     console.log('💉 Contrôleur vaccinationController initialisé');
+
+    // Fonction locale pour afficher les notifications (fallback si display() n'est pas disponible)
+    var showNotification = function(type, title, message) {
+        if (typeof display === 'function') {
+            display(type, title, message);
+        } else if (typeof $.Notification !== 'undefined' && $.Notification.notify) {
+            $.Notification.notify(type, 'top right', title, message);
+        } else {
+            // Fallback sur alert si rien d'autre n'est disponible
+            alert(title + ': ' + message);
+        }
+    };
 
     // URLs de l'API
     var appUrl = window.location.origin + '/sante-start-up/';
@@ -17,54 +29,89 @@ App.controller('vaccinationController', function ($scope, $http, $location, Prop
     $scope.isSaving = false;
     $scope.formErrors = {};
 
+    // Liste des vaccins disponibles
+    $scope.listeVaccins = [
+        'BCG (Tuberculose)',
+        'DTP (Diphtérie, Tétanos, Poliomyélite)',
+        'Hépatite B',
+        'Hépatite A',
+        'Haemophilus influenzae type b (Hib)',
+        'Pneumocoque',
+        'Rotavirus',
+        'Rougeole',
+        'Rubéole',
+        'Oreillons',
+        'ROR (Rougeole, Oreillons, Rubéole)',
+        'Varicelle',
+        'Méningocoque',
+        'Papillomavirus (HPV)',
+        'Grippe',
+        'COVID-19',
+        'Fièvre jaune',
+        'Typhoïde',
+        'Rage',
+        'Choléra'
+    ];
+
     // Récupérer l'ID du patient depuis l'URL
     var urlParams = new URLSearchParams(window.location.search);
     var patientId = urlParams.get('idPatient');
 
-    console.log('📋 ID Patient:', patientId);
+    console.log('📋 ID Patient depuis URL:', patientId);
 
-    // Si pas d'ID patient, essayer de récupérer depuis PropagationService
-    if (!patientId) {
-        var patientFromService = PropagationService.getPatientSender();
-        if (patientFromService && patientFromService.id) {
-            patientId = patientFromService.id;
-            $scope.patient = patientFromService;
-            console.log('✅ Patient récupéré depuis PropagationService:', $scope.patient);
-        } else {
-            console.error('❌ Aucun patient sélectionné');
-            alert('Aucun patient sélectionné. Redirection vers la liste des patients.');
-            window.location.href = appUrl + 'gestion/patient';
-            return;
-        }
-    }
+    // Essayer d'abord de récupérer le patient complet depuis PropagationService
+    var patientFromService = PropagationService.getPatientSender();
+    console.log('🔍 Patient depuis PropagationService:', patientFromService);
 
-    // Charger les informations du patient si on a seulement l'ID
-    if (patientId && !$scope.patient.id) {
+    if (patientFromService && patientFromService.id) {
+        $scope.patient = patientFromService;
+        patientId = patientFromService.id;
+        console.log('✅ Patient récupéré depuis PropagationService:', $scope.patient);
+        console.log('   - ID:', $scope.patient.id);
+        console.log('   - Nom:', $scope.patient.firstName, $scope.patient.lastName);
+    } else if (patientId) {
+        // Si on a seulement l'ID dans l'URL, charger le patient depuis l'API
+        console.log('📥 Chargement du patient depuis l\'API...');
         $http.get(appUrl + 'api/patient/getPatient?id=' + patientId)
             .then(function(response) {
+                console.log('📦 Réponse API patient:', response.data);
                 if (response.data && response.data.patient) {
                     $scope.patient = response.data.patient;
-                    console.log('✅ Patient chargé:', $scope.patient);
+                    console.log('✅ Patient chargé depuis API:', $scope.patient);
+                    // Charger les vaccinations après avoir chargé le patient
+                    $scope.chargerVaccinations();
                 }
             })
             .catch(function(error) {
                 console.error('❌ Erreur chargement patient:', error);
             });
+    } else {
+        // Aucun patient trouvé
+        console.error('❌ Aucun patient sélectionné');
+        alert('Aucun patient sélectionné. Redirection vers la liste des patients.');
+        window.location.href = appUrl + 'gestion/patient';
+        return;
     }
 
     // Charger les vaccinations du patient
     $scope.chargerVaccinations = function() {
-        if (!patientId) return;
+        if (!patientId) {
+            console.warn('⚠️ Impossible de charger les vaccinations: patientId non défini');
+            return;
+        }
 
-        console.log('📥 Chargement des vaccinations...');
-        
+        console.log('📥 Chargement des vaccinations pour le patient:', patientId);
+        console.log('📍 URL complète:', listeVaccinationsURL + '?idPatient=' + patientId);
+
         $http.get(listeVaccinationsURL + '?idPatient=' + patientId)
             .then(function(response) {
+                console.log('📦 Réponse API vaccinations:', response.data);
                 if (response.data && response.data.listVaccinations) {
                     $scope.vaccinations = response.data.listVaccinations;
                     console.log('✅ Vaccinations chargées:', $scope.vaccinations.length);
                 } else {
                     $scope.vaccinations = [];
+                    console.log('ℹ️ Aucune vaccination trouvée');
                 }
             })
             .catch(function(error) {
@@ -87,10 +134,37 @@ App.controller('vaccinationController', function ($scope, $http, $location, Prop
         });
     };
 
+    // Fonction pour initialiser Select2 sur le champ vaccin
+    function initializeSelect2Vaccin() {
+        setTimeout(function() {
+            // Détruire l'instance existante si elle existe
+            if ($('#selectVaccin').data('select2')) {
+                $('#selectVaccin').select2('destroy');
+            }
+
+            // Initialiser Select2
+            $('#selectVaccin').select2({
+                placeholder: "-- Sélectionner un vaccin --",
+                allowClear: true,
+                language: "fr",
+                dropdownParent: $('#detail-vaccination')
+            }).on('change', function() {
+                $scope.$apply(function() {
+                    $scope.objetVaccination.vaccin = $('#selectVaccin').val();
+                });
+            });
+
+            // Définir la valeur si elle existe
+            if ($scope.objetVaccination && $scope.objetVaccination.vaccin) {
+                $('#selectVaccin').val($scope.objetVaccination.vaccin).trigger('change');
+            }
+        }, 200);
+    }
+
     // Ouvrir le modal d'ajout
     $scope.openAddModal = function() {
         console.log('➕ Ouverture modal ajout');
-        
+
         $scope.modeEdition = 0;
         $scope.titleModale = "Ajouter une vaccination";
         $scope.formErrors = {};
@@ -103,17 +177,20 @@ App.controller('vaccinationController', function ($scope, $http, $location, Prop
             lot: '',
             prochainRappel: '',
             statut: 'À-jour',
-            professionnelSante: '',
+            lieuVaccination: '',
             observations: ''
         };
 
         $('#detail-vaccination').modal('show');
+
+        // Initialiser Select2 après l'ouverture du modal
+        initializeSelect2Vaccin();
     };
 
     // Éditer une vaccination
     $scope.editVaccination = function(vaccination) {
         console.log('✏️ Édition vaccination:', vaccination);
-        
+
         $scope.modeEdition = 3;
         $scope.titleModale = "Modifier une vaccination";
         $scope.formErrors = {};
@@ -132,6 +209,9 @@ App.controller('vaccinationController', function ($scope, $http, $location, Prop
         }
 
         $('#detail-vaccination').modal('show');
+
+        // Initialiser Select2 après l'ouverture du modal
+        initializeSelect2Vaccin();
     };
 
     // Valider le formulaire
@@ -171,26 +251,33 @@ App.controller('vaccinationController', function ($scope, $http, $location, Prop
 
         $http.post(saveVaccinationURL, vaccination)
             .then(function(response) {
-                console.log('✅ Réponse serveur:', response);
+                console.log('✅ Vaccination enregistrée:', response.data);
 
-                if (response.data && response.data.success) {
+                if (response.data.success) {
+                    // Utiliser la fonction de notification
+                    showNotification('success', 'Succès', response.data.message || 'Vaccination enregistrée avec succès');
+
                     $('#detail-vaccination').modal('hide');
 
                     // Recharger la liste
                     $scope.chargerVaccinations();
 
-                    // Message de succès
-                    var message = $scope.modeEdition === 0 ? 'Vaccination ajoutée avec succès' : 'Vaccination modifiée avec succès';
-                    alert(message);
+                    $scope.modeEdition = 0;
                 } else {
-                    alert('Erreur lors de l\'enregistrement: ' + (response.data.message || 'Erreur inconnue'));
+                    showNotification('error', 'Erreur', response.data.message || 'Erreur inconnue');
                 }
+
+                $scope.isSaving = false;
             })
             .catch(function(error) {
                 console.error('❌ Erreur sauvegarde:', error);
-                alert('Erreur lors de l\'enregistrement de la vaccination');
-            })
-            .finally(function() {
+
+                if (error.data && error.data.message) {
+                    showNotification('error', 'Erreur', error.data.message);
+                } else {
+                    showNotification('error', 'Erreur', 'Erreur lors de l\'enregistrement de la vaccination. Veuillez réessayer.');
+                }
+
                 $scope.isSaving = false;
             });
     };
@@ -205,22 +292,34 @@ App.controller('vaccinationController', function ($scope, $http, $location, Prop
 
         $http.delete(deleteVaccinationURL + '?id=' + vaccinationId)
             .then(function(response) {
-                if (response.data && response.data.success) {
-                    // Recharger la liste
-                    $scope.chargerVaccinations();
-                    alert('Vaccination supprimée avec succès');
+                console.log('✅ Vaccination supprimée:', response.data);
+
+                if (response.data.success) {
+                    // Utiliser la fonction de notification
+                    showNotification('success', 'Succès', response.data.message || 'Vaccination supprimée avec succès');
                 } else {
-                    alert('Erreur lors de la suppression');
+                    showNotification('error', 'Erreur', response.data.message || 'Erreur lors de la suppression');
                 }
+
+                // Recharger la liste
+                $scope.chargerVaccinations();
             })
             .catch(function(error) {
                 console.error('❌ Erreur suppression:', error);
-                alert('Erreur lors de la suppression de la vaccination');
+
+                if (error.data && error.data.message) {
+                    showNotification('error', 'Erreur', error.data.message);
+                } else {
+                    showNotification('error', 'Erreur', 'Erreur lors de la suppression de la vaccination');
+                }
             });
     };
 
-    // Initialiser au chargement
-    $scope.chargerVaccinations();
+    // Initialiser au chargement - charger les vaccinations si le patient est déjà disponible
+    if ($scope.patient && $scope.patient.id) {
+        console.log('🔄 Chargement initial des vaccinations...');
+        $scope.chargerVaccinations();
+    }
 });
 
 

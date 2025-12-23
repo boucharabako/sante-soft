@@ -63,7 +63,9 @@ VALUES
 ('FC_COMM','Gestion des commandes','/gestion','/gestion/commande', 'FC_HABILIT','FONCTION','PARAM_NVX_SA'),
 ('FC_PATIENT','Gestion des patients','/gestion','/gestion/patient', 'FC_HABILIT','FONCTION','PARAM_NVX_SA'),
 ('FC_PROFESSIONNEL','Gestion des professionnels de santé','/gestion','/gestion/professionnel', 'FC_HABILIT','FONCTION','PARAM_NVX_SA'),
-('FC_ETABLISSEMENT','Gestion des établissements','/gestion','/gestion/etablissement', 'FC_HABILIT','FONCTION','PARAM_NVX_SA')
+('FC_ETABLISSEMENT','Gestion des établissements','/gestion','/gestion/etablissement', 'FC_HABILIT','FONCTION','PARAM_NVX_SA'),
+('FC_CONS_LIST','Liste des consultations','/gestion','/gestion/consultation/liste', 'FC_HABILIT','FONCTION','PARAM_NVX_SA'),
+('FC_INF_PATIENT','Informations sur patient','/gestion','/gestion/information/patient', 'FC_HABILIT','FONCTION','PARAM_NVX_SA')
 
 ON CONFLICT (code) DO UPDATE
 SET

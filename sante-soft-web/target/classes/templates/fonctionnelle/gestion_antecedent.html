@@ -87,7 +87,7 @@
             .badge-AME { background: #e3f2fd; color: #1976d2; border: 1px solid #90caf9; }
             .badge-ACH { background: #f3e5f5; color: #7b1fa2; border: 1px solid #ce93d8; }
             .badge-AFA { background: #e8f5e9; color: #388e3c; border: 1px solid #81c784; }
-            .badge-AAL { background: #fff3e0; color: #f57c00; border: 1px solid #ffb74d; }
+            .badge-AAL { background: #ffebee; color: #c62828; border: 2px solid #d32f2f; font-weight: 700; }
             .badge-AOG { background: #fce4ec; color: #c2185b; border: 1px solid #f48fb1; }
             .badge-ATR { background: #ffebee; color: #d32f2f; border: 1px solid #ef5350; }
             .badge-AMD { background: #e0f2f1; color: #00796b; border: 1px solid #4db6ac; }
@@ -103,6 +103,7 @@
             .status-Actif { background: #c8e6c9; color: #2e7d32; }
             .status-Résolu { background: #e0e0e0; color: #616161; }
             .status-Surveillance { background: #fff9c4; color: #f57f17; }
+            .status-Chronique { background: #ffebee; color: #c62828; }
 
             .antecedent-card {
                 background: white;
@@ -362,18 +363,18 @@
                         <div class="row">
                             <div class="col-md-10">
                                 <div class="mb-2">
-                                    <span class="category-badge" ng-class="getCategoryClass(antecedent.categorieAntecedent.code)">
-                                        {{antecedent.categorieAntecedent.libelle}}
+                                    <span class="category-badge" ng-class="getCategoryClass(antecedent.categorieAntecedentCode)" >
+                                        {{antecedent.categorieAntecedentLibelle}}
                                     </span>
                                     <span class="status-badge" ng-class="getStatusClass(antecedent.statut)">
                                         {{antecedent.statut}}
                                     </span>
                                 </div>
                                 <h5 class="mb-2" style="font-weight: 600; color: #333;">
-                                    {{antecedent.typeAntecedent.libelle}}
+                                    {{antecedent.typeAntecedentLibelle}}
                                 </h5>
                                 <p class="mb-3" style="color: #666;">
-                                    {{antecedent.description}}
+                                    <strong>Description:</strong> {{antecedent.description}}
                                 </p>
                                 <div class="row text-sm mb-3" style="font-size: 13px; color: #666;">
                                     <div class="col-md-4">
@@ -384,31 +385,6 @@
                                     </div>
                                     <div class="col-md-12 mt-2" ng-if="antecedent.traitementSuivi">
                                         <strong>Traitement suivi:</strong> {{antecedent.traitementSuivi}}
-                                    </div>
-                                </div>
-
-                                <!-- Professionnel en charge -->
-                                <div class="professional-card" ng-if="antecedent.professionnel">
-                                    <div class="d-flex align-items-center">
-                                        <div class="professional-avatar mr-3">
-                                            {{antecedent.professionnel.nom.charAt(0)}}{{antecedent.professionnel.prenom.charAt(0)}}
-                                        </div>
-                                        <div class="flex-grow-1">
-                                            <p class="mb-0" style="font-weight: 600; color: #333;">
-                                                Dr. {{antecedent.professionnel.nom}} {{antecedent.professionnel.prenom}}
-                                            </p>
-                                            <p class="mb-0" style="font-size: 12px; color: #666;">
-                                                {{antecedent.professionnel.specialite}} • {{antecedent.professionnel.etablissement}}
-                                            </p>
-                                        </div>
-                                        <div>
-                                            <a href="mailto:{{antecedent.professionnel.email}}" class="btn btn-sm btn-outline-primary mr-2">
-                                                <i class="fas fa-envelope"></i>
-                                            </a>
-                                            <a href="tel:{{antecedent.professionnel.telephone}}" class="btn btn-sm btn-outline-primary">
-                                                <i class="fas fa-phone"></i>
-                                            </a>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -441,14 +417,21 @@
 
                             <div ng-repeat="entry in historique" class="history-item">
                                 <div class="d-flex">
-                                    <div class="action-icon mr-3" ng-class="getActionClass(entry.type)">
-                                        <i class="fas" ng-class="getActionIcon(entry.type)"></i>
+                                    <div class="action-icon mr-3" ng-class="getActionClass(entry.action)">
+                                        <i class="fas" ng-class="getActionIcon(entry.action)"></i>
                                     </div>
                                     <div class="flex-grow-1">
                                         <div class="d-flex justify-content-between mb-2">
                                             <div>
                                                 <h6 class="mb-1" style="font-weight: 600;">{{entry.action}}</h6>
-                                                <p class="mb-0 text-muted" style="font-size: 13px;">{{entry.details}}</p>
+                                                <p class="mb-0 text-muted" style="font-size: 13px;">
+                                                    <strong>{{entry.categorieAntecedentLibelle}}</strong> -
+                                                    {{entry.typeAntecedentLibelle}} -
+                                                    {{entry.antecedentLibelle}}
+                                                </p>
+                                                <p class="mb-0 text-muted" style="font-size: 12px;" ng-if="entry.description">
+                                                    {{entry.description}}
+                                                </p>
                                             </div>
                                             <span class="text-muted" style="font-size: 12px; white-space: nowrap;">
                                                 {{entry.dateAction | date:'dd/MM/yyyy HH:mm'}}
@@ -456,34 +439,36 @@
                                         </div>
 
                                         <!-- Carte du professionnel -->
-                                        <div class="professional-card mt-3" ng-if="entry.professionnel">
+                                        <div class="professional-card mt-3" ng-if="entry.professionnelNom || entry.professionnelPrenom">
                                             <div class="d-flex align-items-center">
                                                 <div class="professional-avatar mr-3">
-                                                    {{entry.professionnel.prenom.charAt(0)}}{{entry.professionnel.nom.charAt(0)}}
+                                                    {{entry.professionnelPrenom ? entry.professionnelPrenom.charAt(0) : ''}}{{entry.professionnelNom ? entry.professionnelNom.charAt(0) : ''}}
                                                 </div>
                                                 <div class="flex-grow-1">
                                                     <p class="mb-0" style="font-weight: 600;">
-                                                        Dr. {{entry.professionnel.nom}} {{entry.professionnel.prenom}}
+                                                        Dr. {{entry.professionnelNom}} {{entry.professionnelPrenom}}
                                                     </p>
-                                                    <p class="mb-0" style="font-size: 12px; color: #666;">
-                                                        {{entry.professionnel.specialite}}
+                                                    <p class="mb-0" style="font-size: 12px; color: #666;" ng-if="entry.professionnelSpecialite">
+                                                        <i class="fas fa-user-md"></i> {{entry.professionnelSpecialite}}
                                                     </p>
-                                                    <p class="mb-0" style="font-size: 11px; color: #999;">
-                                                        <i class="fas fa-hospital"></i> {{entry.professionnel.etablissement}}
+                                                    <p class="mb-0" style="font-size: 11px; color: #999;" ng-if="entry.professionnelEtablissement">
+                                                        <i class="fas fa-hospital"></i> {{entry.professionnelEtablissement}}
                                                     </p>
                                                 </div>
                                                 <div class="ml-3">
-                                                    <a href="mailto:{{entry.professionnel.email}}"
+                                                    <a href="mailto:{{entry.professionnelEmail}}"
                                                        class="btn btn-sm btn-outline-primary mr-2"
                                                        style="border-radius: 4px; padding: 4px 12px;"
-                                                       title="Envoyer un email">
-                                                        <i class="fas fa-envelope"></i> {{entry.professionnel.email}}
+                                                       title="Envoyer un email"
+                                                       ng-if="entry.professionnelEmail">
+                                                        <i class="fas fa-envelope"></i> {{entry.professionnelEmail}}
                                                     </a>
-                                                    <a href="tel:{{entry.professionnel.telephone}}"
+                                                    <a href="tel:{{entry.professionnelTelephone}}"
                                                        class="btn btn-sm btn-outline-success"
                                                        style="border-radius: 4px; padding: 4px 12px;"
-                                                       title="Appeler">
-                                                        <i class="fas fa-phone"></i> {{entry.professionnel.telephone}}
+                                                       title="Appeler"
+                                                       ng-if="entry.professionnelTelephone">
+                                                        <i class="fas fa-phone"></i> {{entry.professionnelTelephone}}
                                                     </a>
                                                 </div>
                                             </div>
