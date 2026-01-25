@@ -37,6 +37,12 @@ public class Document extends AbstractAuditingEntity implements Serializable {
     private String cheminFichier;
     @Column(name = "date_ajout")
     private Instant dateAjout;
+    @Column(name = "type_mime")
+    private String typeMime; // application/pdf
+
+    @Column(name = "nom_fichier")
+    private String nomFichier;
+
 
     public String getId() {
         return id;
@@ -77,6 +83,24 @@ public class Document extends AbstractAuditingEntity implements Serializable {
     public void setIdPatient(String idPatient) {
         this.idPatient = idPatient;
     }
+
+    public String getTypeMime() {
+        return typeMime;
+    }
+
+    public void setTypeMime(String typeMime) {
+        this.typeMime = typeMime;
+    }
+
+    public String getNomFichier() {
+        return nomFichier;
+    }
+
+    public void setNomFichier(String nomFichier) {
+        this.nomFichier = nomFichier;
+    }
+    
+    
 
     @Override
     public String toString() {

@@ -24,29 +24,29 @@ App.controller('informationPatientController', function ($scope, $http, GenericS
 
     // Charger les détails du patient connecté
     $scope.chargerPatient = function() {
-        console.log('📥 Chargement des détails du patient connecté...');
+        console.log(' Chargement des détails du patient connecté...');
 
         $http.get(currentPatientURL)
             .then(function(response) {
-                console.log('📦 Réponse reçue:', response);
+                console.log(' Réponse reçue:', response);
 
                 if (response.data && response.data.success && response.data.patient) {
                     $scope.patient = response.data.patient;
                     patientId = $scope.patient.id;
-                    console.log('✅ Patient connecté chargé:', $scope.patient);
+                    console.log(' Patient connecté chargé:', $scope.patient);
 
                     // Charger les consultations, antécédents et vaccinations
                     $scope.chargerConsultations();
                     $scope.chargerAntecedents();
                     $scope.chargerVaccinations();
                 } else {
-                    console.error('❌ Patient non trouvé:', response.data.message);
+                    console.error(' Patient non trouvé:', response.data.message);
                     alert(response.data.message || 'Vous n\'êtes pas enregistré comme patient');
                     window.location.href = appUrl;
                 }
             })
             .catch(function(error) {
-                console.error('❌ Erreur lors du chargement du patient:', error);
+                console.error(' Erreur lors du chargement du patient:', error);
                 alert('Erreur lors du chargement de vos informations');
                 window.location.href = appUrl;
             });
@@ -54,64 +54,64 @@ App.controller('informationPatientController', function ($scope, $http, GenericS
 
     // Charger les consultations
     $scope.chargerConsultations = function() {
-        console.log('📥 Chargement des consultations...');
+        console.log(' Chargement des consultations...');
 
         $http.get(listeConsultationsURL + '?idPatient=' + patientId)
             .then(function(response) {
                 if (response.data && response.data.listConsultations) {
                     $scope.consultations = response.data.listConsultations;
-                    console.log('✅ Consultations chargées:', $scope.consultations.length);
+                    console.log(' Consultations chargées:', $scope.consultations.length);
                 } else {
                     $scope.consultations = [];
                 }
             })
             .catch(function(error) {
-                console.error('❌ Erreur lors du chargement des consultations:', error);
+                console.error(' Erreur lors du chargement des consultations:', error);
                 $scope.consultations = [];
             });
     };
 
     // Charger les antécédents
     $scope.chargerAntecedents = function() {
-        console.log('📥 Chargement des antécédents...');
+        console.log(' Chargement des antécédents...');
 
         $http.get(listeAntecedentsURL + '?idPatient=' + patientId)
             .then(function(response) {
                 if (response.data && response.data.listAntecedents) {
                     $scope.antecedents = response.data.listAntecedents;
-                    console.log('✅ Antécédents chargés:', $scope.antecedents.length);
+                    console.log(' Antécédents chargés:', $scope.antecedents.length);
                 } else {
                     $scope.antecedents = [];
                 }
             })
             .catch(function(error) {
-                console.error('❌ Erreur lors du chargement des antécédents:', error);
+                console.error(' Erreur lors du chargement des antécédents:', error);
                 $scope.antecedents = [];
             });
     };
 
     // Charger les vaccinations
     $scope.chargerVaccinations = function() {
-        console.log('📥 Chargement des vaccinations...');
+        console.log(' Chargement des vaccinations...');
 
         $http.get(listeVaccinationsURL + '?idPatient=' + patientId)
             .then(function(response) {
                 if (response.data && response.data.listVaccinations) {
                     $scope.vaccinations = response.data.listVaccinations;
-                    console.log('✅ Vaccinations chargées:', $scope.vaccinations.length);
+                    console.log(' Vaccinations chargées:', $scope.vaccinations.length);
                 } else {
                     $scope.vaccinations = [];
                 }
             })
             .catch(function(error) {
-                console.error('❌ Erreur lors du chargement des vaccinations:', error);
+                console.error(' Erreur lors du chargement des vaccinations:', error);
                 $scope.vaccinations = [];
             });
     };
 
     // Voir le détail d'une consultation
     $scope.voirDetailConsultation = function(consultationId) {
-        console.log('👁️ Voir détail consultation:', consultationId);
+        console.log(' Voir détail consultation:', consultationId);
 
         $http.get(appUrl + 'api/consultation/getConsultation?id=' + consultationId)
             .then(function(response) {
@@ -123,7 +123,7 @@ App.controller('informationPatientController', function ($scope, $http, GenericS
                 }
             })
             .catch(function(error) {
-                console.error('❌ Erreur:', error);
+                console.error(' Erreur:', error);
                 alert('Erreur lors du chargement des détails de la consultation');
             });
     };

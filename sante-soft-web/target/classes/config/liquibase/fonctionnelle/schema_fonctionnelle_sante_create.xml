@@ -811,6 +811,65 @@ and open the template in the editor.
             <column name="obligatoire" type="BOOLEAN"/>
         </addColumn>    
     </changeSet>
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-75">
+        <addColumn tableName="examen" schemaName="${sante_schema_name}">
+            <column name="commentaire" type="TEXT"/>
+        </addColumn>    
+    </changeSet>
+    <changeSet  author="Bouchara (generated)" id="16-11-2025-1-76">
+        <renameColumn
+            tableName="examen" schemaName="${sante_schema_name}"
+            oldColumnName="fichier_joint"
+            newColumnName="nom_fichier"
+            columnDataType="VARCHAR(150)"/>
+    </changeSet>
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-77">
+        <addColumn tableName="examen" schemaName="${sante_schema_name}">
+            <column name="typeMime" type="VARCHAR(50)"/>
+        </addColumn>    
+    </changeSet>
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-78">
+        <addColumn tableName="examen" schemaName="${sante_schema_name}">
+            <column name="chemin_fichier" type="VARCHAR(200)"/>
+        </addColumn>    
+    </changeSet>
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-79">
+        <addColumn tableName="document" schemaName="${sante_schema_name}">
+            <column name="typeMime" type="VARCHAR(50)"/>
+        </addColumn>    
+    </changeSet>
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-800">
+        <addColumn tableName="document" schemaName="${sante_schema_name}">
+            <column name="nom_fichier" type="VARCHAR(200)"/>
+        </addColumn>    
+    </changeSet>
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-8010">
+        <addColumn tableName="observation" schemaName="${sante_schema_name}">
+            <column name="id_consultation" type="VARCHAR(50)"/>
+        </addColumn>    
+    </changeSet>
+   
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-8030">
+        <dropColumn 
+            tableName="document" schemaName="${sante_schema_name}"
+            columnName="id_consultation"/>
+    </changeSet>
+    
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-336">
+        <addPrimaryKey schemaName="${sante_schema_name}" columnNames="id" constraintName="consultation_pkey" tableName="consultation"/>
+    </changeSet>
+    
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-8031">
+        <addForeignKeyConstraint baseTableSchemaName="${sante_schema_name}" baseColumnNames="id_consultation" baseTableName="observation" constraintName="consultation_on_obser_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="consultation" referencedTableSchemaName="${sante_schema_name}"/>
+    </changeSet>
+    
+    <changeSet  author="Bouchara (generated)" id="16-11-2025-1-80">
+        <renameColumn
+            tableName="examen" schemaName="${sante_schema_name}"
+            oldColumnName="typeMime"
+            newColumnName="type_mime"
+            columnDataType="VARCHAR(50)"/>
+    </changeSet>
 
     
 </databaseChangeLog>

@@ -12,6 +12,11 @@ App.controller('consultationController', ['$scope', '$http', '$location', '$root
         const listTypesConsultationByCategorieURL = urlBase + "/listTypesConsultationByCategorie";
         const listTypesExamenByTypeConsultationURL = urlBase + "/listTypesExamenByTypeConsultation";
         const enregistrerConsultationURL = urlBase + "/enregistrerConsultation";
+        const getConsultationByIdURL = urlBase + "/getConsultation";
+
+        // Mode édition
+        $scope.modeEdition = false;
+        $scope.consultationId = null;
 
         // Initialisation des données
         $scope.consultation = {
@@ -47,7 +52,7 @@ App.controller('consultationController', ['$scope', '$http', '$location', '$root
         var patientFromService = PropagationService.getPatientSender();
         if (patientFromService && patientFromService.id) {
             $scope.patient = patientFromService;
-            console.log("✅ Patient récupéré depuis PropagationService:", $scope.patient);
+            console.log(" Patient récupéré depuis PropagationService:", $scope.patient);
             console.log("   - Nom complet: " + $scope.patient.firstName + " " + $scope.patient.lastName);
             console.log("   - N° Carnet: " + $scope.patient.numeroCarnet);
             console.log("   - Groupe sanguin: " + $scope.patient.groupeSanguinLibelle);
@@ -55,7 +60,7 @@ App.controller('consultationController', ['$scope', '$http', '$location', '$root
             // Définir l'ID du patient pour la consultation
             $scope.consultation.patientId = $scope.patient.id;
         } else {
-            console.warn("⚠️ Aucun patient trouvé dans PropagationService");
+            console.warn(" Aucun patient trouvé dans PropagationService");
             console.log("Données reçues:", patientFromService);
         }
 
@@ -375,7 +380,7 @@ App.controller('consultationController', ['$scope', '$http', '$location', '$root
                     })
                     .catch(function (error) {
                         console.error('Erreur lors du chargement du patient:', error);
-                        alert('Erreur lors du chargement des informations du patient');
+                        notification('error', 'Erreur lors du chargement des informations du patient');
                     });
         };
 
@@ -426,32 +431,6 @@ App.controller('consultationController', ['$scope', '$http', '$location', '$root
 
         // Ajouter une observation
         $scope.ajouterObservation = function () {
-            // Validation des champs obligatoires
-            if (!$scope.nouvelleObservation.typeObservation || !$scope.nouvelleObservation.valeur) {
-                alert('Veuillez remplir le type et la valeur de l\'observation');
-                return;
-            }
-
-            // Validation de la valeur (doit être entre min et max)
-            var valeur = parseFloat($scope.nouvelleObservation.valeur);
-            var valeurMin = parseFloat($scope.nouvelleObservation.valeurMin);
-            var valeurMax = parseFloat($scope.nouvelleObservation.valeurMax);
-
-            if (isNaN(valeur)) {
-                alert('La valeur doit être un nombre valide');
-                return;
-            }
-
-            if (!isNaN(valeurMin) && valeur < valeurMin) {
-                alert('La valeur doit être supérieure ou égale à ' + valeurMin + ' ' + $scope.nouvelleObservation.unite);
-                return;
-            }
-
-            if (!isNaN(valeurMax) && valeur > valeurMax) {
-                alert('La valeur doit être inférieure ou égale à ' + valeurMax + ' ' + $scope.nouvelleObservation.unite);
-                return;
-            }
-
             // Ajouter l'observation à la liste
             $scope.observations.push({
                 id: Date.now(),
@@ -572,14 +551,6 @@ App.controller('consultationController', ['$scope', '$http', '$location', '$root
 
         // Ajouter un antécédent
         $scope.ajouterAntecedent = function () {
-            // Validation des champs obligatoires
-            if (!$scope.nouvelAntecedent.categorieAntecedent ||
-                    !$scope.nouvelAntecedent.typeAntecedent ||
-                    !$scope.nouvelAntecedent.description) {
-                alert('Veuillez remplir la catégorie, le type et la description de l\'antécédent');
-                return;
-            }
-
             // Ajouter l'antécédent à la liste
             $scope.antecedents.push({
                 id: Date.now(),
@@ -617,11 +588,6 @@ App.controller('consultationController', ['$scope', '$http', '$location', '$root
 
         // Ajouter une prescription
         $scope.ajouterPrescription = function () {
-            if (!$scope.nouvellePrescription.medicament || !$scope.nouvellePrescription.posologie) {
-                alert('Veuillez remplir le médicament et la posologie');
-                return;
-            }
-
             $scope.prescriptions.push({
                 id: Date.now(),
                 medicament: $scope.nouvellePrescription.medicament,
@@ -654,7 +620,7 @@ App.controller('consultationController', ['$scope', '$http', '$location', '$root
 
                 // Vérifier la taille (max 5MB)
                 if (file.size > 5 * 1024 * 1024) {
-                    alert('Le fichier est trop volumineux. Taille maximale: 5MB');
+                    notification('warning', 'Le fichier est trop volumineux. Taille maximale: 5MB');
                     document.getElementById('fichierExamen').value = '';
                     return;
                 }
@@ -676,11 +642,6 @@ App.controller('consultationController', ['$scope', '$http', '$location', '$root
             console.log('🔍 Tentative d\'ajout d\'examen...');
             console.log('   Type examen sélectionné:', $scope.nouvelExamen.typeExamen);
             console.log('   Liste types examen disponibles:', $scope.listeTypesExamen);
-
-            if (!$scope.nouvelExamen.typeExamen) {
-                alert('Veuillez sélectionner le type d\'examen');
-                return;
-            }
 
             // Trouver le libellé du type d'examen sélectionné
             var typeExamenObj = $scope.listeTypesExamen.find(function (type) {
@@ -731,32 +692,6 @@ App.controller('consultationController', ['$scope', '$http', '$location', '$root
 
         // Enregistrer la consultation
         $scope.enregistrerConsultation = function () {
-            // Validation
-            if (!$scope.consultation.patientId) {
-                alert('Aucun patient sélectionné');
-                return;
-            }
-
-            if (!$scope.consultation.categorieConsultation) {
-                alert('Veuillez sélectionner une catégorie de consultation');
-                return;
-            }
-
-            if (!$scope.consultation.typeConsultation) {
-                alert('Veuillez sélectionner un type de consultation');
-                return;
-            }
-
-            if (!$scope.consultation.motif || !$scope.consultation.motif.trim()) {
-                alert('Veuillez remplir le motif de la consultation');
-                return;
-            }
-
-            if (!$scope.consultation.diagnostic || !$scope.consultation.diagnostic.trim()) {
-                alert('Veuillez remplir le diagnostic');
-                return;
-            }
-
             // Préparer les données à envoyer
             var consultationDTO = {
                 idPatient: $scope.consultation.patientId,
@@ -768,6 +703,7 @@ App.controller('consultationController', ['$scope', '$http', '$location', '$root
                 traitement: $scope.consultation.traitement,
                 prescriptions: ($scope.prescriptions && $scope.prescriptions.length > 0) ? $scope.prescriptions.map(function (p) {
                     return {
+                        id: p.id || null, // Inclure l'ID si existant (mode édition)
                         medicament: p.medicament,
                         posologie: p.posologie,
                         duree: p.duree
@@ -775,20 +711,31 @@ App.controller('consultationController', ['$scope', '$http', '$location', '$root
                 }) : [],
                 examens: ($scope.examens && $scope.examens.length > 0) ? $scope.examens.map(function (e) {
                     return {
-                        typeExamen: e.idTypeExamen,
+                        id: e.id || null, // Inclure l'ID si existant (mode édition)
+                        typeExamen: e.idTypeExamen || e.typeExamen,
                         resultat: e.resultat,
-                        fichierJoint: e.fichierJoint
+                        fichierJoint: e.fichierJoint, // Base64 du fichier (pour upload)
+                        nomFichier: e.nomFichier,     // Nom original du fichier
+                        commentaire: e.commentaire
                     };
                 }) : [],
                 observations: ($scope.observations && $scope.observations.length > 0) ? $scope.observations.map(function (o) {
                     return {
-                        typeObservation: o.idTypeObservation,
+                        id: o.id || null, // Inclure l'ID si existant (mode édition)
+                        typeObservation: o.idTypeObservation || (o.typeObservation ? o.typeObservation.id : null),
                         valeur: o.valeur,
                         commentaire: o.commentaire
                     };
                 }) : []
             };
+
+            // Ajouter l'ID de la consultation si on est en mode édition
+            if ($scope.modeEdition && $scope.consultationId) {
+                consultationDTO.id = $scope.consultationId;
+            }
             console.log('📤 Données à enregistrer:', consultationDTO);
+            console.log('   Mode édition:', $scope.modeEdition);
+            console.log('   ID consultation:', consultationDTO.id);
             console.log('   Nombre de prescriptions:', consultationDTO.prescriptions.length);
             console.log('   Nombre d\'examens:', consultationDTO.examens.length);
             console.log('   Nombre d\'observations:', consultationDTO.observations.length);
@@ -796,30 +743,30 @@ App.controller('consultationController', ['$scope', '$http', '$location', '$root
             console.log('   Liste examens mappée (consultationDTO.examens):', consultationDTO.examens);
 
             // Appel API pour enregistrer
-            $http.post(enregistrerConsultationURL, consultationDTO)
+            GenericService.post(enregistrerConsultationURL, consultationDTO)
                     .then(function (response) {
-                        console.log('✅ Réponse du serveur:', response.data);
+                        console.log('✅ Réponse du serveur:', response);
 
-                        if (response.data.success) {
-                            alert('✅ Consultation enregistrée avec succès!\n\nID: ' + response.data.consultationId);
+                        if (response && response.success) {
+                            var message = $scope.modeEdition ?
+                                '✅ Consultation mise à jour avec succès!' :
+                                '✅ Consultation enregistrée avec succès! ID: ' + response.consultationId;
+                            console.log(message);
 
-                            // Réinitialiser le formulaire
-                            $scope.reinitialiser();
+                            // Réinitialiser le formulaire si création
+                            if (!$scope.modeEdition) {
+                                $scope.reinitialiser();
+                            }
 
-                            // Redirection vers la page de détail du patient
-                            window.location.href = appUrl + 'gestion/patient/detail?id=' + $scope.consultation.patientId;
-                        } else {
-                            alert('❌ Erreur: ' + response.data.message);
+                            // Redirection vers la liste des consultations après un court délai
+                            setTimeout(function() {
+                                window.location.href = appUrl + 'gestion/consultation/liste';
+                            }, 1500);
                         }
                     })
                     .catch(function (error) {
                         console.error('❌ Erreur lors de l\'enregistrement:', error);
-
-                        if (error.data && error.data.message) {
-                            alert('❌ Erreur lors de l\'enregistrement: ' + error.data.message);
-                        } else {
-                            alert('❌ Erreur lors de l\'enregistrement de la consultation. Veuillez réessayer.');
-                        }
+                        // Le GenericService gère automatiquement l'affichage des erreurs
                     });
         };
 
@@ -861,6 +808,25 @@ App.controller('consultationController', ['$scope', '$http', '$location', '$root
 
         // ==================== FONCTIONS UTILITAIRES ====================
 
+        // Fonction de notification (SweetAlert2)
+        function notification(icon, title) {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                onOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer);
+                    toast.addEventListener('mouseleave', Swal.resumeTimer);
+                }
+            });
+            Toast.fire({
+                icon: icon,
+                title: title
+            });
+        }
+
         // Calculer l'IMC
         $scope.calculerIMC = function () {
             var poids = null;
@@ -891,9 +857,9 @@ App.controller('consultationController', ['$scope', '$http', '$location', '$root
                     date: new Date()
                 });
 
-                alert('IMC calculé: ' + imc + ' kg/m²');
+                notification('success', 'IMC calculé: ' + imc + ' kg/m²');
             } else {
-                alert('Veuillez d\'abord ajouter le poids (en kg) et la taille (en m ou cm)');
+                notification('warning', 'Veuillez d\'abord ajouter le poids (en kg) et la taille (en m ou cm)');
             }
         };
 
@@ -902,7 +868,158 @@ App.controller('consultationController', ['$scope', '$http', '$location', '$root
             window.print();
         };
 
+        // ==================== CHARGEMENT D'UNE CONSULTATION EXISTANTE ====================
+
+        /**
+         * Charger une consultation existante pour édition
+         */
+        $scope.chargerConsultation = function(consultationId) {
+            console.log('📥 Chargement de la consultation:', consultationId);
+
+            $http.get(getConsultationByIdURL + '?id=' + consultationId)
+                .then(function(response) {
+                    console.log('📦 Réponse reçue:', response);
+
+                    if (response.data && response.data.success && response.data.consultation) {
+                        var consult = response.data.consultation;
+                        console.log('✅ Consultation chargée:', consult);
+
+                        // Activer le mode édition
+                        $scope.modeEdition = true;
+                        $scope.consultationId = consultationId;
+
+                        // Remplir les données de la consultation
+                        $scope.consultation.id = consult.id;
+                        $scope.consultation.categorieConsultation = consult.categorieConsultation;
+                        $scope.consultation.typeConsultation = consult.typeConsultation;
+                        $scope.consultation.motif = consult.motif;
+                        $scope.consultation.diagnostic = consult.diagnostic;
+                        $scope.consultation.traitement = consult.traitement;
+                        $scope.consultation.patientId = consult.idPatient;
+
+                        // Charger les informations du patient si disponibles
+                        if (consult.patientNom) {
+                            $scope.patient.firstName = consult.patientNom.split(' ')[0] || '';
+                            $scope.patient.lastName = consult.patientNom.split(' ').slice(1).join(' ') || '';
+                            $scope.patient.id = consult.idPatient;
+                        }
+
+                        // Convertir la date
+                        if (consult.dateConsultation) {
+                            if (typeof consult.dateConsultation === 'string') {
+                                $scope.consultation.dateConsultation = new Date(consult.dateConsultation);
+                            } else if (consult.dateConsultation.epochSecond) {
+                                $scope.consultation.dateConsultation = new Date(consult.dateConsultation.epochSecond * 1000);
+                            }
+                        }
+
+                        // Charger les prescriptions
+                        if (consult.prescriptions && consult.prescriptions.length > 0) {
+                            $scope.prescriptions = consult.prescriptions.map(function(p) {
+                                return {
+                                    id: p.id,
+                                    medicament: p.medicament,
+                                    posologie: p.posologie,
+                                    duree: p.duree,
+                                    instructions: p.instructions
+                                };
+                            });
+                            console.log('✅ Prescriptions chargées:', $scope.prescriptions.length);
+                        }
+
+                        // Charger les examens
+                        if (consult.examens && consult.examens.length > 0) {
+                            $scope.examens = consult.examens.map(function(e) {
+                                return {
+                                    id: e.id,
+                                    idTypeExamen: e.typeExamen, // ID du type d'examen
+                                    typeExamen: e.typeExamenLibelle,   // ✅ Libellé du type d'examen
+                                    resultat: e.resultat,
+                                    fichierJoint: e.fichierJoint,
+                                    commentaire: e.commentaire
+                                };
+                            });
+                            console.log('✅ Examens chargés:', $scope.examens.length);
+                        }
+
+                        // Charger les observations
+                        if (consult.observations && consult.observations.length > 0) {
+                            $scope.observations = consult.observations.map(function(o) {
+                                var dateObs = o.date;
+                                if (typeof dateObs === 'string') {
+                                    dateObs = new Date(dateObs);
+                                } else if (dateObs && dateObs.epochSecond) {
+                                    dateObs = new Date(dateObs.epochSecond * 1000);
+                                }
+
+                                return {
+                                    id: o.id,
+                                    typeObservation: {
+                                        id: o.typeObservation,
+                                        libelle: o.typeObservationLibelle
+                                    },
+                                    type: o.typeObservationLibelle, // ✅ Ajout du champ type pour l'affichage
+                                    valeur: o.valeur,
+                                    unite: o.unite,
+                                    date: dateObs
+                                };
+                            });
+                            console.log('✅ Observations chargées:', $scope.observations.length);
+                        }
+
+                        // Charger les types de consultation pour la catégorie sélectionnée
+                        if (consult.categorieConsultation) {
+                            $scope.chargerTypesConsultationByCategorie(consult.categorieConsultation);
+                        }
+
+                        // Charger les types d'examen pour le type de consultation sélectionné
+                        if (consult.typeConsultation) {
+                            $scope.chargerTypesExamenByTypeConsultation(consult.typeConsultation);
+                        }
+
+                        // Initialiser Select2 avec les valeurs chargées
+                        setTimeout(function() {
+                            $('#selectCategorieConsultation').val(consult.categorieConsultation).trigger('change');
+
+                            // Attendre que les types de consultation soient chargés
+                            setTimeout(function() {
+                                $('#selectTypeConsultation').val(consult.typeConsultation).trigger('change');
+                            }, 300);
+                        }, 500);
+
+                        // ❌ Message de succès supprimé (pas nécessaire lors du chargement pour édition)
+
+                    } else {
+                        console.error('❌ Consultation non trouvée');
+                        notification('error', 'Consultation non trouvée');
+                    }
+                })
+                .catch(function(error) {
+                    console.error('❌ Erreur lors du chargement:', error);
+                    notification('error', 'Erreur lors du chargement de la consultation');
+                });
+        };
+
+        /**
+         * Vérifier si on est en mode édition (paramètre id dans l'URL)
+         */
+        $scope.verifierModeEdition = function() {
+            var urlParams = new URLSearchParams(window.location.search);
+            var consultationId = urlParams.get('id');
+
+            if (consultationId) {
+                console.log('🔄 Mode édition détecté - ID:', consultationId);
+                // Attendre que les listes soient chargées avant de charger la consultation
+                setTimeout(function() {
+                    $scope.chargerConsultation(consultationId);
+                }, 1000);
+            } else {
+                console.log('➕ Mode création');
+            }
+        };
+
         // ==================== INITIALISATION AU CHARGEMENT ====================
         $scope.init();
+        $scope.verifierModeEdition();
 
     }]);

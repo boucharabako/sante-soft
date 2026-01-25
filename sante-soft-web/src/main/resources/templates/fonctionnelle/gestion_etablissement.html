@@ -9,6 +9,77 @@
     <link th:href="@{/plugins/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet"/>
     <link th:href="@{/plugins/datatables/responsive.bootstrap4.min.css}" rel="stylesheet"/>
     <script th:src="@{/js/controllers/etablissementController.js}"></script>
+
+    <style>
+        /* Arrière-plan de la page */
+        #etablissementList {
+            background-color: #b8c6db !important;
+        }
+
+        /* Titres des sections */
+        .header-title {
+            font-size: 20px !important;
+            font-weight: 700 !important;
+            color: #1a1a1a !important;
+            text-transform: none !important;
+        }
+
+        /* Labels des formulaires */
+        label.control-label {
+            font-size: 15px !important;
+            font-weight: 700 !important;
+            color: #2c3e50 !important;
+        }
+
+        /* Champs de formulaire */
+        .form-control {
+            font-size: 15px !important;
+            font-weight: 600 !important;
+            color: #1a1a1a !important;
+            border: 2px solid #495057 !important;
+        }
+
+        /* En-têtes du tableau */
+        .table thead th {
+            font-size: 16px !important;
+            font-weight: 700 !important;
+            color: #1a1a1a !important;
+            background-color: #e9ecef !important;
+        }
+
+        /* Cellules du tableau */
+        .table tbody td {
+            font-size: 15px !important;
+            font-weight: 600 !important;
+            color: #2c3e50 !important;
+        }
+
+        /* Informations de pagination */
+        .dataTables_info {
+            font-size: 15px !important;
+            font-weight: 600 !important;
+            color: #2c3e50 !important;
+        }
+
+        .dataTables_length label {
+            font-size: 15px !important;
+            font-weight: 600 !important;
+            color: #2c3e50 !important;
+        }
+
+        /* Message "Aucun établissement" */
+        center {
+            font-size: 16px !important;
+            font-weight: 700 !important;
+            color: #2c3e50 !important;
+        }
+
+        /* Boutons */
+        .btn {
+            font-size: 15px !important;
+            font-weight: 700 !important;
+        }
+    </style>
 </head>
 <body>
     <div layout:fragment="content" id="etablissementList" data-ng-cloak="">
@@ -16,7 +87,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="mt-0 header-title">Filtrer les Établissements</h4>
+                        <h4 class="mt-0 header-title">Filtrer les établissements</h4>
                         <form method="POST" class="form-horizontal well">
                             <fieldset>
                                 <div class="repeater-default">

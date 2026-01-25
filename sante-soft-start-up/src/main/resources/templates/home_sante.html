@@ -174,7 +174,10 @@
                         Accédez à vos informations médicales en toute sécurité, 
                         suivez vos consultations et gérez vos données de santé en un seul endroit.
                     </p>
-                    <a th:href="@{/gestion/patient}" class="cta-button">
+                    <a sec:authorize="hasAnyAuthority('FC_PATIENT')" th:href="@{/gestion/patient}" class="cta-button">
+                        <i class="fas fa-user-plus"></i> Commencer Maintenant
+                    </a>
+                    <a sec:authorize="hasAnyAuthority('FC_INF_PATIENT')" th:href="@{/gestion/information/patient}" class="cta-button">
                         <i class="fas fa-user-plus"></i> Commencer Maintenant
                     </a>
                 </div>

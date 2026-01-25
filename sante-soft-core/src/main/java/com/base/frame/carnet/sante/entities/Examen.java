@@ -34,8 +34,16 @@ public class Examen extends AbstractAuditingEntity implements Serializable {
     private String typeExamen;
     @Column(name = "resultat")
     private String resultat;
-    @Column(name = "fichier_joint") 
-    private String fichierJoint;
+    @Column(name = "commentaire")
+    private String commentaire;
+    @Column(name = "chemin_fichier")
+    private String cheminFichier;
+
+    @Column(name = "type_mime")
+    private String typeMime; // application/pdf
+
+    @Column(name = "nom_fichier")
+    private String nomFichier;
 
     public String getId() {
         return id;
@@ -61,13 +69,7 @@ public class Examen extends AbstractAuditingEntity implements Serializable {
         this.resultat = resultat;
     }
 
-    public String getFichierJoint() {
-        return fichierJoint;
-    }
-
-    public void setFichierJoint(String fichierJoint) {
-        this.fichierJoint = fichierJoint;
-    }
+   
 
     public String getIdConsultation() {
         return idConsultation;
@@ -77,10 +79,41 @@ public class Examen extends AbstractAuditingEntity implements Serializable {
         this.idConsultation = idConsultation;
     }
 
-    @Override
-    public String toString() {
-        return "Examen{" + "id=" + id + ", idConsultation=" + idConsultation + ", typeExamen=" + typeExamen + ", resultat=" + resultat + ", fichierJoint=" + fichierJoint + '}';
+    public String getCommentaire() {
+        return commentaire;
     }
 
+    public void setCommentaire(String commentaire) {
+        this.commentaire = commentaire;
+    }
+
+    public String getCheminFichier() {
+        return cheminFichier;
+    }
+
+    public void setCheminFichier(String cheminFichier) {
+        this.cheminFichier = cheminFichier;
+    }
+
+    public String getTypeMime() {
+        return typeMime;
+    }
+
+    public void setTypeMime(String typeMime) {
+        this.typeMime = typeMime;
+    }
+
+    public String getNomFichier() {
+        return nomFichier;
+    }
+
+    public void setNomFichier(String nomFichier) {
+        this.nomFichier = nomFichier;
+    }
+
+    @Override
+    public String toString() {
+        return "Examen{" + "id=" + id + ", idConsultation=" + idConsultation + ", typeExamen=" + typeExamen + ", resultat=" + resultat + ", commentaire=" + commentaire + '}';
+    }
 
 }

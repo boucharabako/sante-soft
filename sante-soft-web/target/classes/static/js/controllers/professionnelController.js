@@ -288,8 +288,7 @@ App.controller("professionnelController", ['$scope', 'GenericService', function 
                                     );
                             },
                             function () {
-                                console.error("Erreur lors du chargement du professionnel");
-                                alert("Erreur lors du chargement des détails du professionnel");
+                                // Le GenericService gère automatiquement l'affichage des erreurs
                             }
                     );
         };
@@ -392,11 +391,10 @@ App.controller("professionnelController", ['$scope', 'GenericService', function 
                             function () {
                                 $scope.affectationsTemporaires.splice(index, 1);
                                 console.log("Affectation supprimée de la base de données");
-                                alert("Affectation supprimée avec succès !");
+                                // Le GenericService affiche automatiquement le message de succès
                             },
-                            function (error) {
-                                console.error("Erreur lors de la suppression de l'affectation:", error);
-                                alert("Erreur lors de la suppression de l'affectation");
+                            function () {
+                                // Le GenericService gère automatiquement l'affichage des erreurs
                             }
                         );
                 }
@@ -466,10 +464,10 @@ App.controller("professionnelController", ['$scope', 'GenericService', function 
                     age--;
                 }
 
-                if (age < 18) {
-                    alert("L'âge du professionnel doit être supérieur ou égal à 18 ans. Âge actuel: " + age + " ans");
-                    return;
-                }
+//                if (age < 18) {
+//                    alert("L'âge du professionnel doit être supérieur ou égal à 18 ans. Âge actuel: " + age + " ans");
+//                    return;
+//                }
             }
 
             GenericService.post(saveProfessionnelURL, professionnel)
@@ -504,14 +502,14 @@ App.controller("professionnelController", ['$scope', 'GenericService', function 
                                                         $('#detail-professionnel').modal('hide');
                                                         $scope.listeProfessionnels();
                                                         $scope.affectationsTemporaires = []; // Réinitialiser
-                                                        alert("Professionnel et " + affectationsPromises.length + " affectation(s) ajoutés avec succès !");
+                                                        // Le GenericService affiche déjà le message de succès
                                                     },
                                                     function (error) {
                                                         console.error("Erreur lors de la création des affectations:", error);
                                                         $('#detail-professionnel').modal('hide');
                                                         $scope.listeProfessionnels();
                                                         $scope.affectationsTemporaires = []; // Réinitialiser
-                                                        alert("Professionnel ajouté mais erreur lors de la création de certaines affectations");
+                                                        // Le GenericService affiche déjà le message d'erreur
                                                     }
                                             );
                                 } else if ($scope.modeEdition === 3 && $scope.affectationsTemporaires.length > 0) {
@@ -541,34 +539,25 @@ App.controller("professionnelController", ['$scope', 'GenericService', function 
                                                         $('#detail-professionnel').modal('hide');
                                                         $scope.listeProfessionnels();
                                                         $scope.affectationsTemporaires = []; // Réinitialiser
-                                                        alert("Professionnel modifié et " + affectationsPromises.length + " affectation(s) ajoutées avec succès !");
+                                                        // Le GenericService affiche déjà le message de succès
                                                     },
                                                     function (error) {
                                                         console.error("Erreur lors de la création des affectations:", error);
                                                         $('#detail-professionnel').modal('hide');
                                                         $scope.listeProfessionnels();
                                                         $scope.affectationsTemporaires = []; // Réinitialiser
-                                                        alert("Professionnel modifié mais erreur lors de la création de certaines affectations");
+                                                        // Le GenericService affiche déjà le message d'erreur
                                                     }
                                             );
                                 } else {
                                     // Pas d'affectations à enregistrer
                                     $('#detail-professionnel').modal('hide');
                                     $scope.listeProfessionnels();
-                                    if ($scope.modeEdition === 0) {
-                                        alert("Professionnel ajouté avec succès !");
-                                    } else {
-                                        alert("Professionnel modifié avec succès !");
-                                    }
+                                    // Le GenericService affiche automatiquement le message de succès
                                 }
                             },
-                            function (error) {
-                                console.error("Erreur lors de l'enregistrement du professionnel:", error);
-                                if (error.data && error.data.message) {
-                                    alert("Erreur: " + error.data.message);
-                                } else {
-                                    alert("Erreur lors de l'enregistrement du professionnel");
-                                }
+                            function () {
+                                // Le GenericService gère automatiquement l'affichage des erreurs
                             }
                     );
         };
@@ -615,8 +604,7 @@ App.controller("professionnelController", ['$scope', 'GenericService', function 
                                                         $scope.objetProfessionnel.numeroOrdre = currentYear + "-XXX";
                                                         $scope.objetProfessionnel.dateEnregistrement = new Date();
 
-                                                        var nbAffectations = affectationsPromises.length;
-                                                        alert("Professionnel et " + nbAffectations + " affectation(s) ajoutés avec succès ! Vous pouvez en ajouter un autre.");
+                                                        // Le GenericService affiche déjà le message de succès
                                                     },
                                                     function (error) {
                                                         console.error("Erreur lors de la création des affectations:", error);
@@ -629,7 +617,7 @@ App.controller("professionnelController", ['$scope', 'GenericService', function 
                                                         $scope.objetProfessionnel.numeroOrdre = currentYear + "-XXX";
                                                         $scope.objetProfessionnel.dateEnregistrement = new Date();
 
-                                                        alert("Professionnel ajouté mais erreur lors de la création de certaines affectations. Vous pouvez en ajouter un autre.");
+                                                        // Le GenericService affiche déjà le message d'erreur
                                                     }
                                             );
                                 } else {
@@ -643,16 +631,11 @@ App.controller("professionnelController", ['$scope', 'GenericService', function 
                                     $scope.objetProfessionnel.numeroOrdre = currentYear + "-XXX";
                                     $scope.objetProfessionnel.dateEnregistrement = new Date();
 
-                                    alert("Professionnel ajouté avec succès ! Vous pouvez en ajouter un autre.");
+                                    // Le GenericService affiche automatiquement le message de succès
                                 }
                             },
-                            function (error) {
-                                console.error("Erreur lors de l'enregistrement du professionnel:", error);
-                                if (error.data && error.data.message) {
-                                    alert("Erreur: " + error.data.message);
-                                } else {
-                                    alert("Erreur lors de l'enregistrement du professionnel");
-                                }
+                            function () {
+                                // Le GenericService gère automatiquement l'affichage des erreurs
                             }
                     );
         };
@@ -665,15 +648,10 @@ App.controller("professionnelController", ['$scope', 'GenericService', function 
                                 function (data) {
                                     console.log("Professionnel supprimé avec succès:", data);
                                     $scope.listeProfessionnels();
-                                    alert("Professionnel supprimé avec succès !");
+                                    // Le GenericService affiche automatiquement le message de succès
                                 },
-                                function (error) {
-                                    console.error("Erreur lors de la suppression du professionnel:", error);
-                                    if (error.data && error.data.message) {
-                                        alert("Erreur: " + error.data.message);
-                                    } else {
-                                        alert("Erreur lors de la suppression du professionnel");
-                                    }
+                                function () {
+                                    // Le GenericService gère automatiquement l'affichage des erreurs
                                 }
                         );
             }
@@ -794,7 +772,7 @@ App.controller("professionnelController", ['$scope', 'GenericService', function 
                     .then(
                             function (data) {
                                 console.log("Affectation ajoutée avec succès:", data);
-                                alert("Affectation ajoutée avec succès");
+                                // Le GenericService affiche automatiquement le message de succès
 
                                 // Recharger les affectations
                                 $scope.chargerAffectations($scope.objetProfessionnel.id);
@@ -802,9 +780,8 @@ App.controller("professionnelController", ['$scope', 'GenericService', function 
                                 // Réinitialiser le formulaire
                                 $scope.initialiserNouvelleAffectation();
                             },
-                            function (error) {
-                                console.error("Erreur lors de l'ajout de l'affectation:", error);
-                                alert("Erreur lors de l'ajout de l'affectation");
+                            function () {
+                                // Le GenericService gère automatiquement l'affichage des erreurs
                             }
                     );
         };
@@ -821,14 +798,13 @@ App.controller("professionnelController", ['$scope', 'GenericService', function 
                     .then(
                             function (data) {
                                 console.log("Affectation supprimée avec succès");
-                                alert("Affectation supprimée avec succès");
+                                // Le GenericService affiche automatiquement le message de succès
 
                                 // Recharger les affectations
                                 $scope.chargerAffectations($scope.objetProfessionnel.id);
                             },
-                            function (error) {
-                                console.error("Erreur lors de la suppression de l'affectation:", error);
-                                alert("Erreur lors de la suppression de l'affectation");
+                            function () {
+                                // Le GenericService gère automatiquement l'affichage des erreurs
                             }
                     );
         };

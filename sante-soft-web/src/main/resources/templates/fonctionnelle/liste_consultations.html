@@ -220,6 +220,11 @@
                                         <td>{{consult.motif | limitTo:50}}{{consult.motif.length > 50 ? '...' : ''}}</td>
                                         <td>{{consult.diagnostic | limitTo:50}}{{consult.diagnostic.length > 50 ? '...' : ''}}</td>
                                         <td>
+                                            <button class="btn btn-sm btn-warning action-btn"
+                                                    ng-click="editerConsultation(consult.id)"
+                                                    title="Éditer la consultation">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
 <!--                                            <button class="btn btn-sm btn-info action-btn"
                                                     ng-click="voirDetail(consult.id)"
                                                     title="Voir détails">

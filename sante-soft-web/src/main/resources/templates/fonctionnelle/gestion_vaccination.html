@@ -8,9 +8,19 @@
         <link th:href="@{/plugins/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet"/>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
         <style type="text/css">
+            /* ============================================
+               CSS AMÉLIORÉ - VACCINATIONS
+               Tous les textes en gras et bien lisibles
+               ============================================ */
+
+            /* Masquage ng-cloak */
             [ng\:cloak], [ng-cloak], .ng-cloak {
                 display: none !important;
             }
+
+            /* ============================================
+               EN-TÊTE PERSONNALISÉ
+               ============================================ */
 
             .page-header-custom {
                 background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
@@ -18,47 +28,134 @@
                 padding: 20px;
                 border-radius: 10px;
                 margin-bottom: 20px;
+                border: 3px solid #00a383 !important;
+            }
+
+            .page-header-custom h3 {
+                margin: 0;
+                font-weight: 800 !important;
+                font-size: 24px !important;
+                text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+            }
+
+            .page-header-custom p {
+                margin: 5px 0 0 0;
+                opacity: 0.9;
+                font-weight: 700 !important;
+                font-size: 15px !important;
+            }
+
+            /* ============================================
+               BOUTONS
+               ============================================ */
+
+            .btn {
+                font-weight: 800 !important;
+                font-size: 15px !important;
+                border-radius: 6px !important;
+                padding: 10px 20px !important;
+                transition: all 0.3s ease !important;
             }
 
             .btn-primary-custom {
                 background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
-                border: none;
+                border: 2px solid #00a383 !important;
                 color: white;
                 padding: 10px 20px;
-                border-radius: 5px;
-                font-weight: 600;
+                border-radius: 6px;
+                font-weight: 800 !important;
+                font-size: 15px !important;
                 transition: all 0.3s;
             }
 
             .btn-primary-custom:hover {
                 transform: translateY(-2px);
                 box-shadow: 0 5px 15px rgba(0, 184, 148, 0.3);
+                background: linear-gradient(135deg, #00a383 0%, #00b8a8 100%);
             }
 
-            .vaccination-card {
-                background: white;
+            .btn-light {
+                font-weight: 800 !important;
+                border: 2px solid #dee2e6 !important;
+            }
+
+            .btn-sm {
+                font-weight: 800 !important;
+                font-size: 14px !important;
+            }
+
+            .btn-outline-primary {
+                font-weight: 800 !important;
+                border: 2px solid #667eea !important;
+                color: #667eea !important;
+            }
+
+            .btn-outline-primary:hover {
+                background: #667eea !important;
+                color: white !important;
+            }
+
+            .btn-outline-danger {
+                font-weight: 800 !important;
+                border: 2px solid #e74c3c !important;
+                color: #e74c3c !important;
+            }
+
+            .btn-outline-danger:hover {
+                background: #e74c3c !important;
+                color: white !important;
+            }
+
+            /* ============================================
+               CARTE INFORMATIONS PATIENT
+               ============================================ */
+
+            .patient-info-card {
+                background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+                border: 3px solid #90caf9 !important;
                 border-radius: 8px;
-                border: 1px solid #e0e0e0;
                 padding: 20px;
-                margin-bottom: 15px;
-                transition: all 0.3s;
+                margin-bottom: 20px;
             }
 
-            .vaccination-card:hover {
-                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-                border-color: #00b894;
+            .patient-info-card h5 {
+                margin: 0;
+                color: #1976D2;
+                font-weight: 800 !important;
+                font-size: 20px !important;
             }
 
-            .status-badge {
-                padding: 5px 12px;
-                border-radius: 20px;
-                font-size: 12px;
-                font-weight: 600;
+            .patient-info-card p {
+                margin: 5px 0 0 0;
+                color: #2c3e50 !important;
+                font-weight: 700 !important;
+                font-size: 15px !important;
             }
 
-            .status-À-jour { background: #c8e6c9; color: #2e7d32; }
-            .status-En-retard { background: #ffebee; color: #c62828; }
-            .status-Prévu { background: #fff9c4; color: #f57f17; }
+            .patient-info-card strong {
+                font-weight: 800 !important;
+                color: #1a1a1a !important;
+            }
+
+            /* ============================================
+               BADGE
+               ============================================ */
+
+            .badge {
+                font-weight: 800 !important;
+                font-size: 14px !important;
+                padding: 8px 15px !important;
+                border-radius: 6px !important;
+            }
+
+            .badge-info {
+                background: #17a2b8 !important;
+                border: 2px solid #138496 !important;
+            }
+
+            /* ============================================
+               BARRE DE RECHERCHE
+               ============================================ */
 
             .search-box {
                 position: relative;
@@ -69,38 +166,301 @@
                 left: 15px;
                 top: 50%;
                 transform: translateY(-50%);
-                color: #999;
+                color: #495057;
+                font-weight: 700;
+                font-size: 16px;
             }
 
             .search-box input {
                 padding-left: 45px;
                 border-radius: 25px;
-                border: 2px solid #e0e0e0;
+                border: 2px solid #495057 !important;
+                font-weight: 700 !important;
+                font-size: 15px !important;
+                color: #1a1a1a !important;
+                padding: 12px 12px 12px 45px !important;
             }
 
             .search-box input:focus {
-                border-color: #00b894;
-                box-shadow: 0 0 0 0.2rem rgba(0, 184, 148, 0.25);
+                border-color: #00b894 !important;
+                box-shadow: 0 0 0 0.2rem rgba(0, 184, 148, 0.25) !important;
             }
 
-            .patient-info-card {
-                background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
-                border: 1px solid #90caf9;
-                border-radius: 8px;
-                padding: 15px;
-                margin-bottom: 20px;
+            .search-box input::placeholder {
+                font-weight: 600 !important;
+                color: #6c757d !important;
             }
+
+            /* ============================================
+               CHAMPS DE FORMULAIRE
+               ============================================ */
+
+            .form-control,
+            input[type="text"],
+            input[type="date"],
+            input[type="number"],
+            select.form-control,
+            textarea.form-control {
+                font-size: 15px !important;
+                font-weight: 700 !important;
+                color: #1a1a1a !important;
+                border: 2px solid #495057 !important;
+                border-radius: 6px !important;
+                padding: 10px 12px !important;
+                transition: all 0.3s ease !important;
+            }
+
+            .form-control:focus {
+                border-color: #00b894 !important;
+                box-shadow: 0 0 0 0.2rem rgba(0, 184, 148, 0.25) !important;
+            }
+
+            .form-control::placeholder {
+                font-weight: 600 !important;
+                color: #6c757d !important;
+            }
+
+            /* Labels */
+            label {
+                font-size: 15px !important;
+                font-weight: 800 !important;
+                color: #2c3e50 !important;
+                margin-bottom: 8px !important;
+            }
+
+            /* ============================================
+               CARTES DE VACCINATION
+               ============================================ */
+
+            .vaccination-card {
+                background: white;
+                border-radius: 8px;
+                border: 2px solid #495057 !important;
+                padding: 20px;
+                margin-bottom: 15px;
+                transition: all 0.3s;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            }
+
+            .vaccination-card:hover {
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                border-color: #00b894 !important;
+                transform: translateY(-2px);
+            }
+
+            .vaccination-card h5 {
+                font-weight: 800 !important;
+                font-size: 18px !important;
+                color: #1a1a1a !important;
+                margin-bottom: 10px;
+            }
+
+            .vaccination-card strong {
+                font-weight: 800 !important;
+                color: #2c3e50 !important;
+            }
+
+            .vaccination-card .row {
+                font-weight: 700 !important;
+            }
+
+            .vaccination-card p {
+                font-weight: 700 !important;
+                color: #2c3e50 !important;
+            }
+
+            /* Textes dans les cards */
+            .vaccination-card .text-sm {
+                font-size: 14px !important;
+                font-weight: 700 !important;
+                color: #2c3e50 !important;
+            }
+
+            /* ============================================
+               BADGES DE STATUT
+               ============================================ */
+
+            .status-badge {
+                padding: 6px 14px !important;
+                border-radius: 20px;
+                font-size: 13px !important;
+                font-weight: 800 !important;
+                display: inline-block;
+                border: 2px solid transparent;
+            }
+
+            .status-À-jour {
+                background: #c8e6c9 !important;
+                color: #2e7d32 !important;
+                border: 2px solid #2e7d32 !important;
+            }
+
+            .status-En-retard {
+                background: #ffebee !important;
+                color: #c62828 !important;
+                border: 2px solid #c62828 !important;
+            }
+
+            .status-Prévu {
+                background: #fff9c4 !important;
+                color: #f57f17 !important;
+                border: 2px solid #f57f17 !important;
+            }
+
+            /* ============================================
+               ÉTAT VIDE
+               ============================================ */
 
             .empty-state {
                 text-align: center;
                 padding: 60px 20px;
-                color: #999;
+                background: #f8f9fa;
+                border-radius: 10px;
+                border: 2px dashed #6c757d;
             }
 
             .empty-state i {
                 font-size: 64px;
                 margin-bottom: 20px;
                 opacity: 0.5;
+                color: #6c757d;
+            }
+
+            .empty-state p {
+                font-weight: 700 !important;
+                font-size: 16px !important;
+                color: #6c757d !important;
+            }
+
+            /* ============================================
+               TEXTE MUTED
+               ============================================ */
+
+            .text-muted {
+                font-weight: 700 !important;
+                color: #6c757d !important;
+            }
+
+            .text-center {
+                font-weight: 700 !important;
+            }
+
+            /* ============================================
+               TITRES H3, H4, H5, H6
+               ============================================ */
+
+            h3, h4, h5, h6 {
+                font-weight: 800 !important;
+                color: #1a1a1a !important;
+            }
+
+            /* ============================================
+               ICÔNES FONT AWESOME
+               ============================================ */
+
+            .fas, .far {
+                font-weight: 900 !important;
+            }
+
+            /* ============================================
+               CARDS (SI UTILISÉES)
+               ============================================ */
+
+            .card {
+                border: 2px solid #495057 !important;
+                border-radius: 10px !important;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+            }
+
+            .card-body {
+                padding: 25px !important;
+            }
+
+            .card-header {
+                font-weight: 800 !important;
+                border-bottom: 3px solid #495057 !important;
+                background: #f8f9fa !important;
+            }
+
+            .card-header h6 {
+                font-weight: 800 !important;
+                color: #1a1a1a !important;
+            }
+
+            /* ============================================
+               TABLEAUX (SI UTILISÉS DANS MODAL)
+               ============================================ */
+
+            .table {
+                font-weight: 700 !important;
+            }
+
+            .table thead th {
+                font-size: 16px !important;
+                font-weight: 800 !important;
+                color: #1a1a1a !important;
+                border-bottom: 3px solid #495057 !important;
+                padding: 15px !important;
+            }
+
+            .table tbody td {
+                font-size: 15px !important;
+                font-weight: 700 !important;
+                color: #2c3e50 !important;
+                padding: 12px !important;
+            }
+
+            .table-bordered {
+                border: 2px solid #495057 !important;
+            }
+
+            .table-striped tbody tr:nth-of-type(odd) {
+                background-color: #f8f9fa !important;
+            }
+
+            /* ============================================
+               MODAL (SI UTILISÉ)
+               ============================================ */
+
+            .modal-header {
+                border-bottom: 3px solid #495057 !important;
+            }
+
+            .modal-title {
+                font-size: 20px !important;
+                font-weight: 800 !important;
+            }
+
+            .modal-body {
+                font-weight: 700 !important;
+            }
+
+            .modal-body strong {
+                font-weight: 800 !important;
+                color: #1a1a1a !important;
+            }
+
+            .modal-body span {
+                font-weight: 700 !important;
+                color: #2c3e50 !important;
+            }
+
+            /* ============================================
+               RESPONSIVE
+               ============================================ */
+
+            @media (max-width: 768px) {
+                .vaccination-card h5 {
+                    font-size: 16px !important;
+                }
+                
+                .vaccination-card .text-sm {
+                    font-size: 13px !important;
+                }
+                
+                .page-header-custom h3 {
+                    font-size: 20px !important;
+                }
             }
         </style>
     </head>
@@ -152,7 +512,7 @@
                     <div class="row mb-4">
                         <div class="col-md-8">
                             <div class="search-box">
-                                <i class="fas fa-search search-icon"></i>
+<!--                                <i class="fas fa-search search-icon"></i>-->
                                 <input type="text"
                                        class="form-control"
                                        ng-model="searchTerm"
@@ -227,4 +587,3 @@
         </div>
     </body>
 </html>
-

@@ -1,4 +1,60 @@
 <!-- Modal Etablissement -->
+<style>
+    /* Fond de la zone des champs */
+    #detail-etablissement .form-group.row.d-flex.align-items-end {
+        background-color: #e3e9f0 !important;
+        padding: 20px !important;
+        border-radius: 8px !important;
+        margin-bottom: 15px !important;
+    }
+
+    /* Titre du modal */
+    #detail-etablissement .modal-title {
+        font-weight: 700 !important;
+        color: #ffffff !important;
+    }
+
+    /* Labels des champs */
+    #detail-etablissement label.control-label {
+        font-size: 16px !important;
+        font-weight: 700 !important;
+        color: #2c3e50 !important;
+        margin-bottom: 8px !important;
+    }
+
+    /* Champs de formulaire */
+    #detail-etablissement .form-control {
+        font-size: 15px !important;
+        font-weight: 600 !important;
+        color: #1a1a1a !important;
+        border: 2px solid #495057 !important;
+    }
+
+    /* Selects */
+    #detail-etablissement select.form-control {
+        border: 2px solid #495057 !important;
+    }
+
+    /* Placeholder */
+    #detail-etablissement .form-control::placeholder {
+        font-weight: 500 !important;
+        color: #6c757d !important;
+    }
+
+    /* Boutons */
+    #detail-etablissement .btn {
+        font-size: 16px !important;
+        font-weight: 700 !important;
+        padding: 10px 20px !important;
+    }
+
+    /* Astérisque obligatoire */
+    #detail-etablissement span[style*="color: red"] {
+        font-size: 18px !important;
+        font-weight: 700 !important;
+    }
+</style>
+
 <div class="modal fade compose-modal" id="detail-etablissement" tabindex="-1" role="dialog" aria-hidden="true" style="max-height: 100%; margin: 50px 10px 50px -90px;">
     <div class="modal-dialog">
         <div class="modal-content" style="width:200%; height: 70%;">
@@ -41,19 +97,21 @@
                                 <textarea class="form-control" ng-model="objetEtablissement.adresse" rows="3" placeholder="Ex: Avenue de la chance, Lomé"></textarea>
                             </div>
                         </div>
-                        <div class="form-group row d-flex align-items-end" style="margin-left: 65%;">
-                            <span name="add" class="btn btn-primary" style="margin-left: 20px;"
-                                  ng-if="modeEdition === 0" ng-click="saveEtablissement(objetEtablissement)">Ajouter
-                            </span>
-                            <span name="add" ng-if="modeEdition === 3" class="btn btn-primary" style="margin-left: 20px;"
-                                  ng-click="saveEtablissement(objetEtablissement)">Modifier
-                            </span>
-                            <span ng-if="modeEdition === 0" class="btn btn-primary" style="margin-left: 20px;" ng-click="saveEtablissementEtContinuer(objetEtablissement)">
-                                Ajouter et continuer
-                            </span>
-                            <span class="btn btn-primary" style="margin-left: 20px;" ng-click="closeModalEtablissement()">
-                                <i class="fas fa-sign-out-alt"></i>
-                            </span>
+                        <div class="form-group row">
+                            <div class="col-sm-12 d-flex justify-content-end align-items-center" style="gap: 10px;">
+                                <span name="add" class="btn btn-primary"
+                                      ng-if="modeEdition === 0" ng-click="saveEtablissement(objetEtablissement)">Ajouter
+                                </span>
+                                <span name="add" ng-if="modeEdition === 3" class="btn btn-primary"
+                                      ng-click="saveEtablissement(objetEtablissement)">Modifier
+                                </span>
+                                <span ng-if="modeEdition === 0" class="btn btn-primary" ng-click="saveEtablissementEtContinuer(objetEtablissement)">
+                                    Ajouter et continuer
+                                </span>
+                                <span class="btn btn-primary" ng-click="closeModalEtablissement()">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                </span>
+                            </div>
                         </div>
                     </div><!--end col-->
                 </div><!--end row-->

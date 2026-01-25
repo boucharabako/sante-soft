@@ -181,12 +181,12 @@ App.controller('detailPatientController', function ($scope, $http, GenericServic
 
     // Voir le détail d'une consultation
     $scope.voirDetailConsultation = function(consultationId) {
-        console.log('👁️ Voir détail consultation:', consultationId);
+        console.log(' Voir détail consultation:', consultationId);
 
         // Charger les détails de la consultation
         $http.get(appUrl + 'api/consultation/getConsultation?id=' + consultationId)
             .then(function(response) {
-                console.log('📦 Détail consultation reçu:', response);
+                console.log(' Détail consultation reçu:', response);
 
                 if (response.data && response.data.consultation) {
                     $scope.consultationDetail = response.data.consultation;
@@ -202,18 +202,18 @@ App.controller('detailPatientController', function ($scope, $http, GenericServic
                         }
                     }
 
-                    console.log('✅ Consultation détaillée:', $scope.consultationDetail);
-                    console.log('🕐 Date convertie:', $scope.consultationDetail.dateConsultation);
+                    console.log(' Consultation détaillée:', $scope.consultationDetail);
+                    console.log(' Date convertie:', $scope.consultationDetail.dateConsultation);
 
                     // Ouvrir la modale
                     $('#modalDetailConsultation').modal('show');
                 } else {
-                    console.error('❌ Consultation non trouvée');
+                    console.error(' Consultation non trouvée');
                     alert('Consultation non trouvée');
                 }
             })
             .catch(function(error) {
-                console.error('❌ Erreur lors du chargement de la consultation:', error);
+                console.error(' Erreur lors du chargement de la consultation:', error);
                 alert('Erreur lors du chargement de la consultation');
             });
     };

@@ -1,4 +1,72 @@
 <!-- Modal Professionnel de Santé -->
+<style>
+    /* Fond de la zone des champs */
+    #detail-professionnel .form-group.row.d-flex.align-items-end {
+        background-color: #e3e9f0 !important;
+        padding: 20px !important;
+        border-radius: 8px !important;
+        margin-bottom: 15px !important;
+    }
+
+    /* Titre du modal */
+    #detail-professionnel .modal-title {
+        font-weight: 700 !important;
+        color: #ffffff !important;
+    }
+
+    /* Labels des champs */
+    #detail-professionnel label.control-label {
+        font-size: 16px !important;
+        font-weight: 700 !important;
+        color: #2c3e50 !important;
+        margin-bottom: 8px !important;
+    }
+
+    /* Champs de formulaire */
+    #detail-professionnel .form-control {
+        font-size: 15px !important;
+        font-weight: 600 !important;
+        color: #1a1a1a !important;
+        border: 2px solid #495057 !important;
+    }
+
+    /* Selects */
+    #detail-professionnel select.form-control {
+        border: 2px solid #495057 !important;
+    }
+
+    /* Placeholder */
+    #detail-professionnel .form-control::placeholder {
+        font-weight: 500 !important;
+        color: #6c757d !important;
+    }
+
+    /* Boutons */
+    #detail-professionnel .btn {
+        font-size: 16px !important;
+        font-weight: 700 !important;
+        padding: 10px 20px !important;
+    }
+
+    /* Titres des sections */
+    #detail-professionnel h6 {
+        font-size: 17px !important;
+        font-weight: 700 !important;
+    }
+
+    /* En-têtes du tableau des affectations */
+    #detail-professionnel .table thead th {
+        font-size: 15px !important;
+        font-weight: 700 !important;
+    }
+
+    /* Cellules du tableau des affectations */
+    #detail-professionnel .table tbody td {
+        font-size: 14px !important;
+        font-weight: 600 !important;
+    }
+</style>
+
 <div class="modal fade compose-modal" id="detail-professionnel" tabindex="-1" role="dialog" aria-hidden="true" style="max-height: 100%; margin: 50px 10px 50px -90px;">
     <div class="modal-dialog">
         <div class="modal-content" style="width:200%; height: 70%;">
@@ -15,36 +83,36 @@
                             <!-- Informations d'identification -->
                             <div class="col-sm-6">
                                 <label class="control-label">Nom d'utilisateur *</label>
-                                <input class="form-control" ng-model="objetProfessionnel.username" required />
+                                <input class="form-control" ng-model="objetProfessionnel.username" />
                             </div>
                             <div class="col-sm-6" ng-if="modeEdition === 0">
                                 <label class="control-label">Mot de passe *</label>
-                                <input type="password" class="form-control" ng-model="objetProfessionnel.password" required />
+                                <input type="password" class="form-control" ng-model="objetProfessionnel.password" />
                             </div>
                             <div class="col-sm-6" ng-if="modeEdition === 0">
                                 <label class="control-label">Confirmer mot de passe *</label>
-                                <input type="password" class="form-control" ng-model="objetProfessionnel.confirmPassword" required />
+                                <input type="password" class="form-control" ng-model="objetProfessionnel.confirmPassword" />
                             </div>
 
                             <!-- Informations personnelles -->
                             <div class="col-sm-6">
                                 <label class="control-label">Nom *</label>
-                                <input class="form-control" ng-model="objetProfessionnel.lastName" required />
+                                <input class="form-control" ng-model="objetProfessionnel.lastName" />
                             </div>
                             <div class="col-sm-6">
                                 <label class="control-label">Prénom *</label>
-                                <input class="form-control" ng-model="objetProfessionnel.firstName" required />
+                                <input class="form-control" ng-model="objetProfessionnel.firstName" />
                             </div>
                             <div class="col-sm-6">
                                 <label class="control-label">Sexe *</label>
-                                <select class="form-control" ng-model="objetProfessionnel.sexe" required>
+                                <select class="form-control" ng-model="objetProfessionnel.sexe">
                                     <option value="">-- Sélectionner --</option>
                                     <option data-ng-repeat="se in listeSexes" value="{{se.id}}">{{se.libelle}}</option>
                                 </select>
                             </div>
                             <div class="col-sm-6">
                                 <label class="control-label">Date de naissance *</label>
-                                <input type="date" class="form-control" ng-model="objetProfessionnel.dateNaissance" required
+                                <input type="date" class="form-control" ng-model="objetProfessionnel.dateNaissance"
                                        max="{{maxDate}}" title="La date de naissance doit être inférieure ou égale à aujourd'hui" />
                             </div>
 
@@ -71,14 +139,14 @@
                             <!-- Informations professionnelles -->
                             <div class="col-sm-6">
                                 <label class="control-label">Numéro d'Ordre *</label>
-                                <input class="form-control" ng-model="objetProfessionnel.numeroOrdre" required readonly
+                                <input class="form-control" ng-model="objetProfessionnel.numeroOrdre" readonly
                                        style="background-color: #e9ecef; cursor: not-allowed;"
                                        title="Le numéro d'ordre est généré automatiquement" />
                             </div>
                             <div class="col-sm-6">
                                 <label class="control-label">Date Enregistrement *</label>
                                 <input type="datetime-local" class="form-control" ng-model="objetProfessionnel.dateEnregistrement"
-                                       required readonly
+                                       readonly
                                        style="background-color: #e9ecef; cursor: not-allowed;"
                                        title="La date d'enregistrement est générée automatiquement" />
                             </div>

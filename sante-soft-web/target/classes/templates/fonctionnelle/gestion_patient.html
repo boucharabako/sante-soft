@@ -77,8 +77,8 @@
 
         .patient-name {
             font-size: 18px;
-            font-weight: 600;
-            color: #2d3436;
+            font-weight: 700;
+            color: #1a1a1a;
             margin: 0 0 5px 0;
             white-space: nowrap;
             overflow: hidden;
@@ -87,7 +87,8 @@
 
         .patient-username {
             font-size: 13px;
-            color: #636e72;
+            font-weight: 600;
+            color: #2c3e50;
             margin: 0;
         }
 
@@ -110,14 +111,14 @@
         }
 
         .patient-detail-label {
-            font-weight: 500;
-            color: #636e72;
+            font-weight: 700;
+            color: #2c3e50;
             margin-right: 8px;
         }
 
         .patient-detail-value {
-            color: #2d3436;
-            font-weight: 500;
+            color: #1a1a1a;
+            font-weight: 700;
         }
 
         .patient-actions {
@@ -132,13 +133,16 @@
             border: none;
             border-radius: 8px;
             font-size: 13px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 6px;
+            white-space: nowrap;
+            min-width: fit-content;
+            overflow: visible;
         }
 
         .patient-btn-edit {
@@ -201,6 +205,20 @@
             color: #c2185b;
         }
 
+        /* Responsive pour les boutons - afficher uniquement les icônes sur petits écrans */
+        @media (max-width: 768px) {
+            .patient-btn span.btn-text {
+                display: none;
+            }
+            .patient-btn {
+                padding: 10px !important;
+            }
+            .patient-btn i {
+                margin: 0 !important;
+                font-size: 16px !important;
+            }
+        }
+
         .no-patients {
             text-align: center;
             padding: 60px 20px;
@@ -233,7 +251,7 @@
         .section-title {
             font-size: 24px;
             font-weight: 700;
-            color: #2d3436;
+            color: #1a1a1a;
             margin: 0;
         }
 
@@ -243,12 +261,33 @@
             border: none;
             padding: 12px 24px;
             border-radius: 8px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
             gap: 8px;
+        }
+
+        /* Styles pour les champs de filtres */
+        .filter-section input.form-control,
+        .filter-section select.form-control {
+            border: 2px solid #495057 !important;
+            font-weight: 600 !important;
+            color: #1a1a1a !important;
+            font-size: 15px !important;
+        }
+
+        .filter-section label {
+            font-weight: 700 !important;
+            color: #2c3e50 !important;
+            font-size: 15px !important;
+        }
+
+        /* Bouton Rechercher */
+        .filter-section .btn-gradient-primary {
+            font-weight: 700 !important;
+            font-size: 15px !important;
         }
 
         .add-patient-btn:hover {
@@ -269,9 +308,8 @@
         <div class="row" ng-controller="patientController" data-ng-cloak="">
             <div class="col-12">
                 <div class="filter-section">
-                    <h4 class="mt-0 header-title" style="margin-bottom: 20px; color: #2d3436; font-weight: 600;">
-                        <i class="fas fa-filter" style="color: #2196F3; margin-right: 10px;"></i>
-                        Filtrer les Patients
+                    <h4 class="mt-0 header-title" style="margin-bottom: 20px; color: #1a1a1a; font-weight: 700; font-size: 18px;">
+                        Filtrer les patients
                     </h4>
                     <form method="POST" class="form-horizontal well">
                         <fieldset>
@@ -285,7 +323,10 @@
                                             </div>
                                             <div class="col-sm-3">
                                                 <label class="control-label">Groupe Sanguin</label>
-                                                <input type="text" name="filter[0][groupeSanguin]" ng-model="searchObject.groupeSanguin" class="form-control">
+                                                <select class="form-control" ng-model="searchObject.groupeSanguin">
+                                                    <option value="">-- Sélectionner --</option>
+                                                    <option data-ng-repeat="gs in listeGroupesSanguins" value="{{gs.id}}">{{gs.libelle}}</option>
+                                                </select>
                                             </div>
                                             <div class="col-sm-3">
                                                 <label class="control-label">Mot clé</label>
@@ -319,15 +360,15 @@
 
                     <div class="row mb-3">
                         <div class="col-sm-6">
-                            <label style="font-size: 14px; color: #636e72;">Afficher
-                                <select ng-change="changePageSize()" class="custom-select custom-select-sm form-control form-control-sm" style="width: auto; display: inline-block; margin: 0 5px;" ng-model="pageSizeSelect" data-ng-options="nb for nb in pageSizes">
+                            <label style="font-size: 15px; font-weight: 700; color: #2c3e50;">Afficher
+                                <select ng-change="changePageSize()" class="custom-select custom-select-sm form-control form-control-sm" style="width: auto; display: inline-block; margin: 0 5px; border: 2px solid #495057; font-weight: 600;" ng-model="pageSizeSelect" data-ng-options="nb for nb in pageSizes">
                                 </select>
                                 patients par page
                             </label>
                         </div>
                         <div class="col-sm-6 text-right">
-                            <span style="font-size: 14px; color: #636e72;">
-                                Total: <strong style="color: #2196F3;">{{totalElements}}</strong> patients
+                            <span style="font-size: 15px; font-weight: 700; color: #2c3e50;">
+                                Total: <strong style="color: #2196F3; font-weight: 700;">{{totalElements}}</strong> patients
                             </span>
                         </div>
                     </div>
@@ -344,18 +385,18 @@
                                     <p class="patient-username">@{{p.username}}</p>
                                 </div>
                             </div>
-                            <div style="display: flex; gap: 8px; margin-bottom: 15px;">
-                                <button type="button" class="patient-btn patient-btn-edit" ng-click="consulterPatient(p)" style="flex: 1; padding: 8px 10px; font-size: 12px;">
+                            <div style="display: flex; gap: 6px; margin-bottom: 15px;">
+                                <button type="button" class="patient-btn patient-btn-edit" ng-click="consulterPatient(p)" style="flex: 1; padding: 8px 4px; font-size: 10.5px;" title="Consultation">
                                     <i class="fas fa-stethoscope"></i>
-                                    Consultation
+                                    <span class="btn-text">Consultation</span>
                                 </button>
-                                <button type="button" class="patient-btn patient-btn-info" ng-click="voirAntecedents(p)" style="flex: 1; padding: 8px 10px; font-size: 12px;">
+                                <button type="button" class="patient-btn patient-btn-info" ng-click="voirAntecedents(p)" style="flex: 1; padding: 8px 4px; font-size: 10.5px;" title="Antécédents">
                                     <i class="fas fa-notes-medical"></i>
-                                    Antécédents
+                                    <span class="btn-text">Antécédents</span>
                                 </button>
-                                <button type="button" class="patient-btn patient-btn-success" ng-click="voirVaccinations(p)" style="flex: 1; padding: 8px 10px; font-size: 12px;">
+                                <button type="button" class="patient-btn patient-btn-success" ng-click="voirVaccinations(p)" style="flex: 1; padding: 8px 4px; font-size: 10.5px;" title="Vaccinations">
                                     <i class="fas fa-syringe"></i>
-                                    Vaccinations
+                                    <span class="btn-text">Vaccinations</span>
                                 </button>
                             </div>
 

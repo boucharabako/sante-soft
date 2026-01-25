@@ -12,10 +12,13 @@ import com.base.frame.carnet.sante.entities.Prescription;
 import com.base.frame.carnet.sante.entities.TypeConsultation;
 import com.base.frame.carnet.sante.repositories.CategorieConsultationRepository;
 import com.base.frame.carnet.sante.repositories.ConsultationRepository;
+import com.base.frame.carnet.sante.repositories.ConsultationTypeExamenAutoriseRepository;
 import com.base.frame.carnet.sante.repositories.ExamenRepository;
 import com.base.frame.carnet.sante.repositories.ObservationRepository;
 import com.base.frame.carnet.sante.repositories.PrescriptionRepository;
 import com.base.frame.carnet.sante.repositories.TypeConsultationRepository;
+import com.base.frame.carnet.sante.repositories.TypeObservationRepository;
+import com.base.frame.socle.utils.exceptions.ObjectValidationException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,13 +49,25 @@ public class ConsultationService {
 
     @Autowired
     private TypeConsultationRepository typeConsultationRepository;
+    
+    @Autowired
+    private TypeObservationRepository typeObservationRepository;
 
     @Autowired
     private CategorieConsultationRepository categorieConsultationRepository;
 
     @Autowired
     private com.base.frame.carnet.sante.repositories.PatientRepository patientRepository;
-    
+
+    @Autowired
+    private FileStorageService fileStorageService;
+
+    @Autowired
+    private TypeObservationService typeObservationService;
+
+    @Autowired
+    private ConsultationTypeExamenAutoriseRepository consultationTypeExamenAutoriseRepository;
+
     /**
      * Enregistrer une consultation avec ses prescriptions et examens
      * @param dto DTO de la consultation
@@ -60,10 +75,27 @@ public class ConsultationService {
      * @return DTO de la consultation enregistrée
      */
     public ConsultationDTO enregistrerConsultation(ConsultationDTO dto, String currentUserId) {
-        System.out.println("======================== Enregistrement de la consultation");
-        
-        // 1. Enregistrer la consultation
-        Consultation consultation = new Consultation();
+        boolean modeEdition = dto.getId() != null && !dto.getId().isEmpty();
+        System.out.println("======================== " + (modeEdition ? "Mise à jour" : "Enregistrement") + " de la consultation");
+        if (modeEdition) {
+            System.out.println("   ID consultation: " + dto.getId());
+        }
+
+        // Valider les données de la consultation
+        this.controleValidationObjetConsultation(dto);
+
+        // 1. Enregistrer ou mettre à jour la consultation
+        Consultation consultation;
+        if (modeEdition) {
+            // Mode édition : charger la consultation existante
+            consultation = consultationRepository.findById(dto.getId())
+                .orElseThrow(() -> new RuntimeException("Consultation non trouvée avec l'ID: " + dto.getId()));
+            System.out.println(" Consultation existante chargée");
+        } else {
+            // Mode création : nouvelle consultation
+            consultation = new Consultation();
+        }
+
         consultation.setIdPatient(dto.getIdPatient());
         consultation.setCategorieConsultation(dto.getCategorieConsultation());
         consultation.setTypeConsultation(dto.getTypeConsultation());
@@ -72,51 +104,121 @@ public class ConsultationService {
         consultation.setDiagnostic(dto.getDiagnostic());
         consultation.setTraitement(dto.getTraitement());
         consultation.setDateConsultation(Instant.parse(dto.getDateConsultation()));
-        
+
         consultation = consultationRepository.save(consultation);
-        System.out.println("✅ Consultation enregistrée avec ID: " + consultation.getId());
+        System.out.println("✅ Consultation " + (modeEdition ? "mise à jour" : "enregistrée") + " avec ID: " + consultation.getId());
         
-        // 2. Enregistrer les prescriptions
+        // 2. Gérer les prescriptions
         if (dto.getPrescriptions() != null && !dto.getPrescriptions().isEmpty()) {
             for (PrescriptionDTO prescDto : dto.getPrescriptions()) {
-                Prescription prescription = new Prescription();
+                Prescription prescription;
+                if (prescDto.getId() != null && !prescDto.getId().isEmpty()) {
+                    // Mise à jour d'une prescription existante
+                    prescription = prescriptionRepository.findById(prescDto.getId())
+                        .orElse(new Prescription());
+                } else {
+                    // Nouvelle prescription
+                    prescription = new Prescription();
+                }
+
                 prescription.setIdConsultation(consultation.getId());
                 prescription.setMedicament(prescDto.getMedicament());
                 prescription.setPosologie(prescDto.getPosologie());
                 prescription.setDuree(prescDto.getDuree());
-                
+
                 prescriptionRepository.save(prescription);
             }
-            System.out.println("✅ " + dto.getPrescriptions().size() + " prescriptions enregistrées");
+            System.out.println(" " + dto.getPrescriptions().size() + " prescriptions " + (modeEdition ? "mises à jour" : "enregistrées"));
         }
-        
-        // 3. Enregistrer les examens
+
+        // 3. Gérer les examens
         if (dto.getExamens() != null && !dto.getExamens().isEmpty()) {
             for (ExamenDTO examenDto : dto.getExamens()) {
-                Examen examen = new Examen();
+                Examen examen;
+                if (examenDto.getId() != null && !examenDto.getId().isEmpty()) {
+                    // Mise à jour d'un examen existant
+                    examen = examenRepository.findById(examenDto.getId())
+                        .orElse(new Examen());
+                } else {
+                    // Nouvel examen
+                    examen = new Examen();
+                }
+
                 examen.setIdConsultation(consultation.getId());
                 examen.setTypeExamen(examenDto.getTypeExamen());
                 examen.setResultat(examenDto.getResultat());
-                examen.setFichierJoint(examenDto.getFichierJoint());
+                examen.setCommentaire(examenDto.getCommentaire());
+
+                // Gérer le fichier joint (si présent)
+                if (examenDto.getFichierJoint() != null && !examenDto.getFichierJoint().isEmpty()) {
+                    try {
+                        // Supprimer l'ancien fichier si on met à jour
+                        if (examen.getCheminFichier() != null && !examen.getCheminFichier().isEmpty()) {
+                            fileStorageService.supprimerFichier(examen.getCheminFichier());
+                            System.out.println(" Ancien fichier supprimé: " + examen.getCheminFichier());
+                        }
+
+                        // Déterminer le type MIME depuis le nom de fichier ou le Base64
+                        String typeMime = determinerTypeMime(examenDto.getFichierJoint(), examenDto.getNomFichier());
+
+                        // Récupérer les informations du patient pour le nom du fichier
+                        Optional<com.base.frame.carnet.sante.entities.Patient> patientOpt =
+                            patientRepository.findById(consultation.getIdPatient());
+                        String numeroCarnet = patientOpt.isPresent() ? patientOpt.get().getNumeroCarnet() : "UNKNOWN";
+                        String nomPatient = patientOpt.isPresent() ? patientOpt.get().getLastName() : "UNKNOWN";
+
+                        // Sauvegarder le nouveau fichier sur le disque
+                        String cheminRelatif = fileStorageService.sauvegarderFichier(
+                            examenDto.getFichierJoint(),
+                            examenDto.getNomFichier() != null ? examenDto.getNomFichier() : "examen_" + System.currentTimeMillis(),
+                            typeMime,
+                            "examens",
+                            numeroCarnet,
+                            nomPatient
+                        );
+
+                        // Stocker les métadonnées en base
+                        examen.setCheminFichier(cheminRelatif);
+                        examen.setNomFichier(examenDto.getNomFichier());
+                        examen.setTypeMime(typeMime);
+
+                        System.out.println(" Fichier sauvegardé: " + examenDto.getNomFichier() + " → " + cheminRelatif);
+
+                    } catch (Exception e) {
+                        System.err.println(" Erreur lors de la sauvegarde du fichier: " + e.getMessage());
+                        e.printStackTrace();
+                        // On continue quand même l'enregistrement de l'examen
+                    }
+                }
 
                 examenRepository.save(examen);
             }
-            System.out.println(" " + dto.getExamens().size() + " examens enregistrés");
+            System.out.println("✅ " + dto.getExamens().size() + " examens " + (modeEdition ? "mis à jour" : "enregistrés"));
         }
 
-        // 4. Enregistrer les observations
+        // 4. Gérer les observations
         if (dto.getObservations() != null && !dto.getObservations().isEmpty()) {
             for (ObservationDTO obsDto : dto.getObservations()) {
-                Observation observation = new Observation();
+                Observation observation;
+                if (obsDto.getId() != null && !obsDto.getId().isEmpty()) {
+                    // Mise à jour d'une observation existante
+                    observation = observationRepository.findById(obsDto.getId())
+                        .orElse(new Observation());
+                } else {
+                    // Nouvelle observation
+                    observation = new Observation();
+                }
+
                 observation.setIdPatient(dto.getIdPatient());
                 observation.setTypeObservation(obsDto.getTypeObservation());
                 observation.setValeur(obsDto.getValeur());
                 observation.setCommentaire(obsDto.getCommentaire());
                 observation.setDateObservation(Instant.parse(dto.getDateConsultation()));
+                observation.setConsultation(consultation.getId()); // ✅ Lier l'observation à la consultation
 
                 observationRepository.save(observation);
             }
-            System.out.println(" " + dto.getObservations().size() + " observations enregistrées");
+            System.out.println("✅ " + dto.getObservations().size() + " observations " + (modeEdition ? "mises à jour" : "enregistrées"));
         }
 
         // Retourner le DTO avec l'ID généré
@@ -134,7 +236,7 @@ public class ConsultationService {
         if (optional.isPresent()) {
             Consultation consultation = optional.get();
             ConsultationDTO dto = mapEntityToDTO(consultation);
-            
+
             // Charger les prescriptions
             List<Prescription> prescriptions = prescriptionRepository.findByIdConsultation(id);
             List<PrescriptionDTO> prescriptionDTOs = new ArrayList<>();
@@ -142,7 +244,7 @@ public class ConsultationService {
                 prescriptionDTOs.add(mapPrescriptionToDTO(p));
             }
             dto.setPrescriptions(prescriptionDTOs);
-            
+
             // Charger les examens
             List<Examen> examens = examenRepository.findByIdConsultation(id);
             List<ExamenDTO> examenDTOs = new ArrayList<>();
@@ -150,7 +252,20 @@ public class ConsultationService {
                 examenDTOs.add(mapExamenToDTO(e));
             }
             dto.setExamens(examenDTOs);
-            
+
+            // Charger les observations de cette consultation spécifique
+            List<Observation> observations = observationRepository.findByConsultation(consultation.getId());
+            List<ObservationDTO> observationDTOs = new ArrayList<>();
+            for (Observation o : observations) {
+                observationDTOs.add(mapObservationToDTO(o));
+            }
+            dto.setObservations(observationDTOs);
+
+            System.out.println("✅ Consultation chargée avec " +
+                prescriptionDTOs.size() + " prescriptions, " +
+                examenDTOs.size() + " examens, " +
+                observationDTOs.size() + " observations");
+
             return dto;
         }
         return null;
@@ -230,7 +345,22 @@ public class ConsultationService {
         dto.setIdConsultation(entity.getIdConsultation());
         dto.setTypeExamen(entity.getTypeExamen());
         dto.setResultat(entity.getResultat());
-        dto.setFichierJoint(entity.getFichierJoint());
+        dto.setCommentaire(entity.getCommentaire());
+
+        // Métadonnées du fichier (pas le contenu)
+        dto.setCheminFichier(entity.getCheminFichier());
+        dto.setNomFichier(entity.getNomFichier());
+        dto.setTypeMime(entity.getTypeMime());
+
+        // Résoudre le libellé du type d'examen
+        if (entity.getTypeExamen() != null) {
+            consultationTypeExamenAutoriseRepository.findById(entity.getTypeExamen())
+                .ifPresent(type -> dto.setTypeExamenLibelle(type.getLibelle()));
+        }
+
+        // Ne pas retourner le fichierJoint (Base64) lors de la lecture
+        // Le fichier sera téléchargé via un endpoint dédié
+
         return dto;
     }
 
@@ -239,6 +369,14 @@ public class ConsultationService {
         dto.setId(entity.getId());
         dto.setIdPatient(entity.getIdPatient());
         dto.setTypeObservation(entity.getTypeObservation());
+
+        // Récupérer le libellé du type d'observation
+        if (entity.getTypeObservation() != null) {
+            typeObservationRepository.findById(entity.getTypeObservation()).ifPresent(typeObs -> {
+                dto.setTypeObservationLibelle(typeObs.getLibelle());
+            });
+        }
+
         dto.setValeur(entity.getValeur());
         dto.setCommentaire(entity.getCommentaire());
         dto.setDateObservation(entity.getDateObservation());
@@ -270,7 +408,7 @@ public class ConsultationService {
                 if (patient.isPresent()) {
                     String nomComplet = patient.get().getFirstName() + " " + patient.get().getLastName();
                     dto.setPatientNom(nomComplet);
-                    System.out.println("👤 Patient: " + nomComplet);
+                    System.out.println(" Patient: " + nomComplet);
                 }
             }
 
@@ -278,6 +416,149 @@ public class ConsultationService {
         }
 
         return dtos;
+    }
+
+    /**
+     * Méthode de validation des données de la consultation
+     * @param dto DTO de la consultation à valider
+     * @throws ObjectValidationException si les données sont invalides
+     */
+    public void controleValidationObjetConsultation(ConsultationDTO dto) {
+        System.out.println("🔍 Validation consultation - Patient: " + dto.getIdPatient());
+        System.out.println("🔍 Validation consultation - Catégorie: '" + dto.getCategorieConsultation() + "'");
+        System.out.println("🔍 Validation consultation - Type: '" + dto.getTypeConsultation() + "'");
+
+        // Validation de l'ID du patient
+        if (dto.getIdPatient() == null || dto.getIdPatient().trim().isEmpty()) {
+            System.out.println("❌ Patient obligatoire");
+            throw new ObjectValidationException("Patient obligatoire", null);
+        }
+
+        // Vérifier que le patient existe
+        if (!patientRepository.existsById(dto.getIdPatient())) {
+            System.out.println("❌ Patient inexistant");
+            throw new ObjectValidationException("Patient inexistant", null);
+        }
+
+        // Validation de la catégorie de consultation
+        if (dto.getCategorieConsultation() == null || dto.getCategorieConsultation().trim().isEmpty()) {
+            System.out.println("❌ Catégorie de consultation obligatoire");
+            throw new ObjectValidationException("Catégorie de consultation obligatoire", null);
+        }
+
+        // Vérifier que la catégorie existe
+        if (!categorieConsultationRepository.existsById(dto.getCategorieConsultation())) {
+            System.out.println("❌ Catégorie de consultation inexistante");
+            throw new ObjectValidationException("Catégorie de consultation inexistante", null);
+        }
+
+        // Validation du type de consultation
+        if (dto.getTypeConsultation() == null || dto.getTypeConsultation().trim().isEmpty()) {
+            throw new ObjectValidationException("Type de consultation obligatoire", null);
+        }
+
+        // Vérifier que le type existe
+        if (!typeConsultationRepository.existsById(dto.getTypeConsultation())) {
+            throw new ObjectValidationException("Type de consultation inexistant", null);
+        }
+
+        // Validation du motif
+        if (dto.getMotif() == null || dto.getMotif().trim().isEmpty()) {
+            throw new ObjectValidationException("Motif de la consultation obligatoire", null);
+        }
+
+        // Validation du diagnostic
+        if (dto.getDiagnostic() == null || dto.getDiagnostic().trim().isEmpty()) {
+            throw new ObjectValidationException("Diagnostic obligatoire", null);
+        }
+
+        // Validation de la date de consultation
+        if (dto.getDateConsultation() == null || dto.getDateConsultation().trim().isEmpty()) {
+            throw new ObjectValidationException("Date de consultation obligatoire", null);
+        }
+
+        // Validation des observations (si présentes)
+        if (dto.getObservations() != null && !dto.getObservations().isEmpty()) {
+            for (ObservationDTO obs : dto.getObservations()) {
+                if (obs.getTypeObservation() == null || obs.getTypeObservation().trim().isEmpty()) {
+                    throw new ObjectValidationException("Type d'observation obligatoire", null);
+                }
+                if (obs.getValeur() == null || obs.getValeur().trim().isEmpty()) {
+                    throw new ObjectValidationException("Valeur de l'observation obligatoire", null);
+                }
+            }
+        }
+
+        // Validation des prescriptions (si présentes)
+        if (dto.getPrescriptions() != null && !dto.getPrescriptions().isEmpty()) {
+            for (PrescriptionDTO presc : dto.getPrescriptions()) {
+                if (presc.getMedicament() == null || presc.getMedicament().trim().isEmpty()) {
+                    throw new ObjectValidationException("Médicament obligatoire pour la prescription", null);
+                }
+                if (presc.getPosologie() == null || presc.getPosologie().trim().isEmpty()) {
+                    throw new ObjectValidationException("Posologie obligatoire pour la prescription", null);
+                }
+            }
+        }
+
+        // Validation des examens (si présents)
+        if (dto.getExamens() != null && !dto.getExamens().isEmpty()) {
+            for (ExamenDTO exam : dto.getExamens()) {
+                if (exam.getTypeExamen() == null || exam.getTypeExamen().trim().isEmpty()) {
+                    throw new ObjectValidationException("Type d'examen obligatoire", null);
+                }
+            }
+        }
+    }
+
+    /**
+     * Déterminer le type MIME d'un fichier
+     * @param base64Data Données Base64 (peut contenir le préfixe data:...)
+     * @param nomFichier Nom du fichier
+     * @return Type MIME
+     */
+    private String determinerTypeMime(String base64Data, String nomFichier) {
+        // Si le Base64 contient le type MIME (data:image/png;base64,...)
+        if (base64Data != null && base64Data.startsWith("data:")) {
+            int indexVirgule = base64Data.indexOf(",");
+            if (indexVirgule > 0) {
+                String prefix = base64Data.substring(0, indexVirgule);
+                // Extraire le type MIME : data:application/pdf;base64 → application/pdf
+                String[] parts = prefix.split(":");
+                if (parts.length > 1) {
+                    String typeMime = parts[1].split(";")[0];
+                    return typeMime;
+                }
+            }
+        }
+
+        // Sinon, déterminer depuis l'extension du fichier
+        if (nomFichier != null) {
+            String extension = nomFichier.substring(nomFichier.lastIndexOf(".") + 1).toLowerCase();
+            switch (extension) {
+                case "pdf":
+                    return "application/pdf";
+                case "jpg":
+                case "jpeg":
+                    return "image/jpeg";
+                case "png":
+                    return "image/png";
+                case "gif":
+                    return "image/gif";
+                case "doc":
+                    return "application/msword";
+                case "docx":
+                    return "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+                case "xls":
+                    return "application/vnd.ms-excel";
+                case "xlsx":
+                    return "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                default:
+                    return "application/octet-stream";
+            }
+        }
+
+        return "application/octet-stream";
     }
 }
 

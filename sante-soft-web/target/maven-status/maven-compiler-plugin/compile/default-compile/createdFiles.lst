@@ -1,5 +1,6 @@
 com\base\frame\achat\fonctionnelle\ressources\PaymentController.class
 com\base\frame\achat\fonctionnelle\ressources\ProduitRessource.class
+com\base\frame\carnet\sante\controller\TableauBordController.class
 com\base\frame\carnet\sante\ressources\AntecedentRessource.class
 com\base\frame\carnet\sante\ressources\ConsultationRessource.class
 com\base\frame\carnet\sante\controller\VaccinationController.class
@@ -17,3 +18,4 @@ com\base\frame\carnet\sante\ressources\ProfessionnelSanteRessource.class
 com\base\frame\carnet\sante\ressources\AffectationRessource.class
 com\base\frame\achat\fonctionnelle\controller\CommandeController.class
 com\base\frame\achat\fonctionnelle\controller\ProduitController.class
+com\base\frame\carnet\sante\ressources\StatistiquesRessource.class

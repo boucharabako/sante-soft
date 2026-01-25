@@ -21,7 +21,10 @@ import com.base.frame.carnet.sante.repositories.TypeAntecedentRepository;
 import com.base.frame.carnet.sante.repositories.TypeConsultationRepository;
 import com.base.frame.carnet.sante.repositories.TypeObservationRepository;
 import com.base.frame.carnet.sante.services.ConsultationService;
+import com.base.frame.carnet.sante.services.FileStorageService;
 import com.base.frame.socle.utils.Constants;
+import com.base.frame.socle.utils.exceptions.ObjectValidationException;
+import com.base.frame.socle.utils.validators.MessageSourceKV;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +32,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -66,10 +70,17 @@ public class ConsultationRessource {
 
     @Autowired
     private ConsultationService consultationService;
-    
+
     @Autowired
     private UtilisateurRepository utilisateurRepository;
 
+    @Autowired
+    private MessageSourceKV messageSource;
+
+    @Autowired
+    private FileStorageService fileStorageService;
+
+   
     /**
      * Récupère tous les types d'observations avec leurs unités et valeurs min/max
      * @return Liste des types d'observations
@@ -239,15 +250,19 @@ public class ConsultationRessource {
             ConsultationDTO savedConsultation = consultationService.enregistrerConsultation(consultationDTO, utilisateur.get().getId());
 
             model.put("success", true);
-            model.put("message", "Consultation enregistrée avec succès");
             model.put("consultationId", savedConsultation.getId());
             model.put("consultation", savedConsultation);
 
             HttpHeaders headers = new HttpHeaders();
             headers.add(Constants.PROPRIETE_HEADERS_RESPONDED, Constants.PROPRIETE_HEADERS_TIMEZONESCONTROLLER);
+            headers.add("X-nframe-alert", this.messageSource.getMessage(Constants.OP_SUCCESS_MSG_CODE, new String[]{}));
 
-            return ResponseEntity.status(HttpStatus.CREATED).headers(headers).body(model);
+            return ResponseEntity.accepted().headers(headers).body(model);
 
+        } catch (ObjectValidationException e) {
+            // Relancer l'exception pour qu'elle soit gérée par ApiExceptionHandler
+            System.err.println("❌ Erreur de validation: " + e.getCode());
+            throw e;
         } catch (Exception e) {
             System.err.println("❌ Erreur lors de l'enregistrement de la consultation: " + e.getMessage());
             e.printStackTrace();
@@ -255,7 +270,11 @@ public class ConsultationRessource {
             model.put("success", false);
             model.put("message", "Erreur lors de l'enregistrement: " + e.getMessage());
 
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(model);
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(Constants.PROPRIETE_HEADERS_RESPONDED, Constants.PROPRIETE_HEADERS_TIMEZONESCONTROLLER);
+            headers.add("X-nframe-alert", this.messageSource.getMessage(Constants.OP_FAILD_MSG_CODE, new String[]{}));
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(headers).body(model);
         }
     }
 
@@ -412,6 +431,83 @@ public class ConsultationRessource {
             model.put("listTypesConsultation", new ArrayList<>());
 
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(model);
+        }
+    }
+
+    /**
+     * Télécharger un fichier d'examen
+     * @param cheminFichier Chemin relatif du fichier
+     * @return Fichier en bytes
+     */
+    @RequestMapping(value = "/telechargerFichierExamen", method = RequestMethod.GET)
+    public ResponseEntity<byte[]> telechargerFichierExamen(
+            @RequestParam(value = "chemin") String cheminFichier) {
+
+        try {
+            System.out.println("📥 Téléchargement du fichier: " + cheminFichier);
+
+            // Lire le fichier depuis le disque
+            byte[] fichierBytes = fileStorageService.lireFichier(cheminFichier);
+
+            if (fichierBytes == null) {
+                System.err.println("❌ Fichier non trouvé: " + cheminFichier);
+                return ResponseEntity.notFound().build();
+            }
+
+            // Déterminer le type MIME depuis le chemin
+            String typeMime = determinerTypeMimeDepuisChemin(cheminFichier);
+
+            // Extraire le nom du fichier
+            String nomFichier = cheminFichier.substring(cheminFichier.lastIndexOf("/") + 1);
+
+            // Préparer les headers
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.parseMediaType(typeMime));
+            headers.setContentLength(fichierBytes.length);
+            headers.set("Content-Disposition", "inline; filename=\"" + nomFichier + "\"");
+
+            System.out.println("✅ Fichier téléchargé: " + nomFichier + " (" + fichierBytes.length + " octets)");
+
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .body(fichierBytes);
+
+        } catch (Exception e) {
+            System.err.println("❌ Erreur lors du téléchargement du fichier: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /**
+     * Déterminer le type MIME depuis le chemin du fichier
+     */
+    private String determinerTypeMimeDepuisChemin(String cheminFichier) {
+        if (cheminFichier == null) {
+            return "application/octet-stream";
+        }
+
+        String extension = cheminFichier.substring(cheminFichier.lastIndexOf(".") + 1).toLowerCase();
+        switch (extension) {
+            case "pdf":
+                return "application/pdf";
+            case "jpg":
+            case "jpeg":
+                return "image/jpeg";
+            case "png":
+                return "image/png";
+            case "gif":
+                return "image/gif";
+            case "doc":
+                return "application/msword";
+            case "docx":
+                return "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+            case "xls":
+                return "application/vnd.ms-excel";
+            case "xlsx":
+                return "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            default:
+                return "application/octet-stream";
         }
     }
 }

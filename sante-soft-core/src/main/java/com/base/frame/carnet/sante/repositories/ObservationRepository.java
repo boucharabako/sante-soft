@@ -18,5 +18,12 @@ public interface ObservationRepository extends JpaRepository<Observation, String
      * @return Liste des observations
      */
     List<Observation> findByIdPatient(String idPatient);
+
+    /**
+     * Trouver toutes les observations d'une consultation
+     * @param consultationId ID de la consultation
+     * @return Liste des observations
+     */
+    List<Observation> findByConsultation(String consultationId);
 }
 

@@ -165,6 +165,13 @@ App.controller('listeConsultationsController', function ($scope, $http, GenericS
         $scope.appliquerFiltres();
     };
 
+    // Éditer une consultation
+    $scope.editerConsultation = function(consultationId) {
+        console.log('✏️ Éditer consultation:', consultationId);
+        // Rediriger vers la page de consultation avec l'ID en paramètre
+        window.location.href = appUrl + 'gestion/consultation?id=' + consultationId;
+    };
+
     // Voir le détail d'une consultation
     $scope.voirDetail = function(consultationId) {
         console.log('👁️ Voir détail consultation:', consultationId);

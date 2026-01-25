@@ -11,6 +11,7 @@ public class ObservationDTO {
     private String id;
     private String idPatient;
     private String typeObservation;
+    private String typeObservationLibelle; // Libellé du type d'observation
     private String valeur;
     private String commentaire;
     private Instant dateObservation;
@@ -38,6 +39,14 @@ public class ObservationDTO {
 
     public void setTypeObservation(String typeObservation) {
         this.typeObservation = typeObservation;
+    }
+
+    public String getTypeObservationLibelle() {
+        return typeObservationLibelle;
+    }
+
+    public void setTypeObservationLibelle(String typeObservationLibelle) {
+        this.typeObservationLibelle = typeObservationLibelle;
     }
 
     public String getValeur() {

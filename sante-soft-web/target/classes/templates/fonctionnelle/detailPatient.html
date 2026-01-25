@@ -1,4 +1,54 @@
 <!-- Modal Patient -->
+<style>
+    /* Fond de la zone des champs */
+    #detail-patient .form-group.row.d-flex.align-items-end {
+        background-color: #e3e9f0 !important;
+        padding: 20px !important;
+        border-radius: 8px !important;
+        margin-bottom: 15px !important;
+    }
+
+    /* Titre du modal */
+    #detail-patient .modal-title {
+        font-weight: 700 !important;
+        color: #ffffff !important;
+    }
+
+    /* Labels des champs */
+    #detail-patient label.control-label {
+        font-size: 16px !important;
+        font-weight: 700 !important;
+        color: #2c3e50 !important;
+        margin-bottom: 8px !important;
+    }
+
+    /* Champs de formulaire */
+    #detail-patient .form-control {
+        font-size: 15px !important;
+        font-weight: 600 !important;
+        color: #1a1a1a !important;
+        border: 2px solid #495057 !important;
+    }
+
+    /* Selects */
+    #detail-patient select.form-control {
+        border: 2px solid #495057 !important;
+    }
+
+    /* Placeholder */
+    #detail-patient .form-control::placeholder {
+        font-weight: 500 !important;
+        color: #6c757d !important;
+    }
+
+    /* Boutons */
+    #detail-patient .btn {
+        font-size: 16px !important;
+        font-weight: 700 !important;
+        padding: 10px 20px !important;
+    }
+</style>
+
 <div class="modal fade compose-modal" id="detail-patient" tabindex="-1" role="dialog" aria-hidden="true" style="max-height: 100%; margin: 50px 10px 50px -90px;">
     <div class="modal-dialog">
         <div class="modal-content" style="width:200%; height: 70%;">
@@ -90,19 +140,26 @@
                                        title="La date d'enregistrement est générée automatiquement" />
                             </div>
                         </div>
-                        <div class="form-group row d-flex align-items-end" style="margin-left: 65%;">
-                            <span name="add" class="btn btn-primary" style="margin-left: 20px;"
-                                  ng-if="modeEdition === 0" ng-click="savePatient(objetPatient)">Ajouter
-                            </span>
-                            <span name="add" ng-if="modeEdition === 3" class="btn btn-primary" style="margin-left: 20px;"
-                                  ng-click="savePatient(objetPatient)">Modifier
-                            </span>
-                            <span ng-if="modeEdition === 0" class="btn btn-primary" style="margin-left: 20px;" ng-click="savePatientEtContinuer(objetPatient)">
-                                Ajouter et continuer
-                            </span>
-                            <span class="btn btn-primary" style="margin-left: 20px;" ng-click="closeModalPatient()">
-                                <i class="fas fa-sign-out-alt"></i>
-                            </span>
+
+                        <!-- Boutons d'action -->
+                        <div class="form-group row" style="margin-top: 20px;">
+                            <div class="col-sm-12 text-right">
+                                <span name="add" class="btn btn-primary"
+                                      ng-if="modeEdition === 0" ng-click="savePatient(objetPatient)">
+                                    <i class="fas fa-save"></i> Ajouter
+                                </span>
+                                <span name="add" ng-if="modeEdition === 3" class="btn btn-primary"
+                                      ng-click="savePatient(objetPatient)">
+                                    <i class="fas fa-save"></i> Modifier
+                                </span>
+                                <span ng-if="modeEdition === 0" class="btn btn-primary" style="margin-left: 10px;"
+                                      ng-click="savePatientEtContinuer(objetPatient)">
+                                    <i class="fas fa-plus-circle"></i> Ajouter et continuer
+                                </span>
+                                <span class="btn btn-danger" style="margin-left: 10px;" ng-click="closeModalPatient()">
+                                    <i class="fas fa-times"></i> Annuler
+                                </span>
+                            </div>
                         </div>
                     </div><!--end col-->
                 </div><!--end row-->

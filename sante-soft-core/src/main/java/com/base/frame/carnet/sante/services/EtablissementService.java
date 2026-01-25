@@ -13,6 +13,7 @@ import com.base.frame.carnet.sante.repositories.EtablissementRepository;
 import com.base.frame.carnet.sante.repositories.ParamListDTORepository;
 import com.base.frame.socle.core.iservice.ISocleGenericService;
 import com.base.frame.socle.core.utils.SocleConstant;
+import com.base.frame.socle.utils.exceptions.ObjectValidationException;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -78,6 +79,9 @@ public class EtablissementService {
     }
 
     public EtablissementDTO saveEtablissement(EtablissementDTO dto) {
+        // Valider les données de l'établissement
+        this.controleValidationObjetEtablissement(dto);
+
         Etablissement entity = new Etablissement();
         if (dto.getId() != null && this.etablissementRepository.existsById(dto.getId())) {
             entity = this.etablissementRepository.findById(dto.getId()).get();
@@ -141,6 +145,37 @@ public class EtablissementService {
      */
     public List<ParamListDTO> getListeRegions() {
         return paramListDTORepository.getParamListDTO(SocleConstant.CODIFICATION_REGION);
+    }
+
+    /**
+     * Méthode de validation des données de l'établissement
+     * @param dto
+     */
+    public void controleValidationObjetEtablissement(EtablissementDTO dto) {
+        // Validation du code établissement
+        if (dto.getCodeEtablissement() == null || dto.getCodeEtablissement().trim().isEmpty()) {
+            throw new ObjectValidationException("Code établissement obligatoire", null);
+        }
+
+        // Validation du libellé
+        if (dto.getLibelleEtablissement() == null || dto.getLibelleEtablissement().trim().isEmpty()) {
+            throw new ObjectValidationException("Libellé obligatoire", null);
+        }
+
+        // Validation de la région
+        if (dto.getRegionEtablissement() == null || dto.getRegionEtablissement().trim().isEmpty()) {
+            throw new ObjectValidationException("Région obligatoire", null);
+        }
+
+        // Validation du type d'établissement
+        if (dto.getTypeEtablissement() == null || dto.getTypeEtablissement().trim().isEmpty()) {
+            throw new ObjectValidationException("Type d'établissement obligatoire", null);
+        }
+
+        // Validation de l'adresse
+        if (dto.getAdresse() == null || dto.getAdresse().trim().isEmpty()) {
+            throw new ObjectValidationException("Adresse obligatoire", null);
+        }
     }
 }
 

@@ -40,6 +40,8 @@ public class Observation extends AbstractAuditingEntity implements Serializable 
     private String commentaire;
     @Column(name = "date_observation")
     private Instant dateObservation;
+    @Column(name = "id_consultation")
+    private String consultation;
 
     public String getId() {
         return id;
@@ -88,6 +90,14 @@ public class Observation extends AbstractAuditingEntity implements Serializable 
 
     public void setIdPatient(String idPatient) {
         this.idPatient = idPatient;
+    }
+
+    public String getConsultation() {
+        return consultation;
+    }
+
+    public void setConsultation(String consultation) {
+        this.consultation = consultation;
     }
     
 

@@ -12,6 +12,20 @@
         <script th:src="@{/js/controllers/consultationController.js}"></script>
         <script src="app.js"></script>
         <style type="text/css">
+            /* Styles globaux pour les champs */
+            .form-control {
+                border: 2px solid #495057 !important;
+                font-weight: 600 !important;
+                color: #1a1a1a !important;
+                font-size: 15px !important;
+            }
+
+            label, .control-label {
+                font-weight: 700 !important;
+                color: #2c3e50 !important;
+                font-size: 15px !important;
+            }
+
             .section-card {
                 border: 1px solid #e0e0e0;
                 border-radius: 10px;
@@ -21,8 +35,8 @@
             }
             .section-header {
                 font-size: 20px;
-                font-weight: 600;
-                color: #333;
+                font-weight: 700;
+                color: #1a1a1a;
                 margin-bottom: 20px;
                 padding-bottom: 10px;
                 border-bottom: 2px solid #e0e0e0;
@@ -39,6 +53,8 @@
                 padding: 20px;
                 border-radius: 8px;
                 margin-bottom: 25px;
+                font-weight: 600;
+                color: #1a1a1a;
             }
             .observation-item {
                 background: #e8f5e9;
@@ -49,6 +65,8 @@
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
+                font-weight: 600;
+                color: #1a1a1a;
             }
             .antecedent-item {
                 background: #e1f5fe;
@@ -59,6 +77,8 @@
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
+                font-weight: 600;
+                color: #1a1a1a;
             }
             .prescription-item {
                 background: #f3e5f5;
@@ -69,6 +89,8 @@
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
+                font-weight: 600;
+                color: #1a1a1a;
             }
             .examen-item {
                 background: #fff3e0;
@@ -79,6 +101,8 @@
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
+                font-weight: 600;
+                color: #1a1a1a;
             }
             .btn-add {
                 background: #4caf50;
@@ -155,15 +179,22 @@
     <body>
         <div layout:fragment="content" id="consultationForm" data-ng-cloak="">
             <div class="row" ng-controller="consultationController" ng-init="init()" data-ng-cloak="">
-                
+
+                <form name="formConsultation" novalidate style="width: 100%;">
+
                 <!-- En-tête -->
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body page-header-custom">
                             <div class="row align-items-center">
                                 <div class="col-md-8">
-                                    <h3 class="mb-0"><i class="fas fa-stethoscope"></i> Nouvelle Consultation</h3>
-                                    <p class="mb-0">Enregistrement d'une consultation médicale</p>
+                                    <h3 class="mb-0">
+                                        <i class="fas fa-stethoscope"></i>
+                                        <span ng-if="!modeEdition">Nouvelle Consultation</span>
+                                        <span ng-if="modeEdition">Édition de Consultation</span>
+                                    </h3>
+                                    <p class="mb-0" ng-if="!modeEdition">Enregistrement d'une consultation médicale</p>
+                                    <p class="mb-0" ng-if="modeEdition">Modification d'une consultation existante</p>
                                 </div>
                                 <div class="col-md-4 text-right">
                                     <div class="row">
@@ -194,7 +225,9 @@
                                     </label>
                                     <select class="form-control mySelecDoc"
                                             ng-model="consultation.categorieConsultation"
-                                            id="selectCategorieConsultation">
+                                            id="selectCategorieConsultation"
+                                            name="categorieConsultation"
+                                            required>
                                         <option value="">-- Sélectionner une catégorie --</option>
                                         <option data-ng-repeat="cat in listeCategoriesConsultation" value="{{cat.id}}">{{cat.libelle}}</option>
                                     </select>
@@ -206,7 +239,9 @@
                                     <select class="form-control mySelecDoc"
                                             ng-model="consultation.typeConsultation"
                                             id="selectTypeConsultation"
-                                            ng-disabled="!consultation.categorieConsultation">
+                                            name="typeConsultation"
+                                            ng-disabled="!consultation.categorieConsultation"
+                                            required>
                                         <option value="">-- Sélectionner un type --</option>
                                         <option data-ng-repeat="type in listeTypesConsultation" value="{{type.id}}">{{type.libelle}}</option>
                                     </select>
@@ -501,14 +536,18 @@
                             
                             <div class="form-group">
                                 <label class="form-label required">Motif de la consultation</label>
-                                <textarea class="form-control" rows="2" ng-model="consultation.motif" 
-                                          placeholder="Ex: Douleurs abdominales, Contrôle de routine..."></textarea>
+                                <textarea class="form-control" rows="2" ng-model="consultation.motif"
+                                          name="motif"
+                                          placeholder="Ex: Douleurs abdominales, Contrôle de routine..."
+                                          required></textarea>
                             </div>
 
                             <div class="form-group">
                                 <label class="form-label required">Diagnostic</label>
-                                <textarea class="form-control" rows="3" ng-model="consultation.diagnostic" 
-                                          placeholder="Diagnostic médical détaillé..."></textarea>
+                                <textarea class="form-control" rows="3" ng-model="consultation.diagnostic"
+                                          name="diagnostic"
+                                          placeholder="Diagnostic médical détaillé..."
+                                          required></textarea>
                             </div>
 
                             <div class="form-group mb-0">
@@ -650,16 +689,18 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="text-right">
-                                <button class="btn btn-secondary mr-2" ng-click="annuler()">
+                                <button type="button" class="btn btn-secondary mr-2" ng-click="annuler()">
                                     <i class="fas fa-times"></i> Annuler
                                 </button>
-                                <button class="btn btn-primary" ng-click="enregistrerConsultation()">
+                                <button type="submit" class="btn btn-primary" ng-click="enregistrerConsultation()">
                                     <i class="fas fa-save"></i> Enregistrer la consultation
                                 </button>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                </form>
 
             </div>
         </div>
