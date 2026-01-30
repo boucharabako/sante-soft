@@ -184,10 +184,23 @@
 
                     <!-- Tableau des consultations -->
                     <div class="table-card">
-                        <h5 style="margin-bottom: 20px; color: #2d3436;">
-                            <i class="fas fa-list"></i> Liste des Consultations
-                            <span class="badge badge-success ml-2">{{consultationsFiltrees.length}}</span>
-                        </h5>
+                        <div class="row mb-3">
+                            <div class="col-sm-6">
+                                <h5 style="margin: 0; color: #2d3436;">
+                                    <i class="fas fa-list"></i> Liste des Consultations
+                                    <span class="badge badge-success ml-2">{{totalElements}}</span>
+                                </h5>
+                            </div>
+                            <div class="col-sm-6 text-right">
+                                <label style="font-size: 15px; font-weight: 700; color: #2c3e50;">Afficher
+                                    <select ng-change="changePageSize()" class="custom-select custom-select-sm form-control form-control-sm"
+                                            style="width: auto; display: inline-block; margin: 0 5px; border: 2px solid #495057; font-weight: 600;"
+                                            ng-model="pageSizeSelect" data-ng-options="nb for nb in pageSizes">
+                                    </select>
+                                    consultations par page
+                                </label>
+                            </div>
+                        </div>
 
                         <div class="table-responsive">
                             <table class="table table-hover" id="tableConsultations">
@@ -245,6 +258,58 @@
                             <i class="fas fa-inbox" style="font-size: 64px; color: #dfe6e9; margin-bottom: 20px;"></i>
                             <h5 style="color: #636e72;">Aucune consultation trouvée</h5>
                             <p style="color: #b2bec3;">Essayez de modifier vos filtres ou créez une nouvelle consultation</p>
+                        </div>
+
+                        <!-- Pagination -->
+                        <div class="row mt-4" data-ng-if="consultationsFiltrees.length !== 0">
+                            <div class="col-sm-12 col-md-5">
+                                <div class="pagination-info" style="text-align: center; color: #636e72; font-size: 14px; margin: 20px 0;">
+                                    Affichage de {{pageSizeSelect * (listPage.number + 1) - pageSizeSelect + 1}} à
+                                    {{pageSizeSelect * (listPage.number + 1) > totalElements ? totalElements : pageSizeSelect * (listPage.number + 1)}}
+                                    sur {{totalElements}} consultations
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-7">
+                                <div class="dataTables_paginate paging_simple_numbers" id="consultation_table_paginate">
+                                    <ul class="pagination justify-content-end">
+                                        <li class="paginate_button page-item previous">
+                                            <button aria-controls="consultation_table" tabindex="0"
+                                                    data-ng-disabled="listPage.number === 0"
+                                                    data-ng-click="paginate(pageSizeSelect, 1)"
+                                                    class="page-link">
+                                                <i class="mdi mdi-skip-backward"></i>
+                                            </button>
+                                        </li>
+                                        <li class="paginate_button page-item previous">
+                                            <button aria-controls="consultation_table" tabindex="0"
+                                                    data-ng-disabled="listPage.number === 0"
+                                                    data-ng-click="paginate(pageSizeSelect, listPage.number)"
+                                                    class="page-link">
+                                                <i class="mdi mdi-chevron-left"></i>
+                                            </button>
+                                        </li>
+                                        <li class="paginate_button page-item active">
+                                            <span class="page-link">{{listPage.number + 1}} / {{totalPages}}</span>
+                                        </li>
+                                        <li class="paginate_button page-item next">
+                                            <button aria-controls="consultation_table" tabindex="0"
+                                                    data-ng-disabled="listPage.number >= totalPages - 1"
+                                                    data-ng-click="paginate(pageSizeSelect, listPage.number + 2)"
+                                                    class="page-link">
+                                                <i class="mdi mdi-chevron-right"></i>
+                                            </button>
+                                        </li>
+                                        <li class="paginate_button page-item next">
+                                            <button aria-controls="consultation_table" tabindex="0"
+                                                    data-ng-disabled="listPage.number >= totalPages - 1"
+                                                    data-ng-click="paginate(pageSizeSelect, totalPages)"
+                                                    class="page-link">
+                                                <i class="mdi mdi-skip-forward"></i>
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

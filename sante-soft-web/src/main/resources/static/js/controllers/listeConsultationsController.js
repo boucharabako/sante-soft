@@ -3,7 +3,7 @@ App.controller('listeConsultationsController', function ($scope, $http, GenericS
 
     // URLs de l'API
     var appUrl = window.location.origin + '/sante-start-up/';
-    var listeConsultationsURL = appUrl + 'api/consultation/listConsultationsByProfessionnel';
+    var listeConsultationsURL = appUrl + 'api/consultation/paginateConsultationsByProfessionnel';
     var listTypesConsultationURL = appUrl + 'api/consultation/listTypesConsultation';
 
     // Initialisation
@@ -11,7 +11,15 @@ App.controller('listeConsultationsController', function ($scope, $http, GenericS
     $scope.consultationsFiltrees = [];
     $scope.listeTypesConsultation = [];
     $scope.loading = true;
-    
+
+    // Pagination
+    $scope.totalElements = 0;
+    $scope.totalPages = 0;
+    $scope.pageSizes = [5, 10, 15, 20, 25];
+    $scope.pageSizeSelect = 10;
+    $scope.memoryPage = 1;
+    var firstPage = 1;
+
     // Statistiques
     $scope.stats = {
         total: 0,
@@ -19,7 +27,7 @@ App.controller('listeConsultationsController', function ($scope, $http, GenericS
         semaine: 0,
         mois: 0
     };
-    
+
     // Filtres
     $scope.filtres = {
         recherche: '',
@@ -42,17 +50,58 @@ App.controller('listeConsultationsController', function ($scope, $http, GenericS
             });
     };
 
-    // Charger les consultations du professionnel
-    $scope.chargerConsultations = function() {
-        console.log('📥 Chargement des consultations...');
-        
-        $http.get(listeConsultationsURL)
-            .then(function(response) {
-                console.log('📦 Réponse reçue:', response);
-                
-                if (response.data && response.data.listConsultations) {
+    // Charger les statistiques
+    $scope.chargerStatistiques = function() {
+        var url = appUrl + 'api/consultation/statistiques';
+
+        GenericService.get(url)
+            .then(function(data) {
+                if (data) {
+                    $scope.stats.aujourdhui = data.aujourdhui || 0;
+                    $scope.stats.semaine = data.semaine || 0;
+                    $scope.stats.mois = data.mois || 0;
+                    console.log('✅ Statistiques chargées:', $scope.stats);
+                }
+            })
+            .catch(function(error) {
+                console.error('❌ Erreur chargement statistiques:', error);
+            });
+    };
+
+
+    // Charger les consultations du professionnel avec pagination
+    $scope.chargerConsultations = function(page) {
+        if (!page) page = firstPage;
+        $scope.memoryPage = page;
+
+        console.log('📥 Chargement des consultations - Page:', page, 'Size:', $scope.pageSizeSelect);
+
+        var url = listeConsultationsURL + '?page=' + (page - 1) + '&size=' + $scope.pageSizeSelect;
+
+        // Ajouter les filtres à l'URL
+        if ($scope.filtres.recherche) {
+            url += '&mc=' + encodeURIComponent($scope.filtres.recherche);
+        }
+        if ($scope.filtres.typeConsultation) {
+            url += '&typeConsultation=' + encodeURIComponent($scope.filtres.typeConsultation);
+        }
+        if ($scope.filtres.dateDebut) {
+            var dateDebut = new Date($scope.filtres.dateDebut);
+            url += '&dateDebut=' + dateDebut.getTime();
+        }
+        if ($scope.filtres.dateFin) {
+            var dateFin = new Date($scope.filtres.dateFin);
+            dateFin.setHours(23, 59, 59, 999);
+            url += '&dateFin=' + dateFin.getTime();
+        }
+
+        GenericService.get(url)
+            .then(function(data) {
+                console.log('📦 Réponse reçue:', data);
+
+                if (data && data.listConsultations) {
                     // Convertir les dates
-                    $scope.consultations = response.data.listConsultations.map(function(consult) {
+                    $scope.consultationsFiltrees = data.listConsultations.content.map(function(consult) {
                         if (consult.dateConsultation) {
                             if (typeof consult.dateConsultation === 'number') {
                                 consult.dateConsultation = new Date(consult.dateConsultation);
@@ -64,94 +113,49 @@ App.controller('listeConsultationsController', function ($scope, $http, GenericS
                         }
                         return consult;
                     });
-                    
-                    console.log('✅ Consultations chargées:', $scope.consultations.length);
-                    
-                    // Calculer les statistiques
-                    $scope.calculerStatistiques();
-                    
-                    // Appliquer les filtres
-                    $scope.appliquerFiltres();
+
+                    $scope.listPage = data.listConsultations;
+                    $scope.totalElements = data.listConsultations.totalElements;
+                    $scope.totalPages = data.listConsultations.totalPages;
+
+                    console.log('✅ Consultations chargées:', $scope.consultationsFiltrees.length);
+                    console.log('📊 Total:', $scope.totalElements, 'Pages:', $scope.totalPages);
+
+                    // Calculer les statistiques (basées sur le total)
+                    $scope.stats.total = $scope.totalElements;
                 } else {
                     console.warn('⚠️ Aucune consultation trouvée');
-                    $scope.consultations = [];
                     $scope.consultationsFiltrees = [];
+                    $scope.totalElements = 0;
+                    $scope.totalPages = 0;
                 }
             })
             .catch(function(error) {
                 console.error('❌ Erreur lors du chargement des consultations:', error);
-                $scope.consultations = [];
                 $scope.consultationsFiltrees = [];
+                $scope.totalElements = 0;
+                $scope.totalPages = 0;
             })
             .finally(function() {
                 $scope.loading = false;
             });
     };
 
-    // Calculer les statistiques
-    $scope.calculerStatistiques = function() {
-        var aujourdhui = new Date();
-        aujourdhui.setHours(0, 0, 0, 0);
+    // Pagination - Changer de page
+    $scope.paginate = function(pageSizeSelect, listePage) {
+        $scope.memoryPage = listePage;
+        $scope.chargerConsultations(listePage);
+    };
 
-        var debutSemaine = new Date(aujourdhui);
-        debutSemaine.setDate(aujourdhui.getDate() - aujourdhui.getDay());
-
-        var debutMois = new Date(aujourdhui.getFullYear(), aujourdhui.getMonth(), 1);
-
-        $scope.stats.total = $scope.consultations.length;
-        $scope.stats.aujourdhui = $scope.consultations.filter(function(c) {
-            var dateConsult = new Date(c.dateConsultation);
-            dateConsult.setHours(0, 0, 0, 0);
-            return dateConsult.getTime() === aujourdhui.getTime();
-        }).length;
-
-        $scope.stats.semaine = $scope.consultations.filter(function(c) {
-            return new Date(c.dateConsultation) >= debutSemaine;
-        }).length;
-
-        $scope.stats.mois = $scope.consultations.filter(function(c) {
-            return new Date(c.dateConsultation) >= debutMois;
-        }).length;
-
-        console.log(' Statistiques calculées:', $scope.stats);
+    // Pagination - Changer la taille de page
+    $scope.changePageSize = function() {
+        $scope.chargerConsultations(firstPage);
     };
 
     // Appliquer les filtres
     $scope.appliquerFiltres = function() {
         console.log('🔍 Application des filtres:', $scope.filtres);
-
-        $scope.consultationsFiltrees = $scope.consultations.filter(function(consult) {
-            // Filtre recherche
-            if ($scope.filtres.recherche) {
-                var recherche = $scope.filtres.recherche.toLowerCase();
-                var match = (consult.patientNom && consult.patientNom.toLowerCase().indexOf(recherche) !== -1) ||
-                             (consult.motif && consult.motif.toLowerCase().indexOf(recherche) !== -1) ||
-                             (consult.diagnostic && consult.diagnostic.toLowerCase().indexOf(recherche) !== -1);
-                if (!match) return false;
-            }
-
-            // Filtre date début
-            if ($scope.filtres.dateDebut) {
-                var dateDebut = new Date($scope.filtres.dateDebut);
-                if (new Date(consult.dateConsultation) < dateDebut) return false;
-            }
-
-            // Filtre date fin
-            if ($scope.filtres.dateFin) {
-                var dateFin = new Date($scope.filtres.dateFin);
-                dateFin.setHours(23, 59, 59, 999);
-                if (new Date(consult.dateConsultation) > dateFin) return false;
-            }
-
-            // Filtre type consultation
-            if ($scope.filtres.typeConsultation) {
-                if (consult.typeConsultation !== $scope.filtres.typeConsultation) return false;
-            }
-
-            return true;
-        });
-
-        console.log('✅ Consultations filtrées:', $scope.consultationsFiltrees.length);
+        $scope.chargerConsultations(firstPage);
     };
 
     // Réinitialiser les filtres
@@ -162,7 +166,7 @@ App.controller('listeConsultationsController', function ($scope, $http, GenericS
             dateFin: null,
             typeConsultation: ''
         };
-        $scope.appliquerFiltres();
+        $scope.chargerConsultations(firstPage);
     };
 
     // Éditer une consultation
@@ -187,6 +191,7 @@ App.controller('listeConsultationsController', function ($scope, $http, GenericS
 
     // Initialiser au chargement
     $scope.chargerTypesConsultation();
+    $scope.chargerStatistiques();
     $scope.chargerConsultations();
 });
 

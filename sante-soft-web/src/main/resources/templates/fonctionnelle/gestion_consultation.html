@@ -533,7 +533,7 @@
                                 <i class="fas fa-file-medical text-primary"></i>
                                 Informations Générales
                             </div>
-                            
+
                             <div class="form-group">
                                 <label class="form-label required">Motif de la consultation</label>
                                 <textarea class="form-control" rows="2" ng-model="consultation.motif"
@@ -552,7 +552,7 @@
 
                             <div class="form-group mb-0">
                                 <label class="form-label">Traitement recommandé</label>
-                                <textarea class="form-control" rows="2" ng-model="consultation.traitement" 
+                                <textarea class="form-control" rows="2" ng-model="consultation.traitement"
                                           placeholder="Plan de traitement..."></textarea>
                             </div>
                         </div>
@@ -570,15 +570,15 @@
 
                             <div class="row mb-3">
                                 <div class="col-md-4">
-                                    <input type="text" class="form-control" ng-model="nouvellePrescription.medicament" 
+                                    <input type="text" class="form-control" ng-model="nouvellePrescription.medicament"
                                            placeholder="Médicament">
                                 </div>
                                 <div class="col-md-3">
-                                    <input type="text" class="form-control" ng-model="nouvellePrescription.posologie" 
+                                    <input type="text" class="form-control" ng-model="nouvellePrescription.posologie"
                                            placeholder="Posologie (ex: 2x/jour)">
                                 </div>
                                 <div class="col-md-3">
-                                    <input type="text" class="form-control" ng-model="nouvellePrescription.duree" 
+                                    <input type="text" class="form-control" ng-model="nouvellePrescription.duree"
                                            placeholder="Durée (ex: 7 jours)">
                                 </div>
                                 <div class="col-md-2">
@@ -605,6 +605,22 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Alertes d'allergies -->
+                <div class="col-12" ng-if="allergiesAlertes.length > 0">
+                    <div class="card" style="border: 2px solid #d9534f; background-color: #fff5f5;">
+                        <div class="card-body">
+                            <div class="section-header" style="color: #d9534f;">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                Alertes d'Allergies
+                            </div>
+                            <div ng-repeat="alerte in allergiesAlertes" class="alert alert-danger" style="margin-bottom: 10px;">
+                                <i class="fas fa-warning"></i> {{alerte}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
 
                 <!-- Examens Complémentaires -->
                 <div class="col-12">

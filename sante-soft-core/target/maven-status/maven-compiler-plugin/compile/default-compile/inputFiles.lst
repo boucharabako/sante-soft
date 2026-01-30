@@ -34,7 +34,9 @@ D:\MemoireNetbeans\sante-soft\sante-soft-core\src\main\java\com\base\frame\carne
 D:\MemoireNetbeans\sante-soft\sante-soft-core\src\main\java\com\base\frame\carnet\sante\repositories\ExamenRepository.java
 D:\MemoireNetbeans\sante-soft\sante-soft-core\src\main\java\com\base\frame\carnet\sante\dtos\PatientDTO.java
 D:\MemoireNetbeans\sante-soft\sante-soft-core\src\main\java\com\base\frame\achat\fonctionnelle\daos\ProduitDAO.java
+D:\MemoireNetbeans\sante-soft\sante-soft-core\src\main\java\com\base\frame\carnet\sante\services\AllergyCheckService.java
 D:\MemoireNetbeans\sante-soft\sante-soft-core\src\main\java\com\base\frame\carnet\sante\repositories\PatientRepository.java
+D:\MemoireNetbeans\sante-soft\sante-soft-core\src\main\java\com\base\frame\carnet\sante\repositories\CompositionMedicamentRepository.java
 D:\MemoireNetbeans\sante-soft\sante-soft-core\src\main\java\com\base\frame\carnet\sante\entities\TypeEtablissement.java
 D:\MemoireNetbeans\sante-soft\sante-soft-core\src\main\java\com\base\frame\carnet\sante\entities\Observation.java
 D:\MemoireNetbeans\sante-soft\sante-soft-core\src\main\java\com\base\frame\carnet\sante\daos\PatientDAO.java
@@ -53,6 +55,7 @@ D:\MemoireNetbeans\sante-soft\sante-soft-core\src\main\java\com\base\frame\carne
 D:\MemoireNetbeans\sante-soft\sante-soft-core\src\main\java\com\base\frame\carnet\sante\dtos\ObservationDTO.java
 D:\MemoireNetbeans\sante-soft\sante-soft-core\src\main\java\com\base\frame\carnet\sante\services\EtablissementService.java
 D:\MemoireNetbeans\sante-soft\sante-soft-core\src\main\java\com\base\frame\carnet\sante\dtos\AffectationDTO.java
+D:\MemoireNetbeans\sante-soft\sante-soft-core\src\main\java\com\base\frame\carnet\sante\services\MedicamentService.java
 D:\MemoireNetbeans\sante-soft\sante-soft-core\src\main\java\com\base\frame\carnet\sante\repositories\TypeObservationRepository.java
 D:\MemoireNetbeans\sante-soft\sante-soft-core\src\main\java\com\base\frame\carnet\sante\entities\Consultation.java
 D:\MemoireNetbeans\sante-soft\sante-soft-core\src\main\java\com\base\frame\carnet\sante\repositories\EtablissementRepository.java
@@ -64,6 +67,7 @@ D:\MemoireNetbeans\sante-soft\sante-soft-core\src\main\java\com\base\frame\carne
 D:\MemoireNetbeans\sante-soft\sante-soft-core\src\main\java\com\base\frame\carnet\sante\dtos\ProfessionnelSanteDTO.java
 D:\MemoireNetbeans\sante-soft\sante-soft-core\src\main\java\com\base\frame\carnet\sante\daos\AffectationDAO.java
 D:\MemoireNetbeans\sante-soft\sante-soft-core\src\main\java\com\base\frame\carnet\sante\repositories\CategorieAntecedentRepository.java
+D:\MemoireNetbeans\sante-soft\sante-soft-core\src\main\java\com\base\frame\carnet\sante\entities\CompositionMedicament.java
 D:\MemoireNetbeans\sante-soft\sante-soft-core\src\main\java\com\base\frame\carnet\sante\entities\ConsultationTypeExamenAutorise.java
 D:\MemoireNetbeans\sante-soft\sante-soft-core\src\main\java\com\base\frame\achat\fonctionnelle\repositories\DetailCommandeRepository.java
 D:\MemoireNetbeans\sante-soft\sante-soft-core\src\main\java\com\base\frame\carnet\sante\entities\TypeConsultation.java
@@ -90,6 +94,7 @@ D:\MemoireNetbeans\sante-soft\sante-soft-core\src\main\java\com\base\frame\carne
 D:\MemoireNetbeans\sante-soft\sante-soft-core\src\main\java\com\base\frame\carnet\sante\repositories\AntecedentPatientRepository.java
 D:\MemoireNetbeans\sante-soft\sante-soft-core\src\main\java\com\base\frame\achat\fonctionnelle\entities\Commande.java
 D:\MemoireNetbeans\sante-soft\sante-soft-core\src\main\java\com\base\frame\carnet\sante\entities\Document.java
+D:\MemoireNetbeans\sante-soft\sante-soft-core\src\main\java\com\base\frame\carnet\sante\dtos\CompositionMedicamentDTO.java
 D:\MemoireNetbeans\sante-soft\sante-soft-core\src\main\java\com\base\frame\achat\fonctionnelle\services\TableauDeBordService.java
 D:\MemoireNetbeans\sante-soft\sante-soft-core\src\main\java\com\base\frame\carnet\sante\dtos\EtablissementDTO.java
 D:\MemoireNetbeans\sante-soft\sante-soft-core\src\main\java\com\base\frame\achat\fonctionnelle\repositories\PaiementRepository.java

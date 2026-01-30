@@ -13,6 +13,7 @@ App.controller('consultationController', ['$scope', '$http', '$location', '$root
         const listTypesExamenByTypeConsultationURL = urlBase + "/listTypesExamenByTypeConsultation";
         const enregistrerConsultationURL = urlBase + "/enregistrerConsultation";
         const getConsultationByIdURL = urlBase + "/getConsultation";
+        const checkAllergiesURL = urlBase + "/checkAllergies";
 
         // Mode édition
         $scope.modeEdition = false;
@@ -588,6 +589,49 @@ App.controller('consultationController', ['$scope', '$http', '$location', '$root
 
         // Ajouter une prescription
         $scope.ajouterPrescription = function () {
+            // Vérifier d'abord si le médicament est renseigné
+            if (!$scope.nouvellePrescription.medicament || $scope.nouvellePrescription.medicament.trim() === '') {
+                alert('Veuillez saisir le nom du médicament');
+                return;
+            }
+
+            // Vérifier les allergies AVANT d'ajouter la prescription
+            if ($scope.patient && $scope.patient.id) {
+                var medicamentAVerifier = $scope.nouvellePrescription.medicament;
+
+                $http.post(checkAllergiesURL, {
+                    idPatient: $scope.patient.id,
+                    medicaments: [medicamentAVerifier]
+                }).then(function(response) {
+                    if (response.data && response.data.alertes && response.data.alertes.length > 0) {
+                        // Allergie détectée - demander confirmation
+                        var message = "⚠️ ALERTE D'ALLERGIE !\n\n";
+                        message += response.data.alertes.join('\n');
+                        message += "\n\nVoulez-vous quand même ajouter cette prescription ?";
+
+                        if (confirm(message)) {
+                            // L'utilisateur confirme malgré l'allergie
+                            ajouterPrescriptionDansListe();
+                        }
+                    } else {
+                        // Pas d'allergie détectée - ajouter directement
+                        ajouterPrescriptionDansListe();
+                    }
+                }, function(error) {
+                    console.error("Erreur lors de la vérification des allergies:", error);
+                    // En cas d'erreur, demander confirmation
+                    if (confirm("Impossible de vérifier les allergies. Voulez-vous quand même ajouter cette prescription ?")) {
+                        ajouterPrescriptionDansListe();
+                    }
+                });
+            } else {
+                // Pas de patient sélectionné - ajouter directement
+                ajouterPrescriptionDansListe();
+            }
+        };
+
+        // Fonction interne pour ajouter la prescription dans la liste
+        function ajouterPrescriptionDansListe() {
             $scope.prescriptions.push({
                 id: Date.now(),
                 medicament: $scope.nouvellePrescription.medicament,
@@ -595,19 +639,48 @@ App.controller('consultationController', ['$scope', '$http', '$location', '$root
                 duree: $scope.nouvellePrescription.duree
             });
 
-            // Réinitialiser le formulaire
             $scope.nouvellePrescription = {
                 medicament: '',
                 posologie: '',
                 duree: ''
             };
-        };
+
+            // Mettre à jour les alertes pour toutes les prescriptions
+            $scope.verifierAllergies();
+        }
 
         // Supprimer une prescription
         $scope.supprimerPrescription = function (index) {
             if (confirm('Voulez-vous vraiment supprimer cette prescription ?')) {
                 $scope.prescriptions.splice(index, 1);
+                // Mettre à jour les alertes après suppression
+                $scope.verifierAllergies();
             }
+        };
+
+        // Vérifier les allergies pour les médicaments prescrits
+        $scope.verifierAllergies = function () {
+            if (!$scope.patient || !$scope.patient.id || $scope.prescriptions.length === 0) {
+                $scope.allergiesAlertes = [];
+                return;
+            }
+
+            var medicaments = $scope.prescriptions.map(function(p) { return p.medicament; });
+
+            GenericService.postData(checkAllergiesURL, {
+                idPatient: $scope.patient.id,
+                medicaments: medicaments
+            }).then(function(response) {
+                if (response.data.success) {
+                    $scope.allergiesAlertes = response.data.alertes;
+                    console.log(' Alertes d\'allergies:', $scope.allergiesAlertes);
+                } else {
+                    $scope.allergiesAlertes = [];
+                }
+            }).catch(function(error) {
+                console.error(' Erreur lors de la vérification des allergies:', error);
+                $scope.allergiesAlertes = [];
+            });
         };
 
         // ==================== EXAMENS ====================

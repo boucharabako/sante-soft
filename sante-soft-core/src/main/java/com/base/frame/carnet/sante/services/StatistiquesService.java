@@ -117,14 +117,14 @@ public class StatistiquesService {
         
         // Filtrer par spécialité si spécifié
         if (specialite != null && !specialite.isEmpty()) {
-            List<String> profIds = professionnels.stream()
-                .filter(p -> specialite.equals(p.getSpecialite()))
-                .map(ProfessionelSante::getId)
-                .collect(Collectors.toList());
+//            List<String> profIds = professionnels.stream()
+//                .filter(p -> specialite.equals(p.getSpecialite()))
+//                .map(ProfessionelSante::getId)
+//                .collect(Collectors.toList());
             
-            consultations = consultations.stream()
-                .filter(c -> profIds.contains(c.getIdProfessionnelSante()))
-                .collect(Collectors.toList());
+//            consultations = consultations.stream()
+//                .filter(c -> profIds.contains(c.getIdProfessionnelSante()))
+//                .collect(Collectors.toList());
         }
         
         // Calculer les statistiques générales

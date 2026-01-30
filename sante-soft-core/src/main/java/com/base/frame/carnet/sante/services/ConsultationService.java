@@ -1,5 +1,6 @@
 package com.base.frame.carnet.sante.services;
 
+import com.base.frame.carnet.sante.daos.ConsultationDAO;
 import com.base.frame.carnet.sante.dtos.ConsultationDTO;
 import com.base.frame.carnet.sante.dtos.ExamenDTO;
 import com.base.frame.carnet.sante.dtos.ObservationDTO;
@@ -20,10 +21,16 @@ import com.base.frame.carnet.sante.repositories.TypeConsultationRepository;
 import com.base.frame.carnet.sante.repositories.TypeObservationRepository;
 import com.base.frame.socle.utils.exceptions.ObjectValidationException;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -67,6 +74,9 @@ public class ConsultationService {
 
     @Autowired
     private ConsultationTypeExamenAutoriseRepository consultationTypeExamenAutoriseRepository;
+
+    @Autowired
+    private ConsultationDAO consultationDAO;
 
     /**
      * Enregistrer une consultation avec ses prescriptions et examens
@@ -559,6 +569,108 @@ public class ConsultationService {
         }
 
         return "application/octet-stream";
+    }
+
+    /**
+     * Recherche paginée des consultations d'un professionnel
+     * @param idProfessionnel ID du professionnel
+     * @param motCle Mot-clé de recherche
+     * @param typeConsultation Type de consultation
+     * @param dateDebut Date de début
+     * @param dateFin Date de fin
+     * @param pageRequest Pagination
+     * @return Page de consultations
+     */
+    public Page<ConsultationDTO> findConsultationsByProfessionnel(
+            String idProfessionnel,
+            String motCle,
+            String typeConsultation,
+            Instant dateDebut,
+            Instant dateFin,
+            Pageable pageRequest) {
+
+        Page<Consultation> listResult = this.consultationDAO.findPageConsultationByProfessionnel(
+                idProfessionnel, motCle, typeConsultation, dateDebut, dateFin, pageRequest);
+
+        return this.mapEntityPageIntoDTOPage(pageRequest, listResult);
+    }
+
+    /**
+     * Recherche paginée des consultations d'un patient
+     * @param idPatient ID du patient
+     * @param motCle Mot-clé de recherche
+     * @param typeConsultation Type de consultation
+     * @param dateDebut Date de début
+     * @param dateFin Date de fin
+     * @param pageRequest Pagination
+     * @return Page de consultations
+     */
+    public Page<ConsultationDTO> findConsultationsByPatient(
+            String idPatient,
+            String motCle,
+            String typeConsultation,
+            Instant dateDebut,
+            Instant dateFin,
+            Pageable pageRequest) {
+
+        Page<Consultation> listResult = this.consultationDAO.findPageConsultationByPatient(
+                idPatient, motCle, typeConsultation, dateDebut, dateFin, pageRequest);
+
+        return this.mapEntityPageIntoDTOPage(pageRequest, listResult);
+    }
+
+    /**
+     * Convertir une page d'entités en page de DTOs
+     * @param page Pagination
+     * @param source Page d'entités
+     * @return Page de DTOs
+     */
+    public Page<ConsultationDTO> mapEntityPageIntoDTOPage(Pageable page, Page<Consultation> source) {
+        List<ConsultationDTO> list = new ArrayList<>();
+
+        for (Consultation consultation : source.getContent()) {
+            ConsultationDTO dto = mapEntityToDTO(consultation);
+
+            // Enrichir avec le nom du patient
+            if (consultation.getIdPatient() != null) {
+                Optional<com.base.frame.carnet.sante.entities.Patient> patient =
+                    patientRepository.findById(consultation.getIdPatient());
+                if (patient.isPresent()) {
+                    String nomComplet = patient.get().getFirstName() + " " + patient.get().getLastName();
+                    dto.setPatientNom(nomComplet);
+                }
+            }
+
+            list.add(dto);
+        }
+
+        return new PageImpl<>(list, page, source.getTotalElements());
+    }
+
+    /**
+     * Calcule les statistiques de consultations pour un professionnel
+     * @param idProfessionnel ID du professionnel
+     * @return Map contenant les statistiques (aujourdhui, semaine, mois)
+     */
+    public Map<String, Long> getStatistiquesConsultations(String idProfessionnel) {
+        Instant now = Instant.now();
+        Instant debutJour = now.truncatedTo(ChronoUnit.DAYS);
+        Instant debutSemaine = now.minus(7, ChronoUnit.DAYS);
+        Instant debutMois = now.minus(30, ChronoUnit.DAYS);
+
+        Long aujourdhui = consultationDAO.countConsultationsByProfessionnelAndDateRange(
+                idProfessionnel, debutJour, null);
+        Long semaine = consultationDAO.countConsultationsByProfessionnelAndDateRange(
+                idProfessionnel, debutSemaine, null);
+        Long mois = consultationDAO.countConsultationsByProfessionnelAndDateRange(
+                idProfessionnel, debutMois, null);
+
+        Map<String, Long> stats = new HashMap<>();
+        stats.put("aujourdhui", aujourdhui);
+        stats.put("semaine", semaine);
+        stats.put("mois", mois);
+
+        return stats;
     }
 }
 

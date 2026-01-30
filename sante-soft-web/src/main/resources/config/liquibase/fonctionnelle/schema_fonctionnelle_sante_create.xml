@@ -870,6 +870,38 @@ and open the template in the editor.
             newColumnName="type_mime"
             columnDataType="VARCHAR(50)"/>
     </changeSet>
+    
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-81">
+        <createTable schemaName="${sante_schema_name}" tableName="composition_medicament">
+            <column name="id" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+
+            <!-- Colonnes d'audit -->
+            <column name="created_by" type="VARCHAR(50)"/>
+            <column name="created_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="created_user_ip_adresse" type="VARCHAR(255)"/>
+            <column name="created_user_agent_info" type="VARCHAR(255)"/>
+            <column name="created_user_device" type="VARCHAR(255)"/>
+            <column name="created_user_zone" type="VARCHAR(255)"/>
+
+            <column name="last_modified_by" type="VARCHAR(50)"/>
+            <column name="last_modified_date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="last_modified_user_ip_adresse" type="VARCHAR(255)"/>
+            <column name="last_modified_user_agent_info" type="VARCHAR(255)"/>
+            <column name="last_modified_user_device" type="VARCHAR(255)"/>
+            <column name="last_modified_user_zone" type="VARCHAR(255)"/>
+
+            <!-- Colonnes de l'entité -->
+            <column name="medicament" type="VARCHAR(150)"/>
+            <column name="composition" type="TEXT"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="Bouchara (generated)" id="16-11-2025-1-82">
+        <addPrimaryKey schemaName="${sante_schema_name}" columnNames="id" constraintName="composition_medoc_pkey" tableName="composition_medicament"/>
+    </changeSet>
+    
 
     
 </databaseChangeLog>

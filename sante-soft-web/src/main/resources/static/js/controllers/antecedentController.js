@@ -531,6 +531,7 @@ App.controller('antecedentController', ['$scope', '$http', '$location', '$rootSc
         $http.post(saveAntecedentURL, antecedent).then(function(response) {
             console.log("Antecedent " + ($scope.modeEdition === 3 ? "modifie" : "ajoute") + " avec succes");
             $scope.chargerAntecedentsPatient($scope.patient.id);
+            $scope.chargerHistorique($scope.patient.id);
             $scope.closeModalAntecedent();
         }, function(error) {
             console.error("Erreur lors de " + actionMessage + " de l'antecedent:", error);
@@ -576,6 +577,7 @@ App.controller('antecedentController', ['$scope', '$http', '$location', '$rootSc
         $http.post(saveAntecedentURL, antecedent).then(function(response) {
             console.log("Antecedent ajoute avec succes");
             $scope.chargerAntecedentsPatient($scope.patient.id);
+            $scope.chargerHistorique($scope.patient.id);
 
             // Réinitialiser le formulaire mais garder le modal ouvert
             $scope.objetAntecedent = {
