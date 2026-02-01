@@ -179,8 +179,8 @@ App.controller('listeConsultationsController', function ($scope, $http, GenericS
     // Voir le détail d'une consultation
     $scope.voirDetail = function(consultationId) {
         console.log('👁️ Voir détail consultation:', consultationId);
-        // TODO: Ouvrir modal ou rediriger vers page détail
-        alert('Fonctionnalité en cours de développement');
+        // Rediriger vers la page de détail de consultation
+        window.location.href = appUrl + 'gestion/consultation/detail?id=' + consultationId;
     };
 
     // Voir le patient

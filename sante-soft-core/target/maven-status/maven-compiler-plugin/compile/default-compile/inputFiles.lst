@@ -30,6 +30,7 @@ D:\MemoireNetbeans\sante-soft\sante-soft-core\src\main\java\com\base\frame\carne
 D:\MemoireNetbeans\sante-soft\sante-soft-core\src\main\java\com\base\frame\achat\fonctionnelle\dtos\CommandeDTO.java
 D:\MemoireNetbeans\sante-soft\sante-soft-core\src\main\java\com\base\frame\carnet\sante\dtos\HistoriqueAntecedentDTO.java
 D:\MemoireNetbeans\sante-soft\sante-soft-core\src\main\java\com\base\frame\achat\fonctionnelle\repositories\CategorieProduitRepository.java
+D:\MemoireNetbeans\sante-soft\sante-soft-core\src\main\java\com\base\frame\carnet\sante\daos\ConsultationDAO.java
 D:\MemoireNetbeans\sante-soft\sante-soft-core\src\main\java\com\base\frame\carnet\sante\entities\Patient.java
 D:\MemoireNetbeans\sante-soft\sante-soft-core\src\main\java\com\base\frame\carnet\sante\repositories\ExamenRepository.java
 D:\MemoireNetbeans\sante-soft\sante-soft-core\src\main\java\com\base\frame\carnet\sante\dtos\PatientDTO.java

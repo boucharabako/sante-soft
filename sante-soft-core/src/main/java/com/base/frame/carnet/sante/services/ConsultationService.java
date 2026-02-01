@@ -271,7 +271,7 @@ public class ConsultationService {
             }
             dto.setObservations(observationDTOs);
 
-            System.out.println("✅ Consultation chargée avec " +
+            System.out.println(" Consultation chargée avec " +
                 prescriptionDTOs.size() + " prescriptions, " +
                 examenDTOs.size() + " examens, " +
                 observationDTOs.size() + " observations");

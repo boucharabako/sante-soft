@@ -8,6 +8,10 @@ package com.base.frame.carnet.sante.ressources;
 import com.base.frame.account.core.repository.UtilisateurRepository;
 import com.base.frame.account.entity.Utilisateur;
 import com.base.frame.carnet.sante.dtos.ConsultationDTO;
+import com.base.frame.carnet.sante.dtos.EtablissementDTO;
+import com.base.frame.carnet.sante.dtos.PatientDTO;
+import com.base.frame.carnet.sante.dtos.PrescriptionDTO;
+import com.base.frame.carnet.sante.dtos.ProfessionnelSanteDTO;
 import com.base.frame.carnet.sante.entities.CategorieAntecedent;
 import com.base.frame.carnet.sante.entities.CategorieConsultation;
 import com.base.frame.carnet.sante.entities.ConsultationTypeExamenAutorise;
@@ -26,6 +30,7 @@ import com.base.frame.carnet.sante.services.FileStorageService;
 import com.base.frame.socle.utils.Constants;
 import com.base.frame.socle.utils.exceptions.ObjectValidationException;
 import com.base.frame.socle.utils.validators.MessageSourceKV;
+import java.io.ByteArrayOutputStream;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,6 +52,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+//import net.sf.dynamicreports.report.builder.DynamicReports.*;
 
 /**
  *
@@ -88,6 +94,18 @@ public class ConsultationRessource {
 
     @Autowired
     private AllergyCheckService allergyCheckService;
+
+    @Autowired
+    private com.base.frame.carnet.sante.services.PatientService patientService;
+
+    @Autowired
+    private com.base.frame.carnet.sante.services.ProfessionnelSanteService professionnelSanteService;
+
+    @Autowired
+    private com.base.frame.carnet.sante.services.EtablissementService etablissementService;
+
+    @Autowired
+    private com.base.frame.carnet.sante.services.AffectationService affectationService;
 
     /**
      * Récupère tous les types d'observations avec leurs unités et valeurs
@@ -277,10 +295,10 @@ public class ConsultationRessource {
 
         } catch (ObjectValidationException e) {
             // Relancer l'exception pour qu'elle soit gérée par ApiExceptionHandler
-            System.err.println("❌ Erreur de validation: " + e.getCode());
+            System.err.println(" Erreur de validation: " + e.getCode());
             throw e;
         } catch (Exception e) {
-            System.err.println("❌ Erreur lors de l'enregistrement de la consultation: " + e.getMessage());
+            System.err.println(" Erreur lors de l'enregistrement de la consultation: " + e.getMessage());
             e.printStackTrace();
 
             model.put("success", false);
@@ -367,7 +385,7 @@ public class ConsultationRessource {
             return ResponseEntity.ok().headers(headers).body(model);
 
         } catch (Exception e) {
-            System.err.println("❌ Erreur lors de la récupération de la consultation: " + e.getMessage());
+            System.err.println(" Erreur lors de la récupération de la consultation: " + e.getMessage());
             e.printStackTrace();
 
             model.put("success", false);
@@ -402,12 +420,12 @@ public class ConsultationRessource {
             HttpHeaders headers = new HttpHeaders();
             headers.add(Constants.PROPRIETE_HEADERS_RESPONDED, Constants.PROPRIETE_HEADERS_TIMEZONESCONTROLLER);
 
-            System.out.println("✅ " + consultations.size() + " consultations trouvées");
+            System.out.println(" " + consultations.size() + " consultations trouvées");
 
             return ResponseEntity.ok().headers(headers).body(model);
 
         } catch (Exception e) {
-            System.err.println("❌ Erreur lors de la récupération des consultations: " + e.getMessage());
+            System.err.println(" Erreur lors de la récupération des consultations: " + e.getMessage());
             e.printStackTrace();
 
             model.put("success", false);
@@ -468,8 +486,8 @@ public class ConsultationRessource {
             String idPatient = (String) requestData.get("idPatient");
             List<String> medicaments = (List<String>) requestData.get("medicaments");
 
-            System.out.println("🔍 Vérification des allergies pour patient: " + idPatient);
-            System.out.println("📋 Médicaments à vérifier: " + medicaments);
+            System.out.println(" Vérification des allergies pour patient: " + idPatient);
+            System.out.println(" Médicaments à vérifier: " + medicaments);
 
             List<String> alertes = allergyCheckService.checkAllergies(idPatient, medicaments);
 
@@ -482,7 +500,7 @@ public class ConsultationRessource {
             return ResponseEntity.ok().headers(headers).body(model);
 
         } catch (Exception e) {
-            System.err.println("❌ Erreur lors de la vérification des allergies: " + e.getMessage());
+            System.err.println(" Erreur lors de la vérification des allergies: " + e.getMessage());
             e.printStackTrace();
 
             model.put("success", false);
@@ -504,13 +522,13 @@ public class ConsultationRessource {
             @RequestParam(value = "chemin") String cheminFichier) {
 
         try {
-            System.out.println("📥 Téléchargement du fichier: " + cheminFichier);
+            System.out.println(" Téléchargement du fichier: " + cheminFichier);
 
             // Lire le fichier depuis le disque
             byte[] fichierBytes = fileStorageService.lireFichier(cheminFichier);
 
             if (fichierBytes == null) {
-                System.err.println("❌ Fichier non trouvé: " + cheminFichier);
+                System.err.println(" Fichier non trouvé: " + cheminFichier);
                 return ResponseEntity.notFound().build();
             }
 
@@ -526,14 +544,14 @@ public class ConsultationRessource {
             headers.setContentLength(fichierBytes.length);
             headers.set("Content-Disposition", "inline; filename=\"" + nomFichier + "\"");
 
-            System.out.println("✅ Fichier téléchargé: " + nomFichier + " (" + fichierBytes.length + " octets)");
+            System.out.println(" Fichier téléchargé: " + nomFichier + " (" + fichierBytes.length + " octets)");
 
             return ResponseEntity.ok()
                     .headers(headers)
                     .body(fichierBytes);
 
         } catch (Exception e) {
-            System.err.println("❌ Erreur lors du téléchargement du fichier: " + e.getMessage());
+            System.err.println(" Erreur lors du téléchargement du fichier: " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -607,7 +625,7 @@ public class ConsultationRessource {
 
             String professionnelId = utilisateur.get().getId();
             System.out.println("======================== Pagination consultations pour professionnel: " + professionnelId);
-            System.out.println("📋 Paramètres - Page: " + page + ", Size: " + size + ", MC: " + motCle);
+            System.out.println(" Paramètres - Page: " + page + ", Size: " + size + ", MC: " + motCle);
 
             // Convertir les timestamps en Instant
             Instant dateDebut = dateDebutMillis != null ? Instant.ofEpochMilli(dateDebutMillis) : null;
@@ -626,13 +644,13 @@ public class ConsultationRessource {
             HttpHeaders headers = new HttpHeaders();
             headers.add(Constants.PROPRIETE_HEADERS_RESPONDED, Constants.PROPRIETE_HEADERS_TIMEZONESCONTROLLER);
 
-            System.out.println("✅ " + listConsultations.getTotalElements() + " consultations trouvées (page "
+            System.out.println(" " + listConsultations.getTotalElements() + " consultations trouvées (page "
                     + (page + 1) + "/" + listConsultations.getTotalPages() + ")");
 
             return ResponseEntity.ok().headers(headers).body(model);
 
         } catch (Exception e) {
-            System.err.println("❌ Erreur lors de la pagination des consultations: " + e.getMessage());
+            System.err.println(" Erreur lors de la pagination des consultations: " + e.getMessage());
             e.printStackTrace();
 
             model.put("success", false);
@@ -656,19 +674,281 @@ public class ConsultationRessource {
             Optional<Utilisateur> utilisateur = this.utilisateurRepository.findByUsername(currentUserId);
 
             if (!utilisateur.isPresent()) {
-                System.err.println("❌ Utilisateur non trouvé pour les statistiques");
+                System.err.println(" Utilisateur non trouvé pour les statistiques");
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new HashMap<>());
             }
 
             String professionnelId = utilisateur.get().getId();
-            System.out.println("📊 Calcul des statistiques pour professionnel: " + professionnelId);
+            System.out.println(" Calcul des statistiques pour professionnel: " + professionnelId);
 
             Map<String, Long> stats = consultationService.getStatistiquesConsultations(professionnelId);
             return ResponseEntity.ok(stats);
         } catch (Exception e) {
-            System.err.println("❌ Erreur lors du calcul des statistiques: " + e.getMessage());
+            System.err.println(" Erreur lors du calcul des statistiques: " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new HashMap<>());
         }
+    }
+
+    /**
+     * Exporter l'ordonnance (prescriptions) en PDF
+     */
+    @RequestMapping(value = "/exportPrescription", method = RequestMethod.GET)
+    public ResponseEntity<byte[]> exportPrescription(@RequestParam String id) {
+        try {
+            System.out.println(" Export ordonnance pour consultation: " + id);
+
+            // 1. Récupérer la consultation avec les prescriptions
+            ConsultationDTO consultation = consultationService.getConsultationById(id);
+            if (consultation == null || consultation.getPrescriptions() == null || consultation.getPrescriptions().isEmpty()) {
+                System.err.println(" Consultation non trouvée ou sans prescriptions");
+                return ResponseEntity.notFound().build();
+            }
+
+            // 2. Récupérer les informations du patient
+            PatientDTO patient = patientService.getPatient(consultation.getIdPatient());
+            if (patient == null) {
+                System.err.println(" Patient non trouvé");
+                return ResponseEntity.notFound().build();
+            }
+
+            // 3. Récupérer les informations du professionnel
+            ProfessionnelSanteDTO professionnel = professionnelSanteService.getProfessionnelSante(consultation.getIdProfessionnelSante());
+            if (professionnel == null) {
+                System.err.println(" Professionnel non trouvé");
+                return ResponseEntity.notFound().build();
+            }
+
+            // 4. Récupérer l'affectation active du professionnel (contient établissement et spécialité)
+            java.util.List<com.base.frame.carnet.sante.dtos.AffectationDTO> affectations
+                    = affectationService.getAffectationsByProfessionnel(consultation.getIdProfessionnelSante());
+
+            com.base.frame.carnet.sante.dtos.AffectationDTO affectationActive = null;
+            String etablissementLibelle = "Centre de Santé";
+            String etablissementAdresse = "";
+            String specialiteLibelle = "";
+
+            if (affectations != null && !affectations.isEmpty()) {
+                // Prendre la première affectation (la plus récente, triée par dateDebut DESC)
+                affectationActive = affectations.get(0);
+
+                // Récupérer les libellés depuis l'affectation
+                if (affectationActive.getEtablissementLibelle() != null) {
+                    etablissementLibelle = affectationActive.getEtablissementLibelle();
+                }
+                if (affectationActive.getSpecialiteLibelle() != null) {
+                    specialiteLibelle = affectationActive.getSpecialiteLibelle();
+                }
+
+                // Récupérer l'adresse de l'établissement
+                if (affectationActive.getIdEtablissement() != null) {
+                    com.base.frame.carnet.sante.dtos.EtablissementDTO etab
+                            = etablissementService.getEtablissement(affectationActive.getIdEtablissement());
+                    if (etab != null && etab.getAdresse() != null) {
+                        etablissementAdresse = etab.getAdresse();
+                    }
+                }
+            }
+
+            // 5. Formater la date de consultation
+            String dateFormatee = "";
+            if (consultation.getDateConsultation() != null && !consultation.getDateConsultation().isEmpty()) {
+                try {
+                    java.time.Instant instant = java.time.Instant.parse(consultation.getDateConsultation());
+                    java.time.LocalDateTime dateTime = java.time.LocalDateTime.ofInstant(
+                            instant, java.time.ZoneId.systemDefault());
+                    dateFormatee = dateTime.format(
+                            java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                } catch (Exception e) {
+                    dateFormatee = consultation.getDateConsultation();
+                }
+            }
+
+            // 6. Générer le PDF avec DynamicReports - Layout professionnel amélioré
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+            // Styles personnalisés
+            net.sf.dynamicreports.report.builder.style.StyleBuilder headerStyle
+                    = net.sf.dynamicreports.report.builder.DynamicReports.stl.style()
+                            .bold()
+                            .setFontSize(14)
+                            .setBackgroundColor(new java.awt.Color(41, 128, 185))
+                            .setForegroundColor(java.awt.Color.WHITE)
+                            .setPadding(5);
+
+            net.sf.dynamicreports.report.builder.style.StyleBuilder sectionTitleStyle
+                    = net.sf.dynamicreports.report.builder.DynamicReports.stl.style()
+                            .bold()
+                            .setFontSize(11)
+                            .setBackgroundColor(new java.awt.Color(236, 240, 241))
+                            .setPadding(3)
+                            .setBorder(net.sf.dynamicreports.report.builder.DynamicReports.stl.pen1Point());
+
+            // Créer le rapport avec un design professionnel
+            net.sf.dynamicreports.report.builder.DynamicReports.report()
+                    .setTemplate(net.sf.dynamicreports.report.builder.DynamicReports.template()
+                            .setPageMargin(net.sf.dynamicreports.report.builder.DynamicReports.margin(30)))
+                    .title(
+                            net.sf.dynamicreports.report.builder.DynamicReports.cmp.verticalList(
+                                    // En-tête avec logo et établissement
+                                    net.sf.dynamicreports.report.builder.DynamicReports.cmp.horizontalList(
+                                            net.sf.dynamicreports.report.builder.DynamicReports.cmp.image(
+                                                    getClass().getResourceAsStream("/static/images/logo-sante.png"))
+                                                    .setFixedDimension(70, 70),
+                                            net.sf.dynamicreports.report.builder.DynamicReports.cmp.horizontalGap(15),
+                                            net.sf.dynamicreports.report.builder.DynamicReports.cmp.verticalList(
+                                                    net.sf.dynamicreports.report.builder.DynamicReports.cmp.text(etablissementLibelle)
+                                                            .setStyle(net.sf.dynamicreports.report.builder.DynamicReports.stl.style()
+                                                                    .bold().setFontSize(18).setForegroundColor(new java.awt.Color(41, 128, 185))),
+                                                    net.sf.dynamicreports.report.builder.DynamicReports.cmp.verticalGap(3),
+                                                    net.sf.dynamicreports.report.builder.DynamicReports.cmp.text(etablissementAdresse)
+                                                            .setStyle(net.sf.dynamicreports.report.builder.DynamicReports.stl.style()
+                                                                    .setFontSize(10).setForegroundColor(new java.awt.Color(127, 140, 141)))
+                                            )
+                                    ),
+                                    net.sf.dynamicreports.report.builder.DynamicReports.cmp.verticalGap(10),
+                                    net.sf.dynamicreports.report.builder.DynamicReports.cmp.line()
+                                            .setStyle(net.sf.dynamicreports.report.builder.DynamicReports.stl.style()
+                                                    .setLinePen(net.sf.dynamicreports.report.builder.DynamicReports.stl.pen2Point()
+                                                            .setLineColor(new java.awt.Color(41, 128, 185)))),
+                                    net.sf.dynamicreports.report.builder.DynamicReports.cmp.verticalGap(15),
+                                    // Titre principal
+                                    net.sf.dynamicreports.report.builder.DynamicReports.cmp.text("ORDONNANCE MÉDICALE")
+                                            .setStyle(net.sf.dynamicreports.report.builder.DynamicReports.stl.style()
+                                                    .bold().setFontSize(20)
+                                                    .setForegroundColor(new java.awt.Color(44, 62, 80))
+                                                    .setHorizontalTextAlignment(
+                                                            net.sf.dynamicreports.report.constant.HorizontalTextAlignment.CENTER)),
+                                    net.sf.dynamicreports.report.builder.DynamicReports.cmp.verticalGap(20),
+                                    // Section Médecin
+                                    net.sf.dynamicreports.report.builder.DynamicReports.cmp.text("INFORMATIONS DU MÉDECIN")
+                                            .setStyle(sectionTitleStyle),
+                                    net.sf.dynamicreports.report.builder.DynamicReports.cmp.verticalGap(8),
+                                    net.sf.dynamicreports.report.builder.DynamicReports.cmp.horizontalList(
+                                            net.sf.dynamicreports.report.builder.DynamicReports.cmp.verticalList(
+                                                    net.sf.dynamicreports.report.builder.DynamicReports.cmp.text("Dr. "
+                                                            + professionnel.getFirstName() + " " + professionnel.getLastName())
+                                                            .setStyle(net.sf.dynamicreports.report.builder.DynamicReports.stl.style()
+                                                                    .bold().setFontSize(13).setForegroundColor(new java.awt.Color(52, 73, 94))),
+                                                    net.sf.dynamicreports.report.builder.DynamicReports.cmp.verticalGap(4),
+                                                    net.sf.dynamicreports.report.builder.DynamicReports.cmp.text(
+                                                            "Spécialité: " + (!specialiteLibelle.isEmpty() ? specialiteLibelle : "Médecine Générale"))
+                                                            .setStyle(net.sf.dynamicreports.report.builder.DynamicReports.stl.style()
+                                                                    .setFontSize(10).setForegroundColor(new java.awt.Color(127, 140, 141))),
+                                                    net.sf.dynamicreports.report.builder.DynamicReports.cmp.text(
+                                                            "Tél: " + (professionnel.getTel() != null ? professionnel.getTel() : "N/A"))
+                                                            .setStyle(net.sf.dynamicreports.report.builder.DynamicReports.stl.style()
+                                                                    .setFontSize(10).setForegroundColor(new java.awt.Color(127, 140, 141))),
+                                                    net.sf.dynamicreports.report.builder.DynamicReports.cmp.text(
+                                                            "Email: " + (professionnel.getEmail() != null ? professionnel.getEmail() : "N/A"))
+                                                            .setStyle(net.sf.dynamicreports.report.builder.DynamicReports.stl.style()
+                                                                    .setFontSize(10).setForegroundColor(new java.awt.Color(127, 140, 141)))
+                                            )
+                                    ),
+                                    net.sf.dynamicreports.report.builder.DynamicReports.cmp.verticalGap(15),
+                                    // Section Patient
+                                    net.sf.dynamicreports.report.builder.DynamicReports.cmp.text("INFORMATIONS DU PATIENT")
+                                            .setStyle(sectionTitleStyle),
+                                    net.sf.dynamicreports.report.builder.DynamicReports.cmp.verticalGap(8),
+                                    net.sf.dynamicreports.report.builder.DynamicReports.cmp.horizontalList(
+                                            net.sf.dynamicreports.report.builder.DynamicReports.cmp.verticalList(
+                                                    net.sf.dynamicreports.report.builder.DynamicReports.cmp.text(
+                                                            patient.getFirstName() + " " + patient.getLastName())
+                                                            .setStyle(net.sf.dynamicreports.report.builder.DynamicReports.stl.style()
+                                                                    .bold().setFontSize(12).setForegroundColor(new java.awt.Color(52, 73, 94))),
+                                                    net.sf.dynamicreports.report.builder.DynamicReports.cmp.verticalGap(4),
+                                                    net.sf.dynamicreports.report.builder.DynamicReports.cmp.text(
+                                                            "Date de consultation: " + (!dateFormatee.isEmpty() ? dateFormatee : "N/A"))
+                                                            .setStyle(net.sf.dynamicreports.report.builder.DynamicReports.stl.style()
+                                                                    .setFontSize(10).setForegroundColor(new java.awt.Color(127, 140, 141)))
+                                            )
+                                    ),
+                                    net.sf.dynamicreports.report.builder.DynamicReports.cmp.verticalGap(20),
+                                    // Section Prescriptions
+                                    net.sf.dynamicreports.report.builder.DynamicReports.cmp.text("PRESCRIPTIONS")
+                                            .setStyle(sectionTitleStyle),
+                                    net.sf.dynamicreports.report.builder.DynamicReports.cmp.verticalGap(10)
+                            )
+                    )
+                    .columns(
+                            net.sf.dynamicreports.report.builder.DynamicReports.col.column("Médicament", "medicament",
+                                    net.sf.dynamicreports.report.builder.DynamicReports.type.stringType())
+                                    .setStyle(net.sf.dynamicreports.report.builder.DynamicReports.stl.style()
+                                            .setFontSize(10).setPadding(5)),
+                            net.sf.dynamicreports.report.builder.DynamicReports.col.column("Posologie", "posologie",
+                                    net.sf.dynamicreports.report.builder.DynamicReports.type.stringType())
+                                    .setStyle(net.sf.dynamicreports.report.builder.DynamicReports.stl.style()
+                                            .setFontSize(10).setPadding(5)),
+                            net.sf.dynamicreports.report.builder.DynamicReports.col.column("Durée", "duree",
+                                    net.sf.dynamicreports.report.builder.DynamicReports.type.stringType())
+                                    .setStyle(net.sf.dynamicreports.report.builder.DynamicReports.stl.style()
+                                            .setFontSize(10).setPadding(5))
+                    )
+                    .setColumnTitleStyle(headerStyle)
+                    .setColumnStyle(net.sf.dynamicreports.report.builder.DynamicReports.stl.style()
+                            .setBorder(net.sf.dynamicreports.report.builder.DynamicReports.stl.pen1Point()
+                                    .setLineColor(new java.awt.Color(189, 195, 199))))
+                    .setDetailEvenRowStyle(
+                            net.sf.dynamicreports.report.builder.DynamicReports.stl.simpleStyle()
+                                    .setBackgroundColor(new java.awt.Color(250, 250, 250))
+                    )
+                    .setDataSource(createPrescriptionDataSource(consultation.getPrescriptions()))
+                    .pageFooter(
+                            net.sf.dynamicreports.report.builder.DynamicReports.cmp.verticalList(
+                                    net.sf.dynamicreports.report.builder.DynamicReports.cmp.verticalGap(30),
+                                    net.sf.dynamicreports.report.builder.DynamicReports.cmp.horizontalList(
+                                            net.sf.dynamicreports.report.builder.DynamicReports.cmp.filler().setFixedWidth(300),
+                                            net.sf.dynamicreports.report.builder.DynamicReports.cmp.verticalList(
+                                                    net.sf.dynamicreports.report.builder.DynamicReports.cmp.text("Signature et cachet du médecin")
+                                                            .setStyle(net.sf.dynamicreports.report.builder.DynamicReports.stl.style()
+                                                                    .setFontSize(9).italic()
+                                                                    .setHorizontalTextAlignment(
+                                                                            net.sf.dynamicreports.report.constant.HorizontalTextAlignment.CENTER)),
+                                                    net.sf.dynamicreports.report.builder.DynamicReports.cmp.verticalGap(50)
+                                            ).setFixedWidth(200)
+                                    )
+                            )
+                    )
+                    .toPdf(outputStream);
+
+            // 6. Préparer le nom du fichier
+            String dateJour = java.time.LocalDate.now().format(
+                    java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd"));
+            String numeroCarnet = patient.getNumeroCarnet() != null ? patient.getNumeroCarnet() : "000";
+            String filename = "ordonnance_" + dateJour + "_" + numeroCarnet + ".pdf";
+
+            // 7. Retourner le PDF
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            headers.setContentDispositionFormData("attachment", filename);
+            headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+
+            System.out.println(" Ordonnance générée: " + filename);
+            return new ResponseEntity<>(outputStream.toByteArray(), headers, HttpStatus.OK);
+
+        } catch (Exception e) {
+            System.err.println(" Erreur lors de l'export de l'ordonnance: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /**
+     * Créer une source de données pour les prescriptions
+     */
+    private net.sf.jasperreports.engine.JRDataSource createPrescriptionDataSource(
+            java.util.List<PrescriptionDTO> prescriptions) {
+
+        java.util.List<java.util.Map<String, ?>> data = new java.util.ArrayList<>();
+
+        for (PrescriptionDTO presc : prescriptions) {
+            java.util.Map<String, Object> row = new java.util.HashMap<>();
+            row.put("medicament", presc.getMedicament());
+            row.put("posologie", presc.getPosologie());
+            row.put("duree", presc.getDuree() + " jours");
+            data.add(row);
+        }
+
+        return new net.sf.jasperreports.engine.data.JRMapCollectionDataSource(data);
     }
 }

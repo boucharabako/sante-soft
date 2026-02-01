@@ -18,6 +18,7 @@ public class ConsultationController {
 
     public static final String PAGE_CONSULTATION_PATH = "fonctionnelle/gestion_consultation";
     public static final String PAGE_LISTE_CONSULTATIONS_PATH = "fonctionnelle/liste_consultations";
+    public static final String PAGE_DETAIL_CONSULTATION_PATH = "fonctionnelle/detail_consultation";
 
     @RequestMapping()
     public String homeList(Model model) {
@@ -27,6 +28,11 @@ public class ConsultationController {
     @RequestMapping("/liste")
     public String listeConsultations(Model model) {
         return PAGE_LISTE_CONSULTATIONS_PATH;
+    }
+
+    @RequestMapping("/detail")
+    public String detailConsultation(Model model) {
+        return PAGE_DETAIL_CONSULTATION_PATH;
     }
 
 }

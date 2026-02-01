@@ -589,42 +589,54 @@ App.controller('consultationController', ['$scope', '$http', '$location', '$root
 
         // Ajouter une prescription
         $scope.ajouterPrescription = function () {
+            console.log('🔵 ajouterPrescription appelée');
+
             // Vérifier d'abord si le médicament est renseigné
             if (!$scope.nouvellePrescription.medicament || $scope.nouvellePrescription.medicament.trim() === '') {
                 alert('Veuillez saisir le nom du médicament');
                 return;
             }
 
+            console.log('🔵 Médicament:', $scope.nouvellePrescription.medicament);
+            console.log('🔵 Patient ID:', $scope.patient ? $scope.patient.id : 'Pas de patient');
+
             // Vérifier les allergies AVANT d'ajouter la prescription
             if ($scope.patient && $scope.patient.id) {
                 var medicamentAVerifier = $scope.nouvellePrescription.medicament;
+
+                console.log('🔵 Vérification des allergies pour:', medicamentAVerifier);
 
                 $http.post(checkAllergiesURL, {
                     idPatient: $scope.patient.id,
                     medicaments: [medicamentAVerifier]
                 }).then(function(response) {
-                    if (response.data && response.data.alertes && response.data.alertes.length > 0) {
-                        // Allergie détectée - demander confirmation
-                        var message = "⚠️ ALERTE D'ALLERGIE !\n\n";
-                        message += response.data.alertes.join('\n');
-                        message += "\n\nVoulez-vous quand même ajouter cette prescription ?";
+                    console.log('🔵 Réponse allergies:', response.data);
 
-                        if (confirm(message)) {
-                            // L'utilisateur confirme malgré l'allergie
-                            ajouterPrescriptionDansListe();
-                        }
+                    if (response.data && response.data.alertes && response.data.alertes.length > 0) {
+
+                        console.log('⚠️ Allergie détectée:', response.data.alertes);
+
+                        // Allergie détectée - afficher les notifications une par une
+                        response.data.alertes.forEach(function(alerte) {
+                            notification('warning', alerte);
+                        });
+
+                        // Ne pas ajouter la prescription automatiquement en cas d'allergie
+                        console.warn('⚠️ Prescription non ajoutée en raison d\'une allergie détectée');
                     } else {
+                        console.log('✅ Pas d\'allergie - ajout de la prescription');
                         // Pas d'allergie détectée - ajouter directement
                         ajouterPrescriptionDansListe();
                     }
                 }, function(error) {
-                    console.error("Erreur lors de la vérification des allergies:", error);
+                    console.error("❌ Erreur lors de la vérification des allergies:", error);
                     // En cas d'erreur, demander confirmation
                     if (confirm("Impossible de vérifier les allergies. Voulez-vous quand même ajouter cette prescription ?")) {
                         ajouterPrescriptionDansListe();
                     }
                 });
             } else {
+                console.log('🔵 Pas de patient - ajout direct');
                 // Pas de patient sélectionné - ajouter directement
                 ajouterPrescriptionDansListe();
             }
@@ -667,18 +679,18 @@ App.controller('consultationController', ['$scope', '$http', '$location', '$root
 
             var medicaments = $scope.prescriptions.map(function(p) { return p.medicament; });
 
-            GenericService.postData(checkAllergiesURL, {
+            $http.post(checkAllergiesURL, {
                 idPatient: $scope.patient.id,
                 medicaments: medicaments
             }).then(function(response) {
                 if (response.data.success) {
                     $scope.allergiesAlertes = response.data.alertes;
-                    console.log(' Alertes d\'allergies:', $scope.allergiesAlertes);
+                    console.log('✅ Alertes d\'allergies:', $scope.allergiesAlertes);
                 } else {
                     $scope.allergiesAlertes = [];
                 }
             }).catch(function(error) {
-                console.error(' Erreur lors de la vérification des allergies:', error);
+                console.error('❌ Erreur lors de la vérification des allergies:', error);
                 $scope.allergiesAlertes = [];
             });
         };
